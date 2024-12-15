@@ -1,0 +1,6 @@
+@Teczter.WebApi_HostAddress = http://localhost:5100
+
+GET {{Teczter.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
