@@ -8,17 +8,17 @@ public class TestRoundService(ITestRoundAdapter testRoundAdapter) : ITestRoundSe
 {
     private readonly ITestRoundAdapter _testRoundAdpater = testRoundAdapter;
 
-    public Task CreateNewTestRound(TestRoundEntity testRound)
+    public Task CreateNewTestRound(ExecutionGroupEntity testRound)
     {
         throw new NotImplementedException();
     }
 
-    public Task DeleteTestRound(TestRoundEntity testRound)
+    public Task DeleteTestRound(ExecutionGroupEntity testRound)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<List<TestRoundEntity>> GetAllTestRounds()
+    public async Task<List<ExecutionGroupEntity>> GetAllTestRounds()
     {
         return await _testRoundAdpater.GetAllTestRounds();
     }
@@ -28,12 +28,12 @@ public class TestRoundService(ITestRoundAdapter testRoundAdapter) : ITestRoundSe
         throw new NotImplementedException();
     }
 
-    public Task<TestRoundEntity?> GetTestRoundById(int id)
+    public Task<ExecutionGroupEntity?> GetTestRoundById(int id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<TestRoundEntity?> UpdateTest(TestRoundEntity testRound)
+    public Task<ExecutionGroupEntity?> UpdateTest(ExecutionGroupEntity testRound)
     {
         throw new NotImplementedException();
     }

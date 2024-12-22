@@ -4,10 +4,15 @@ using Teczter.Domain.Entities;
 
 namespace Teczter.Data.Configurations;
 
-public class TestRoundConfiguration : IEntityTypeConfiguration<TestRoundEntity>
+public class ExecutionGroupConfiguration : IEntityTypeConfiguration<ExecutionGroupEntity>
 {
-    public void Configure(EntityTypeBuilder<TestRoundEntity> builder)
+    public void Configure(EntityTypeBuilder<ExecutionGroupEntity> builder)
     {
+        builder.HasKey(x => x.Id);
+
+        builder.Property(x => x.Id)
+            .ValueGeneratedOnAdd();
+
         builder.Property(x => x.CreatedOn)
             .IsRequired();
 
@@ -20,15 +25,15 @@ public class TestRoundConfiguration : IEntityTypeConfiguration<TestRoundEntity>
         builder.Property(x => x.RevisedById)
             .IsRequired();
 
-        builder.Property(x => x.TestRoundName)
+        builder.Property(x => x.ExecutionGroupName)
             .IsRequired();
 
-        builder.HasIndex(x => x.TestRoundName)
+        builder.HasIndex(x => x.ExecutionGroupName)
             .IsUnique();
 
-        builder.HasMany(x => x.Tests)
-            .WithOne(y => y.TestRound)
-            .HasForeignKey(y => y.TestingRoundId)
+        builder.HasMany(x => x.Executions)
+            .WithOne(y => y.ExecutionGroup)
+            .HasForeignKey(y => y.ExecutionGroupId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasQueryFilter(x => !x.IsDeleted);

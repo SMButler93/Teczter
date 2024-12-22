@@ -2,7 +2,7 @@
 using Teczter.Adapters;
 using Teczter.Adapters.AdapterInterfaces;
 
-namespace Teczter.Services.DependencyInjection;
+namespace Teczter.DependencyInjection;
 
 public static class AdapterLayerDependencyInjection
 {
@@ -10,6 +10,5 @@ public static class AdapterLayerDependencyInjection
     {
         services.AddScoped<ITestAdministrationAdapter, TestAdministrationAdapter>();
         services.AddScoped<ITestRoundAdapter, TestRoundAdapter>();
-        services.AddScoped<IUserAdapter, UserAdapter>();
     }
 }

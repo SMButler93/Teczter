@@ -13,14 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teczter.Data", "Teczter.Dat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teczter.Domain", "Teczter.Domain\Teczter.Domain.csproj", "{F34EDDAC-FF11-43CB-B6C7-A62ABA720BD1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teczter.Adapters.Tests", "Teczter.Adapters.Tests\Teczter.Adapters.Tests.csproj", "{8AA52425-4667-4297-AF9F-F2C01B8173D5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teczter.Services.Tests", "Teczter.Services.Tests\Teczter.Services.Tests.csproj", "{35781C29-07D2-4945-9C3B-EE26D80FCF2A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teczter.WebApi.Tests", "Teczter.WebApi.Tests\Teczter.WebApi.Tests.csproj", "{7A988F3F-7104-4BDF-AC89-5DD0BBA01369}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teczter.Domain.Tests", "Teczter.Domain.Tests\Teczter.Domain.Tests.csproj", "{925ADD23-DE7A-46EC-A77D-684572F41B0F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teczter.Persistence", "Teczter.Persistence\Teczter.Persistence.csproj", "{80F28E91-39E5-4466-8782-07C01ED923B5}"
 EndProject
 Global
@@ -49,22 +41,6 @@ Global
 		{F34EDDAC-FF11-43CB-B6C7-A62ABA720BD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F34EDDAC-FF11-43CB-B6C7-A62ABA720BD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F34EDDAC-FF11-43CB-B6C7-A62ABA720BD1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8AA52425-4667-4297-AF9F-F2C01B8173D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8AA52425-4667-4297-AF9F-F2C01B8173D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8AA52425-4667-4297-AF9F-F2C01B8173D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8AA52425-4667-4297-AF9F-F2C01B8173D5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{35781C29-07D2-4945-9C3B-EE26D80FCF2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{35781C29-07D2-4945-9C3B-EE26D80FCF2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{35781C29-07D2-4945-9C3B-EE26D80FCF2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{35781C29-07D2-4945-9C3B-EE26D80FCF2A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7A988F3F-7104-4BDF-AC89-5DD0BBA01369}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A988F3F-7104-4BDF-AC89-5DD0BBA01369}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A988F3F-7104-4BDF-AC89-5DD0BBA01369}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A988F3F-7104-4BDF-AC89-5DD0BBA01369}.Release|Any CPU.Build.0 = Release|Any CPU
-		{925ADD23-DE7A-46EC-A77D-684572F41B0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{925ADD23-DE7A-46EC-A77D-684572F41B0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{925ADD23-DE7A-46EC-A77D-684572F41B0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{925ADD23-DE7A-46EC-A77D-684572F41B0F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{80F28E91-39E5-4466-8782-07C01ED923B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{80F28E91-39E5-4466-8782-07C01ED923B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80F28E91-39E5-4466-8782-07C01ED923B5}.Release|Any CPU.ActiveCfg = Release|Any CPU

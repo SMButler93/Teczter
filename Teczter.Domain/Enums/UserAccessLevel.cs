@@ -1,6 +1,6 @@
 ﻿namespace Teczter.Domain.Enums;
 
-public enum UserAccessLevels
+public enum UserAccessLevel
 {
     Tester = 1,
     Admin = 2

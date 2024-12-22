@@ -8,6 +8,11 @@ public class UserConfigurations : IEntityTypeConfiguration<UserEntity>
 {
     public void Configure(EntityTypeBuilder<UserEntity> builder)
     {
+        builder.HasKey(x => x.Id);
+
+        builder.Property(x => x.Id)
+            .ValueGeneratedOnAdd();
+
         builder.Property(x => x.Username)
             .IsRequired();
 
@@ -28,7 +33,7 @@ public class UserConfigurations : IEntityTypeConfiguration<UserEntity>
         builder.Property(x => x.Pillar)
             .IsRequired();
 
-        builder.HasMany(x => x.AssignedTests)
+        builder.HasMany(x => x.AssignedExcutions)
             .WithOne(y => y.AssignedUser)
             .HasForeignKey(y => y.AssignedUserId)
             .OnDelete(DeleteBehavior.Cascade);

@@ -1,6 +1,7 @@
-﻿using Teczter.Adapters;
+﻿using Microsoft.EntityFrameworkCore;
 using Teczter.Adapters.AdapterInterfaces;
 using Teczter.Domain.Entities;
+using Teczter.Services.Dtos.RequestDtos.TestRequests;
 using Teczter.Services.ServiceInterfaces;
 
 namespace Teczter.Services;
@@ -9,13 +10,16 @@ public class TestAdministrationService : ITestAdministrationService
 {
     private readonly ITestAdministrationAdapter _testAdministrationAdapter;
     private readonly ITestRoundAdapter _testRoundAdapter;
+    private readonly IUserAdapter _userAdapter;
 
     public TestAdministrationService(
         ITestAdministrationAdapter testAdministrationAdapter,
-        ITestRoundAdapter testRoundAdapter)
+        ITestRoundAdapter testRoundAdapter,
+        IUserAdapter userAdapter)
     {
         _testAdministrationAdapter = testAdministrationAdapter;
         _testRoundAdapter = testRoundAdapter;
+        _userAdapter = userAdapter;
     }
 
     public Task CreateNewTest(TestEntity test)
@@ -28,29 +32,7 @@ public class TestAdministrationService : ITestAdministrationService
         throw new NotImplementedException();
     }
 
-    public async Task<List<TestEntity>> GetTestsInTestRound(string testRoundName)
-    {
-        var testRound = await _testRoundAdapter.GetTestRoundByTestRoundName(testRoundName);
-
-        if (testRound == null)
-        {
-            throw new ArgumentException($"Test round {testRoundName} does not exist.");
-        }
-
-        return testRound.Tests;
-    }
-
-    public Task<List<TestEntity>> GetAllUsersAssignedTests(Guid userId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<TestEntity?> GetTestById(Guid id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<TestEntity?> GetTestByName(string testRoundName)
+    public async Task<List<TestEntity>> GetTestSearchResults(TestSearchRequest request)
     {
         throw new NotImplementedException();
     }

@@ -9,23 +9,23 @@ public class TestRoundAdapter(TeczterDbContext dbContext) : ITestRoundAdapter
 {
     private readonly TeczterDbContext _dbContext = dbContext;
 
-    public Task CreateNewTestRound(TestRoundEntity testRound)
+    public Task CreateNewTestRound(ExecutionGroupEntity testRound)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<List<TestRoundEntity>> GetAllTestRounds()
-    {
-        return await _dbContext.TestRounds.ToListAsync();
-    }
-
-    public Task<TestRoundEntity?> GetTestRoundById(int id)
+    public async Task<List<ExecutionGroupEntity>> GetAllTestRounds()
     {
         throw new NotImplementedException();
     }
 
-    public async Task<TestRoundEntity?> GetTestRoundByTestRoundName(string testRoundName)
+    public Task<ExecutionGroupEntity?> GetTestRoundById(int id)
     {
-        return await _dbContext.TestRounds.Where(x => x.TestRoundName == testRoundName).SingleOrDefaultAsync();
+        throw new NotImplementedException();
+    }
+
+    public async Task<ExecutionGroupEntity?> GetTestRoundByTestRoundName(string testRoundName)
+    {
+        throw new NotImplementedException();
     }
 }

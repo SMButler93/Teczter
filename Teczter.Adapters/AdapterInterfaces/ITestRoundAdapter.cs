@@ -4,8 +4,8 @@ namespace Teczter.Adapters.AdapterInterfaces;
 
 public interface ITestRoundAdapter
 {
-    Task CreateNewTestRound(TestRoundEntity testRound);
-    Task<List<TestRoundEntity>> GetAllTestRounds();
-    Task<TestRoundEntity?> GetTestRoundById(int id);
-    Task<TestRoundEntity?> GetTestRoundByTestRoundName(string testRoundName);
+    Task CreateNewTestRound(ExecutionGroupEntity testRound);
+    Task<List<ExecutionGroupEntity>> GetAllTestRounds();
+    Task<ExecutionGroupEntity?> GetTestRoundById(int id);
+    Task<ExecutionGroupEntity?> GetTestRoundByTestRoundName(string testRoundName);
 }

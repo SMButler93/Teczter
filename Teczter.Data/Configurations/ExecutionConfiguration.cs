@@ -4,9 +4,9 @@ using Teczter.Domain.Entities;
 
 namespace Teczter.Data.Configurations;
 
-public class TestStepConfiguration : IEntityTypeConfiguration<TestStepEntity>
+public class ExecutionConfiguration : IEntityTypeConfiguration<ExecutionGroupEntity>
 {
-    public void Configure(EntityTypeBuilder<TestStepEntity> builder)
+    public void Configure(EntityTypeBuilder<ExecutionGroupEntity> builder)
     {
         builder.HasKey(x => x.Id);
 
@@ -25,21 +25,8 @@ public class TestStepConfiguration : IEntityTypeConfiguration<TestStepEntity>
         builder.Property(x => x.RevisedById)
             .IsRequired();
 
-        builder.Property(x => x.TestId)
-            .IsRequired();
-
-        builder.Property(x => x.StepPlacement)
-            .IsRequired();
-
-        builder.Property(x => x.Instructions)
+        builder.Property(x => x.ExecutionGroupName)
             .IsRequired()
-            .HasMaxLength(250);
-
-        builder.HasOne(x => x.Test)
-            .WithMany(y => y.TestSteps)
-            .HasForeignKey(x => x.TestId)
-            .OnDelete(DeleteBehavior.NoAction);
-
-        builder.HasQueryFilter(x => !x.IsDeleted);
+            .HasMaxLength(50);
     }
 }

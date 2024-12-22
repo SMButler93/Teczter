@@ -17,12 +17,10 @@ public class TestDto
     public string Description { get; set; } = null!;
     public Guid? AssignedToId { get; set; } = null;
     public List<LinkUrl> LinkUrls { get; set; } = [];
-    public bool HasPassed => TestState.IsAPass;
-    public Pillars PillarOwner { get; set; }
+    public Pillar PillarOwner { get; set; }
 
     public List<TestStepEntity> TestSteps { get; set; } = [];
-    public TestState TestState { get; set; } = null!;
-    public TestRoundEntity TestRound { get; set; } = null!;
+    public ExecutionGroupEntity TestRound { get; set; } = null!;
     public UserEntity? AssignedUser { get; set; }
 
     public TestDto(TestEntity test)
@@ -33,15 +31,5 @@ public class TestDto
         CreatedById = test.CreatedById;
         RevisedOn = test.RevisedOn;
         RevisedById = test.RevisedById;
-        TestingRoundId = test.TestingRoundId;
-        Title = test.Title;
-        Description = test.Description;
-        AssignedToId = test.AssignedUserId;
-        LinkUrls = test.LinkUrls;
-        PillarOwner = test.PillarOwner;
-        TestSteps = test.TestSteps;
-        TestState = test.TestState;
-        TestRound = test.TestRound;
-        AssignedUser = test.AssignedUser;
     }
 }
