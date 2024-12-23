@@ -6,7 +6,7 @@ public class ExecutionEntity
 {
     private string _executionState = ExecutionStateType.UNTESTED.ToString();
 
-    public Guid Id { get; }
+    public Guid Id { get; private set; }
     public Guid ExecutionGroupId { get; init; }
     public Guid? AssignedUserId { get; set; } = null;
     public bool IsDeleted { get; private set; }

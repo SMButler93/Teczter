@@ -8,8 +8,6 @@ public class TestConfiguration : IEntityTypeConfiguration<TestEntity>
 {
     public void Configure(EntityTypeBuilder<TestEntity> builder)
     {
-        builder.HasKey(x => x.Id);
-
         builder.Property(x => x.Id)
             .ValueGeneratedOnAdd();
 
@@ -37,6 +35,12 @@ public class TestConfiguration : IEntityTypeConfiguration<TestEntity>
             .WithOne(y => y.Test)
             .HasForeignKey(y => y.TestId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.OwnsMany(x => x.LinkUrls, ownedbuilder =>
+        {
+            ownedbuilder.Property(y => y.Url)
+            .HasColumnName("LinkUrl");
+        });
         
         builder.HasQueryFilter(x => !x.IsDeleted);
     }
