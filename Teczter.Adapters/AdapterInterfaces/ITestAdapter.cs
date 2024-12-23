@@ -2,7 +2,7 @@
 
 namespace Teczter.Adapters.AdapterInterfaces;
 
-public interface ITestAdministrationAdapter
+public interface ITestAdapter
 {
     Task CreateNewTest(TestEntity test);
     IQueryable<TestEntity> GetTestSearchBaseQuery();

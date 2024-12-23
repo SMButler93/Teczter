@@ -8,17 +8,17 @@ public class ExecutionEntity
 
     public Guid Id { get; private set; }
     public Guid ExecutionGroupId { get; init; }
-    public Guid? AssignedUserId { get; set; } = null;
+    public int? AssignedUserId { get; set; } = null;
     public bool IsDeleted { get; private set; }
     public DateTime CreatedOn { get; } = DateTime.Now;
-    public Guid CreatedById { get; init; }
+    public int CreatedById { get; init; }
     public DateTime RevisedOn { get; set; } = DateTime.Now;
-    public Guid RevisedById { get; set; }
+    public int RevisedById { get; set; }
     public Guid TestId { get; set; }
     public bool HasPassed => ExecutionState == ExecutionStateType.PASS.ToString();
     public Guid? FailedStepId { get; private set; } = null;
     public string? FailureReason { get; private set; } = null;
-    public Guid? TestedById { get; private set; } = null;
+    public int? TestedById { get; private set; } = null;
     public string? Notes { get; private set; } = null;
     public string ExecutionState
     {
@@ -47,13 +47,13 @@ public class ExecutionEntity
         return validValues.Contains(state.ToUpper());
     }
 
-    public void Pass(Guid userId)
+    public void Pass(int userId)
     {
         TestedById = userId;
         ExecutionState = ExecutionStateType.PASS.ToString();
     }
 
-    public void Fail(Guid userId, Guid testStepId, string failureReason)
+    public void Fail(int userId, Guid testStepId, string failureReason)
     {
         TestedById = userId;
         FailedStepId = testStepId;

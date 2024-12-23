@@ -8,7 +8,7 @@ public static class AdapterLayerDependencyInjection
 {
     public static void RegisterAdapters(this IServiceCollection services)
     {
-        services.AddScoped<ITestAdministrationAdapter, TestAdministrationAdapter>();
+        services.AddScoped<ITestAdapter, TestAdapter>();
         services.AddScoped<ITestRoundAdapter, TestRoundAdapter>();
         services.AddScoped<IUserAdapter, UserAdapter>();
     }

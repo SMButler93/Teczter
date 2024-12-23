@@ -12,7 +12,7 @@ using Teczter.Data;
 namespace Teczter.Data.Migrations
 {
     [DbContext(typeof(TeczterDbContext))]
-    [Migration("20241223133755_Init")]
+    [Migration("20241223221148_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -31,11 +31,11 @@ namespace Teczter.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AssignedUserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("AssignedUserId")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("CreatedById")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("ExecutionGroupId")
                         .HasColumnType("uniqueidentifier");
@@ -56,8 +56,8 @@ namespace Teczter.Data.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("RevisedById")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("RevisedById")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("RevisedOn")
                         .HasColumnType("datetime2");
@@ -65,8 +65,8 @@ namespace Teczter.Data.Migrations
                     b.Property<Guid>("TestId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("TestedById")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("TestedById")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -90,8 +90,8 @@ namespace Teczter.Data.Migrations
                     b.Property<DateTime?>("ClosedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("CreatedById")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -108,8 +108,8 @@ namespace Teczter.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("RevisedById")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("RevisedById")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("RevisedOn")
                         .HasColumnType("datetime2");
@@ -128,8 +128,8 @@ namespace Teczter.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("CreatedById")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -146,8 +146,8 @@ namespace Teczter.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("RevisedById")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("RevisedById")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("RevisedOn")
                         .HasColumnType("datetime2");
@@ -168,22 +168,22 @@ namespace Teczter.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("CreatedById")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Instructions")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                        .HasMaxLength(750)
+                        .HasColumnType("nvarchar(750)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("RevisedById")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("RevisedById")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("RevisedOn")
                         .HasColumnType("datetime2");
@@ -203,9 +203,11 @@ namespace Teczter.Data.Migrations
 
             modelBuilder.Entity("Teczter.Domain.Entities.UserEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccessLevel")
                         .HasColumnType("int");
