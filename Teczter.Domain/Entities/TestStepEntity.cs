@@ -8,9 +8,9 @@ public class TestStepEntity
     public Guid Id { get; private set; }
     public bool IsDeleted { get; set; }
     public DateTime CreatedOn { get; } = DateTime.Now;
-    public Guid CreatedById { get; }
+    public int CreatedById { get; }
     public DateTime RevisedOn { get; set; } = DateTime.Now;
-    public Guid RevisedById { get; set; }
+    public int RevisedById { get; set; }
     public Guid TestId { get; set; }
     public int StepPlacement { get; set; }
     public string Instructions { get; set; } = null!;

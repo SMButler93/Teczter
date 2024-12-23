@@ -7,9 +7,9 @@ public class ExecutionGroupEntity
     public Guid Id { get; private set; }
     public bool IsDeleted { get; set; }
     public DateTime CreatedOn { get; } = DateTime.Now;
-    public Guid CreatedById { get; }
+    public int CreatedById { get; }
     public DateTime RevisedOn { get; set; } = DateTime.Now;
-    public Guid RevisedById { get; set; }
+    public int RevisedById { get; set; }
     public string ExecutionGroupName { get; private set; } = null!;
     public DateTime? ClosedDate { get; private set; } = null;
     public bool IsComplete => Executions.All(x => x.ExecutionState != ExecutionStateType.UNTESTED.ToString());

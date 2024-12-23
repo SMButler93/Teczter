@@ -9,7 +9,7 @@ public class UserConfigurations : IEntityTypeConfiguration<UserEntity>
     public void Configure(EntityTypeBuilder<UserEntity> builder)
     {
         builder.Property(x => x.Id)
-            .ValueGeneratedOnAdd();
+            .IsRequired();
 
         builder.Property(x => x.Username)
             .IsRequired();

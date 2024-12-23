@@ -1,10 +1,11 @@
-﻿using Teczter.Adapters.AdapterInterfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using Teczter.Adapters.AdapterInterfaces;
 using Teczter.Data;
 using Teczter.Domain.Entities;
 
 namespace Teczter.Adapters;
 
-public class TestAdministrationAdapter(TeczterDbContext dbContext) : ITestAdministrationAdapter
+public class TestAdapter(TeczterDbContext dbContext) : ITestAdapter
 {
     private readonly TeczterDbContext _dbContext = dbContext;
 
@@ -15,6 +16,6 @@ public class TestAdministrationAdapter(TeczterDbContext dbContext) : ITestAdmini
 
     public IQueryable<TestEntity> GetTestSearchBaseQuery()
     {
-        return _dbContext.Tests;
+        return _dbContext.Tests.Include(x => x.TestSteps);
     }
 }

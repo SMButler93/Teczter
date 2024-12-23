@@ -31,7 +31,7 @@ public class TestStepConfiguration : IEntityTypeConfiguration<TestStepEntity>
 
         builder.Property(x => x.Instructions)
             .IsRequired()
-            .HasMaxLength(250);
+            .HasMaxLength(750);
 
         builder.HasOne(x => x.Test)
             .WithMany(y => y.TestSteps)

@@ -5,11 +5,11 @@ namespace Teczter.Services.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TestRoundController : ControllerBase
+    public class ExecutionGroupController : ControllerBase
     {
         private readonly ITestRoundService _testRoundService;
 
-        public TestRoundController(ITestRoundService testRoundService)
+        public ExecutionGroupController(ITestRoundService testRoundService)
         {
             _testRoundService = testRoundService;
         }

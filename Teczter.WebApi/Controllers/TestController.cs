@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Teczter.Domain.Enums;
-using Teczter.Services.Dtos.RequestDtos.TestRequests;
 using Teczter.Services.ServiceInterfaces;
 using Teczter.WebApi.DTOs;
 
@@ -10,26 +8,18 @@ namespace Teczter.Services.Controllers;
 [ApiController]
 public class TestController : ControllerBase
 {
-    private readonly ITestAdministrationService _testAdministrationService;
+    private readonly ITestService _testService;
 
-    public TestController(ITestAdministrationService testAdministrationService)
+    public TestController(ITestService testService)
     {
-        _testAdministrationService = testAdministrationService;
+        _testService = testService;
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetTestSearchResults(
-        [FromQuery] string? testRoundName,
-        [FromQuery] Pillar? pillar,
-        [FromQuery] string? assignedUserUsername,
-        [FromQuery] string? testTitle,
-        [FromQuery] ExecutionStateType? testState
-        )
+    public async Task<IActionResult> GetTestSearchResults([FromQuery] string? testname, string? pillarOwner)
     {
-        var request = new TestSearchRequest(testRoundName, pillar, assignedUserUsername, testTitle, testState);
-        var tests = await _testAdministrationService.GetTestSearchResults(request);
-        var dtos = tests.Select(x => new TestDto(x)).ToList();
+        var tests = await _testService.GetTestSearchResults(testname, pillarOwner);
 
-        return Ok(dtos);
+        return Ok(tests.Select(x => new TestDetailedDto(x)).ToList());
     }
 }

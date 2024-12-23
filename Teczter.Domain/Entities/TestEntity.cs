@@ -10,9 +10,9 @@ public class TestEntity
     public Guid Id { get; private set; }
     public bool IsDeleted { get; set; }
     public DateTime CreatedOn { get; } = DateTime.Now;
-    public Guid CreatedById { get; }
+    public int CreatedById { get; }
     public DateTime RevisedOn { get; set; } = DateTime.Now;
-    public Guid RevisedById { get; set; }
+    public int RevisedById { get; set; }
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
     public List<LinkUrl> LinkUrls { get; set; } = [];

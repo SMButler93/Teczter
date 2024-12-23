@@ -14,7 +14,7 @@ public class TestRoundAdapter(TeczterDbContext dbContext) : ITestRoundAdapter
         throw new NotImplementedException();
     }
 
-    public async Task<List<ExecutionGroupEntity>> GetAllTestRounds()
+    public Task<List<ExecutionGroupEntity>> GetAllTestRounds()
     {
         throw new NotImplementedException();
     }
@@ -24,7 +24,7 @@ public class TestRoundAdapter(TeczterDbContext dbContext) : ITestRoundAdapter
         throw new NotImplementedException();
     }
 
-    public async Task<ExecutionGroupEntity?> GetTestRoundByTestRoundName(string testRoundName)
+    public Task<ExecutionGroupEntity?> GetTestRoundByTestRoundName(string testRoundName)
     {
         throw new NotImplementedException();
     }
