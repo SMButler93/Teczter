@@ -7,7 +7,7 @@ public class TestEntity
     private readonly string[] Pillars = { "ACCOUNTING", "CORE", "OPERATIONS", "TRADING", "UNOWNED" };
     private string _pillar = "UNOWNED";
 
-    public Guid Id { get; }
+    public Guid Id { get; private set; }
     public bool IsDeleted { get; set; }
     public DateTime CreatedOn { get; } = DateTime.Now;
     public Guid CreatedById { get; }

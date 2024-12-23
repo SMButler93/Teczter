@@ -38,6 +38,12 @@ public class TestStepConfiguration : IEntityTypeConfiguration<TestStepEntity>
             .HasForeignKey(x => x.TestId)
             .OnDelete(DeleteBehavior.NoAction);
 
+        builder.OwnsMany(x => x.LinkUrls, ownedbuilder =>
+        {
+            ownedbuilder.Property(y => y.Url)
+            .HasColumnName("LinkUrl");
+        });
+
         builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }

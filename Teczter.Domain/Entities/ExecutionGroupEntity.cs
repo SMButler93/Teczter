@@ -4,7 +4,7 @@ namespace Teczter.Domain.Entities;
 
 public class ExecutionGroupEntity
 {
-    public Guid Id { get; }
+    public Guid Id { get; private set; }
     public bool IsDeleted { get; set; }
     public DateTime CreatedOn { get; } = DateTime.Now;
     public Guid CreatedById { get; }
