@@ -20,6 +20,8 @@ public class TestController : ControllerBase
     {
         var tests = await _testService.GetTestSearchResults(testname, pillarOwner);
 
-        return Ok(tests.Select(x => new TestDetailedDto(x)).ToList());
+        var testDtos = tests.Select(x => new TestDetailedDto(x)).ToList();
+
+        return Ok(testDtos.OrderBy(x => x.Pillar).ThenBy(x => x.Title));
     }
 }
