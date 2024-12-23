@@ -8,8 +8,6 @@ public class TestStepConfiguration : IEntityTypeConfiguration<TestStepEntity>
 {
     public void Configure(EntityTypeBuilder<TestStepEntity> builder)
     {
-        builder.HasKey(x => x.Id);
-
         builder.Property(x => x.Id)
             .ValueGeneratedOnAdd();
 

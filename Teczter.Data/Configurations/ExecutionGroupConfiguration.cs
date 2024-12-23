@@ -8,8 +8,6 @@ public class ExecutionGroupConfiguration : IEntityTypeConfiguration<ExecutionGro
 {
     public void Configure(EntityTypeBuilder<ExecutionGroupEntity> builder)
     {
-        builder.HasKey(x => x.Id);
-
         builder.Property(x => x.Id)
             .ValueGeneratedOnAdd();
 
