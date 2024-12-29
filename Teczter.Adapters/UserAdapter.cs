@@ -11,6 +11,8 @@ public class UserAdapter(TeczterDbContext dbContext) : IUserAdapter
 
     public async Task<UserEntity?> GetUserByUsername(string username)
     {
-        return await _dbContext.Users.Where(x => x.Username == username).SingleOrDefaultAsync();
+        return await _dbContext.Users
+            .Where(x => x.Username == username)
+            .SingleOrDefaultAsync();
     }
 }

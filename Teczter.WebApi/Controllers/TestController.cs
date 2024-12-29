@@ -16,12 +16,26 @@ public class TestController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetTestSearchResults([FromQuery] string? testname, string? pillarOwner)
+    public async Task<IActionResult> GetTestSearchResults([FromQuery] string? testname, [FromQuery] string? pillarOwner)
     {
         var tests = await _testService.GetTestSearchResults(testname, pillarOwner);
 
-        var testDtos = tests.Select(x => new TestDetailedDto(x)).ToList();
+        var testDtos = tests.Select(x => new TestBasicDto(x)).ToList();
 
         return Ok(testDtos.OrderBy(x => x.Pillar).ThenBy(x => x.Title));
+    }
+
+    [HttpGet]
+    [Route("/TestDetails/{id:guid}")]
+    public async Task<IActionResult> GetTest(Guid id)
+    {
+        var test = await _testService.GetTestById(id);
+
+        if (test == default)
+        {
+            return NotFound($"Test {id} could not be found.");
+        }
+
+        return Ok(new TestDetailedDto(test));
     }
 }

@@ -26,6 +26,11 @@ public class TestService : ITestService
         throw new NotImplementedException();
     }
 
+    public async Task<TestEntity?> GetTestById(Guid id)
+    {
+        return await _testAdapter.GetTestById(id);
+    }
+
     public async Task<List<TestEntity>> GetTestSearchResults(string? testTitle, string? pillarOwner)
     {
         var TestSearchQuery = _testAdapter.GetTestSearchBaseQuery();

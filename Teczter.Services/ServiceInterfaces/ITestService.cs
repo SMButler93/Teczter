@@ -8,6 +8,7 @@ public interface ITestService
 {
     Task CreateNewTest(TestEntity test);
     Task<List<TestEntity>> GetTestSearchResults(string? testName, string? pillarOwner);
+    Task<TestEntity?> GetTestById(Guid id);
     Task DeleteTest(TestEntity test);
     Task<TestEntity?> UpdateTest(TestEntity test);
 }

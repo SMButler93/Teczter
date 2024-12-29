@@ -14,8 +14,18 @@ public class TestAdapter(TeczterDbContext dbContext) : ITestAdapter
         throw new NotImplementedException();
     }
 
+    public async Task<TestEntity?> GetTestById(Guid id)
+    {
+        return await _dbContext.Tests
+            .Include(x => x.TestSteps)
+            .ThenInclude(y => y.LinkUrls)
+            .SingleOrDefaultAsync(x => x.Id == id);
+    }
+
     public IQueryable<TestEntity> GetTestSearchBaseQuery()
     {
-        return _dbContext.Tests.Include(x => x.TestSteps);
+        return _dbContext.Tests
+            .Include(x => x.TestSteps)
+            .ThenInclude(y => y.LinkUrls);
     }
 }
