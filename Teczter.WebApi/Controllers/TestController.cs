@@ -38,4 +38,13 @@ public class TestController : ControllerBase
 
         return Ok(new TestDetailedDto(test));
     }
+
+    [HttpDelete]
+    [Route("/TestDetails/{id:guid}/Delete")]
+    public async Task<IActionResult> DeleteTest(Guid id)
+    {
+        await _testService.DeleteTest(id);
+
+        return NoContent();
+    }
 }

@@ -27,4 +27,9 @@ public class TestStepEntity
     {
         LinkUrls.Remove(linkUrl);
     }
+
+    public void Delete()
+    {
+        IsDeleted = true;
+    }
 }

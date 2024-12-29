@@ -68,4 +68,14 @@ public class TestEntity
     {
         LinkUrls.Remove(linkUrl);
     }
+
+    public void Delete()
+    {
+        foreach (var step in TestSteps)
+        {
+            step.Delete();
+        }
+
+        IsDeleted = true;
+    }
 }
