@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Teczter.Adapters.AdapterInterfaces;
 using Teczter.Domain.Entities;
-using Teczter.Services.Dtos.RequestDtos.TestRequests;
+using Teczter.Persistence;
 using Teczter.Services.ServiceInterfaces;
 
 namespace Teczter.Services;
@@ -9,11 +9,14 @@ namespace Teczter.Services;
 public class TestService : ITestService
 {
     private readonly ITestAdapter _testAdapter;
+    private readonly IUnitOfWork _uow;
 
     public TestService(
-        ITestAdapter testAdapter)
+        ITestAdapter testAdapter,
+        IUnitOfWork uow)
     {
         _testAdapter = testAdapter;
+        _uow = uow;
     }
 
     public Task CreateNewTest(TestEntity test)
@@ -21,9 +24,19 @@ public class TestService : ITestService
         throw new NotImplementedException();
     }
 
-    public Task DeleteTest(TestEntity test)
+    public async Task DeleteTest(Guid id)
     {
-        throw new NotImplementedException();
+        var test = await _testAdapter.GetTestById(id) ?? throw new InvalidOperationException("Cannot delete a test that does not exist.");
+
+        try
+        {
+            test.Delete();
+            await _uow.CommitChanges();
+        }
+        catch (DbUpdateException dbEx)
+        {
+            throw new InvalidOperationException("Failed to delete the test.", dbEx);
+        }
     }
 
     public async Task<TestEntity?> GetTestById(Guid id)
