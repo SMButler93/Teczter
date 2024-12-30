@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Teczter.Services.ServiceInterfaces;
-using Teczter.WebApi.DTOs;
+using Teczter.WebApi.RequestDTOs;
+using Teczter.WebApi.ResponseDTOs;
 
 namespace Teczter.Services.Controllers;
 
@@ -31,7 +32,7 @@ public class TestController : ControllerBase
     {
         var test = await _testService.GetTestById(id);
 
-        if (test == default)
+        if (test == null)
         {
             return NotFound($"Test {id} could not be found.");
         }
@@ -46,5 +47,17 @@ public class TestController : ControllerBase
         await _testService.DeleteTest(id);
 
         return NoContent();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateTest([FromBody] TestCreationDto request)
+    {
+        var entity = request.MapToEntity();
+
+        await _testService.CreateNewTest(entity);
+
+        var dto = new TestDetailedDto(entity);
+
+        return CreatedAtAction(nameof(GetTest), new { entity.Id }, dto);
     }
 }
