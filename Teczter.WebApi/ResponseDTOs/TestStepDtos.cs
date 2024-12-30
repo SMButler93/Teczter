@@ -1,7 +1,7 @@
 ﻿using Teczter.Domain.Entities;
 using Teczter.Domain.ValueObjects;
 
-namespace Teczter.WebApi.DTOs;
+namespace Teczter.WebApi.ResponseDTOs;
 
 public class TestStepBasicDto
 {

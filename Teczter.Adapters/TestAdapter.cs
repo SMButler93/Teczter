@@ -9,9 +9,9 @@ public class TestAdapter(TeczterDbContext dbContext) : ITestAdapter
 {
     private readonly TeczterDbContext _dbContext = dbContext;
 
-    public Task CreateNewTest(TestEntity test)
+    public async Task CreateNewTest(TestEntity test)
     {
-        throw new NotImplementedException();
+        await _dbContext.Tests.AddAsync(test);
     }
 
     public async Task<TestEntity?> GetTestById(Guid id)
