@@ -25,7 +25,7 @@ public record LinkUrl
 
     private bool ValidateLinkUrl(string url)
     {
-        var regex = @"^(http:\\/\\/www\\.|https:\\/\\/www\\.|http:\\/\\/|https:\\/\\/)?[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(:[0-9]{1,5})?(\\/.*)?$/;";
+        var regex = @"^(https?:\/\/|www\.)[^\s\/$.?#].[^\s]*\.(com|co\.uk|[a-z]{2,})(\/[^\s]*)?$";
 
         var match = Regex.Match(url, regex, RegexOptions.IgnoreCase);
 

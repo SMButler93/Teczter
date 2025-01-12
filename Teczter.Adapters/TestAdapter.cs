@@ -9,9 +9,9 @@ public class TestAdapter(TeczterDbContext dbContext) : ITestAdapter
 {
     private readonly TeczterDbContext _dbContext = dbContext;
 
-    public Task CreateNewTest(TestEntity test)
+    public async Task CreateNewTest(TestEntity test)
     {
-        throw new NotImplementedException();
+        await _dbContext.Tests.AddAsync(test);
     }
 
     public async Task<TestEntity?> GetTestById(Guid id)
@@ -22,10 +22,20 @@ public class TestAdapter(TeczterDbContext dbContext) : ITestAdapter
             .SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public IQueryable<TestEntity> GetTestSearchBaseQuery()
+    public IQueryable<TestEntity> GetDetailedTestSearchBaseQuery()
     {
         return _dbContext.Tests
             .Include(x => x.TestSteps)
             .ThenInclude(y => y.LinkUrls);
+    }
+
+    public IQueryable<TestEntity> GetBasicTestSearchBaseQuery()
+    {
+        return _dbContext.Tests;
+    }
+
+    public Task<TestEntity> UpdateTest(TestEntity test)
+    {
+        throw new NotImplementedException();
     }
 }

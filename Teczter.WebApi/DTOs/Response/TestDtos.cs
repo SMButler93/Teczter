@@ -1,7 +1,7 @@
 ﻿using Teczter.Domain.Entities;
 using Teczter.Domain.ValueObjects;
 
-namespace Teczter.WebApi.DTOs;
+namespace Teczter.WebApi.DTOs.Response;
 
 public class TestBasicDto
 {
@@ -15,7 +15,7 @@ public class TestBasicDto
         Id = test.Id;
         Title = test.Title;
         Description = test.Description;
-        Pillar = test.Pillar;
+        Pillar = test.OwningPillar;
     }
 }
 
@@ -45,7 +45,7 @@ public class TestDetailedDto
         Title = test.Title;
         Description = test.Description;
         LinkUrls = test.LinkUrls;
-        Pillar = test.Pillar;
+        Pillar = test.OwningPillar;
         TestSteps = test.TestSteps.Select(x => new TestStepBasicDto(x)).ToList();
     }
 }
