@@ -4,7 +4,7 @@ namespace Teczter.Domain.ValueObjects;
 
 public record LinkUrl
 {
-    private string _url = string.Empty;
+    private string _url = null!;
 
     public string Url
     {
