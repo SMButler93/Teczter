@@ -8,14 +8,14 @@ public class TestBasicDto
     public Guid Id { get; private set; }
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
-    public string Pillar { get; set; } = null!;
+    public string OwningPillar { get; set; } = null!;
 
     public TestBasicDto(TestEntity test)
     {
         Id = test.Id;
         Title = test.Title;
         Description = test.Description;
-        Pillar = test.Pillar;
+        OwningPillar = test.OwningPillar;
     }
 }
 
@@ -30,7 +30,7 @@ public class TestDetailedDto
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
     public List<LinkUrl> LinkUrls { get; set; } = [];
-    public string Pillar { get; set; } = null!;
+    public string OwningPillar { get; set; } = null!;
 
     public List<TestStepBasicDto> TestSteps { get; set; } = [];
 
@@ -45,7 +45,7 @@ public class TestDetailedDto
         Title = test.Title;
         Description = test.Description;
         LinkUrls = test.LinkUrls;
-        Pillar = test.Pillar;
+        OwningPillar = test.OwningPillar;
         TestSteps = test.TestSteps.Select(x => new TestStepBasicDto(x)).ToList();
     }
 }

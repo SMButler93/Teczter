@@ -43,7 +43,7 @@ public class TestService : ITestService
         var TestSearchQuery = _testAdapter.GetDetailedTestSearchBaseQuery();
         
         TestSearchQuery = testTitle == null ? TestSearchQuery : TestSearchQuery.Where(x => x.Title.Contains(testTitle));
-        TestSearchQuery = pillarOwner == null ? TestSearchQuery : TestSearchQuery.Where(x => x.Pillar == pillarOwner);
+        TestSearchQuery = pillarOwner == null ? TestSearchQuery : TestSearchQuery.Where(x => x.OwningPillar == pillarOwner);
 
         return await TestSearchQuery.ToListAsync();
     }

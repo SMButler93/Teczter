@@ -6,7 +6,7 @@ namespace Teczter.WebApi.RequestDTOs
     {
         public string Title { get; set; } = null!;
         public string Description { get; set; } = null!;
-        public string Pillar { get; set; } = null!;
+        public string OwningPillar { get; set; } = null!;
 
         public TestEntity MapToEntity()
         {
@@ -14,7 +14,7 @@ namespace Teczter.WebApi.RequestDTOs
             {
                 Title = this.Title,
                 Description = this.Description,
-                Pillar = this.Pillar
+                OwningPillar = this.OwningPillar
             };
         }
     }

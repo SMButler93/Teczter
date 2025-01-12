@@ -72,7 +72,7 @@ public class TestController : ControllerBase
 
     [HttpPut]
     [Route("/{id:guid}/Update")]
-    public async Task<IActionResult> UpdateTest(Guid id, CreateTestRequestDto request) 
+    public async Task<IActionResult> UpdateTest(Guid id, CreateTestRequestDto request)
     {
         var currentTest = await _testService.GetTestById(id);
 
@@ -86,4 +86,5 @@ public class TestController : ControllerBase
         entity = await _testService.UpdateTest(currentTest, entity);
 
         return Ok(new TestDetailedDto(entity));
+    }
 }

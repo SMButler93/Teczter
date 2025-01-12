@@ -14,7 +14,7 @@ namespace Teczter.WebApi.RequestDTOs.RequestValidations
                 .NotEmpty()
                 .WithMessage("A Descriptions is Required.");
 
-            RuleFor(x => x.Pillar)
+            RuleFor(x => x.OwningPillar)
                 .NotEmpty()
                 .WithMessage("You must specify the pillar that owns this test, or set to 'Unowned'.")
                 .Must(IsValidPillar)
