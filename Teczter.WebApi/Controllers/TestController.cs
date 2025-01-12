@@ -33,7 +33,7 @@ public class TestController : ControllerBase
     {
         var test = await _testService.GetTestById(id);
 
-        if (test == default)
+        if (test == null)
         {
             return NotFound($"Test {id} does not exist");
         }
@@ -86,5 +86,4 @@ public class TestController : ControllerBase
         entity = await _testService.UpdateTest(currentTest, entity);
 
         return Ok(new TestDetailedDto(entity));
-    }
 }

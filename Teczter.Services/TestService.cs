@@ -41,9 +41,9 @@ public class TestService : ITestService
     public async Task<List<TestEntity>> GetTestSearchResults(string? testTitle, string? pillarOwner)
     {
         var TestSearchQuery = _testAdapter.GetDetailedTestSearchBaseQuery();
-
-        TestSearchQuery = testTitle == default ? TestSearchQuery : TestSearchQuery.Where(x => x.Title.Contains(testTitle));
-        TestSearchQuery = pillarOwner == default ? TestSearchQuery : TestSearchQuery.Where(x => x.OwningPillar == pillarOwner);
+        
+        TestSearchQuery = testTitle == null ? TestSearchQuery : TestSearchQuery.Where(x => x.Title.Contains(testTitle));
+        TestSearchQuery = pillarOwner == null ? TestSearchQuery : TestSearchQuery.Where(x => x.Pillar == pillarOwner);
 
         return await TestSearchQuery.ToListAsync();
     }
