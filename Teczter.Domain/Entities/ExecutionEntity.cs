@@ -40,7 +40,7 @@ public class ExecutionEntity
     public TestStepEntity? FailedStep { get; set; }
     public UserEntity? AssignedUser { get; set; }
 
-    private bool ValidateTestState(string state)
+    private static bool ValidateTestState(string state)
     {
         var validValues = Enum.GetNames(typeof(ExecutionStateType));
 

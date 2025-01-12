@@ -27,6 +27,9 @@ public class TestConfiguration : IEntityTypeConfiguration<TestEntity>
             .IsRequired()
             .HasMaxLength(75);
 
+        builder.HasIndex(x => x.Title)
+            .IsUnique();
+
         builder.Property(x => x.Description)
             .IsRequired()
             .HasMaxLength(750);

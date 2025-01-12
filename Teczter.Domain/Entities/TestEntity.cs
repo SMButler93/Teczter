@@ -1,11 +1,11 @@
-﻿using Teczter.Domain.ValueObjects;
+﻿using Teczter.Domain.Enums;
+using Teczter.Domain.ValueObjects;
 
 namespace Teczter.Domain.Entities;
 
 public class TestEntity
 {
-    private readonly string[] Pillars = { "ACCOUNTING", "CORE", "OPERATIONS", "TRADING", "UNOWNED" };
-    private string _pillar = "UNOWNED";
+    private string _owningPillar = Pillar.UNOWNED.ToString();
 
     public Guid Id { get; private set; }
     public bool IsDeleted { get; set; }
@@ -16,25 +16,31 @@ public class TestEntity
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
     public List<LinkUrl> LinkUrls { get; set; } = [];
-
-    public string Pillar
+    public string OwningPillar
     {
         get
         {
-            return _pillar;
+            return _owningPillar;
         }
         set
         {
-            if (!Pillars.Contains(value.ToUpper()))
+            if (!ValidateOwningPillar(value))
             {
                 throw new ArgumentException($"{value} is an invalid pillar. Valid options: Accounting, Core, Operations, Trading or Unowned.");
             }
 
-            _pillar = value.ToUpper();
+            _owningPillar = value.ToUpper();
         }
     }
 
     public List<TestStepEntity> TestSteps { get; set; } = [];
+
+    private static bool ValidateOwningPillar(string pillar)
+    {
+        var validValues = Enum.GetNames(typeof(Pillar));
+
+        return validValues.Contains(pillar.ToUpper());
+    } 
 
     public void AddTestStep(TestStepEntity step)
     {

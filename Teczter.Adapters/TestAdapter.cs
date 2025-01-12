@@ -22,10 +22,20 @@ public class TestAdapter(TeczterDbContext dbContext) : ITestAdapter
             .SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public IQueryable<TestEntity> GetTestSearchBaseQuery()
+    public IQueryable<TestEntity> GetDetailedTestSearchBaseQuery()
     {
         return _dbContext.Tests
             .Include(x => x.TestSteps)
             .ThenInclude(y => y.LinkUrls);
+    }
+
+    public IQueryable<TestEntity> GetBasicTestSearchBaseQuery()
+    {
+        return _dbContext.Tests;
+    }
+
+    public Task<TestEntity> UpdateTest(TestEntity test)
+    {
+        throw new NotImplementedException();
     }
 }

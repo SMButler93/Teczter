@@ -19,32 +19,18 @@ public class TestService : ITestService
         _uow = uow;
     }
 
-    public async Task CreateNewTest(TestEntity test)
+    public async Task<TestEntity> CreateNewTest(TestEntity test)
     {
-        try
-        {
-            await _testAdapter.CreateNewTest(test);
-            await _uow.CommitChanges();
-        }
-        catch (DbUpdateException)
-        {
-            throw new InvalidOperationException("Failed to create the test");
-        }
+        await _testAdapter.CreateNewTest(test);
+        await _uow.CommitChanges();
+
+        return test;
     }
 
-    public async Task DeleteTest(Guid id)
+    public async Task DeleteTest(TestEntity test)
     {
-        var test = await _testAdapter.GetTestById(id) ?? throw new InvalidOperationException("Cannot delete a test that does not exist.");
-
-        try
-        {
-            test.Delete();
-            await _uow.CommitChanges();
-        }
-        catch (DbUpdateException dbEx)
-        {
-            throw new InvalidOperationException("Failed to delete the test.", dbEx);
-        }
+        test.Delete();
+        await _uow.CommitChanges();
     }
 
     public async Task<TestEntity?> GetTestById(Guid id)
@@ -54,16 +40,31 @@ public class TestService : ITestService
 
     public async Task<List<TestEntity>> GetTestSearchResults(string? testTitle, string? pillarOwner)
     {
-        var TestSearchQuery = _testAdapter.GetTestSearchBaseQuery();
-
+        var TestSearchQuery = _testAdapter.GetDetailedTestSearchBaseQuery();
+        
         TestSearchQuery = testTitle == null ? TestSearchQuery : TestSearchQuery.Where(x => x.Title.Contains(testTitle));
         TestSearchQuery = pillarOwner == null ? TestSearchQuery : TestSearchQuery.Where(x => x.Pillar == pillarOwner);
 
         return await TestSearchQuery.ToListAsync();
     }
 
-    public Task<TestEntity?> UpdateTest(TestEntity test)
+    public async Task<TestEntity> UpdateTest(TestEntity currentTest, TestEntity update)
     {
-        throw new NotImplementedException();
+        var revisedTest = UpdateTestValues(currentTest, update);
+
+        await _uow.CommitChanges();
+
+        return revisedTest;
+    }
+
+    private TestEntity UpdateTestValues(TestEntity currentTest, TestEntity update)
+    {
+        currentTest.RevisedOn = DateTime.Now;
+
+        currentTest.Title = update.Title;
+        currentTest.Description = update.Title;
+        currentTest.OwningPillar = update.OwningPillar;
+
+        return currentTest;
     }
 }
