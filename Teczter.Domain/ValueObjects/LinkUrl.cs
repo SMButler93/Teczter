@@ -16,11 +16,16 @@ public record LinkUrl
         {
             if (!ValidateLinkUrl(value))
             {
-                throw new ArgumentException("URL provided is not considered valid.");
+                throw new ArgumentException($"URL: {value} is not considered valid.");
             }
 
             _url = value;
         }
+    }
+
+    public LinkUrl(string url)
+    {
+        Url = url;
     }
 
     private bool ValidateLinkUrl(string url)
