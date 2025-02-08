@@ -26,7 +26,7 @@ public class TestEntity
         {
             if (!ValidateOwningPillar(value))
             {
-                throw new ArgumentException($"{value} is an invalid pillar. Valid options: Accounting, Core, Operations, Trading or Unowned.");
+                throw new ArgumentException($"{value} is an invalid pillar.");
             }
 
             _owningPillar = value.ToUpper();
@@ -47,6 +47,14 @@ public class TestEntity
         TestSteps.Insert(step.StepPlacement - 1, step);
         SetCorrectStepPlacementValues();
         TestSteps.OrderBy(x => x.StepPlacement);
+    }
+
+    public void AddTestSteps(List<TestStepEntity> steps)
+    {
+        foreach(var step in steps)
+        {
+            AddTestStep(step);
+        }
     }
 
     public void RemoveTestStep(TestStepEntity step)

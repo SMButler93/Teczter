@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Teczter.Services.DTOs.Request;
 using Teczter.Services.ServiceInterfaces;
-using Teczter.WebApi.DTOs.Request;
-using Teczter.WebApi.DTOs.Response;
-using Teczter.WebApi.Mappers;
+using Teczter.WebApi.ResponseDtos;
 
 namespace Teczter.Services.Controllers;
 
@@ -59,32 +58,92 @@ public class TestController : ControllerBase
 
     [HttpPost]
     [Route("/CreateTest")]
-    public async Task<IActionResult> CreateTest([FromBody] CreateTestRequestDto request)
+    public async Task<IActionResult> CreateTest([FromBody] TestCommandRequestDto request)
     {
-        var entity = DtoMapper.MapToEntity(request);
+        var test = await _testService.CreateNewTest(request);
 
-        entity = await _testService.CreateNewTest(entity);
-
-        var dto = new TestDetailedDto(entity);
+        var dto = new TestDetailedDto(test);
 
         return CreatedAtAction(nameof(GetTest), new { dto.Id }, dto);
     }
 
     [HttpPut]
     [Route("/{id:guid}/Update")]
-    public async Task<IActionResult> UpdateTest(Guid id, CreateTestRequestDto request)
+    public async Task<IActionResult> UpdateTest(Guid id, TestCommandRequestDto request)
     {
-        var currentTest = await _testService.GetTestById(id);
+        var test = await _testService.GetTestById(id);
 
-        if (currentTest == null)
+        if (test == null)
         {
             return NotFound($"Test {id} does not exist");
         }
 
-        var entity = DtoMapper.MapToEntity(request);
+        await _testService.UpdateTest(test, request);
 
-        entity = await _testService.UpdateTest(currentTest, entity);
+        return Ok(new TestDetailedDto(test));
+    }
 
-        return Ok(new TestDetailedDto(entity));
+    [HttpPut]
+    [Route("/{id:guid}/AddUrlResource")]
+    public async Task<IActionResult> AddLinkUrl(Guid id, [FromBody] string url)
+    {
+        var test = await _testService.GetTestById(id);
+
+        if (test == null)
+        {
+            return NotFound($"Test {id} does not exist");
+        }
+
+        await _testService.AddLinkUrl(test, url);
+
+        return Ok(new TestDetailedDto(test));
+    }
+
+    [HttpPut]
+    [Route("/{id:guid}/RemoveUrlResource")]
+    public async Task<IActionResult> RemoveLinkUrl(Guid id, [FromBody] string url)
+    {
+        var test = await _testService.GetTestById(id);
+
+        if (test == null)
+        {
+            return NotFound($"test {id} does not exist.");
+        }
+
+        await _testService.RemoveLinkUrl(test, url);
+
+        return Ok(new TestDetailedDto(test));
+    }
+
+    [HttpPut]
+    [Route("/{id:guid}/AddTestStep")]
+    public async Task<IActionResult> AddTestStep(Guid id, [FromBody] TestStepCommandRequestDto request)
+    {
+        var test = await _testService.GetTestById(id);
+
+        if (test == null)
+        {
+            return NotFound($"Test {id} does not exist");
+        }
+
+        await _testService.AddTestStep(test, request);
+
+        return Ok(new TestDetailedDto(test));
+    }
+
+    [HttpPut]
+    [Route("/{testId:guid}/RemoveTestStep/{testStepId:guid}")]
+    public async Task<IActionResult> RemoveTestStep(Guid testId, Guid testStepId)
+    {
+        var test = await _testService.GetTestById(testId);
+
+        if (test == null)
+        {
+            return NotFound($"test {testId} does not exist.");
+        }
+
+        await _testService.RemoveTestStep(test, testStepId);
+
+        return Ok(new TestDetailedDto(test));
     }
 }

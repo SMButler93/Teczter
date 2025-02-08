@@ -17,25 +17,13 @@ public class TestAdapter(TeczterDbContext dbContext) : ITestAdapter
     public async Task<TestEntity?> GetTestById(Guid id)
     {
         return await _dbContext.Tests
-            .Include(x => x.TestSteps)
-            .ThenInclude(y => y.LinkUrls)
+            .Include(x => x.TestSteps.OrderBy(y => y.StepPlacement))
+            .ThenInclude(z => z.LinkUrls)
             .SingleOrDefaultAsync(x => x.Id == id);
-    }
-
-    public IQueryable<TestEntity> GetDetailedTestSearchBaseQuery()
-    {
-        return _dbContext.Tests
-            .Include(x => x.TestSteps)
-            .ThenInclude(y => y.LinkUrls);
     }
 
     public IQueryable<TestEntity> GetBasicTestSearchBaseQuery()
     {
         return _dbContext.Tests;
-    }
-
-    public Task<TestEntity> UpdateTest(TestEntity test)
-    {
-        throw new NotImplementedException();
     }
 }
