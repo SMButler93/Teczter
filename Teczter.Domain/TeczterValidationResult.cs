@@ -1,21 +1,21 @@
 ﻿namespace Teczter.Domain;
 
-public class CzValidationResult
+public class TeczterValidationResult
 {
     public bool Success { get; set; }
     public string? Message { get; set; }
 
-    public static CzValidationResult Succeed()
+    public static TeczterValidationResult Succeed()
     {
-        return new CzValidationResult
+        return new TeczterValidationResult
         {
             Success = true
         };
     }
 
-    public static CzValidationResult Fail(string message)
+    public static TeczterValidationResult Fail(string message)
     {
-        return new CzValidationResult
+        return new TeczterValidationResult
         {
             Success = false,
             Message = message

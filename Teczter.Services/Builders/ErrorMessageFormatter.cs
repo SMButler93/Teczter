@@ -5,7 +5,7 @@ namespace Teczter.Services.Builders;
 
 public static class ErrorMessageFormatter
 {
-    public static string CreateValidationErrorMessage(CzValidationResult[] errors)
+    public static string CreateValidationErrorMessage(TeczterValidationResult[] errors)
     {
         var sb = new StringBuilder();
         var errorCount = 0;

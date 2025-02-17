@@ -4,5 +4,5 @@ namespace Teczter.Services.Validation.Validators;
 
 public interface IValidator<T>
 {
-    public CzValidationResult Validate(T subject);
+    public TeczterValidationResult Validate(T subject);
 }
