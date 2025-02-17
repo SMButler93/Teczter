@@ -6,7 +6,7 @@ namespace Teczter.Services.Validation.ValidationRules;
 
 public class TestValidationRuleProvider : AbstractValidationRulesProvider<TestEntity>
 {
-    public override List<Func<TestEntity, CzValidationResult>> GetRules()
+    public override List<Func<TestEntity, TeczterValidationResult>> GetRules()
     {
         return GetRules(typeof(TestValidationRules));
     }
@@ -14,7 +14,7 @@ public class TestValidationRuleProvider : AbstractValidationRulesProvider<TestEn
 
 public class TestStepValidationRuleProvider : AbstractValidationRulesProvider<TestStepEntity>
 {
-    public override List<Func<TestStepEntity, CzValidationResult>> GetRules()
+    public override List<Func<TestStepEntity, TeczterValidationResult>> GetRules()
     {
         return GetRules(typeof(TestStepValidationRules));
     }

@@ -6,9 +6,9 @@ namespace Teczter.Services.Validation.Validators
 {
     public class Validator<T>(AbstractValidationRulesProvider<T> ruleProvider) : IValidator<T>
     {
-        private readonly List<Func<T, CzValidationResult>> _rules = ruleProvider.GetRules();
+        private readonly List<Func<T, TeczterValidationResult>> _rules = ruleProvider.GetRules();
 
-        public CzValidationResult Validate(T subject)
+        public TeczterValidationResult Validate(T subject)
         {
             var results = _rules.Select(validation => validation(subject));
 
@@ -17,10 +17,10 @@ namespace Teczter.Services.Validation.Validators
             if (failures.Length > 0)
             {
                 var errorMessage = ErrorMessageFormatter.CreateValidationErrorMessage(failures);
-                return CzValidationResult.Fail(errorMessage);
+                return TeczterValidationResult.Fail(errorMessage);
             }
 
-            return CzValidationResult.Succeed();
+            return TeczterValidationResult.Succeed();
         }
     }
 }

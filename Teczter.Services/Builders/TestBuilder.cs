@@ -38,7 +38,7 @@ namespace Teczter.Services.Builders
 
                 if (!stepValidationResults.Success)
                 {
-                    throw new CzValidationException(stepValidationResults.Message!);
+                    throw new TeczterValidationException(stepValidationResults.Message!);
                 }
 
                 testStepEntities.Add(stepEntity);
