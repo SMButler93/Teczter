@@ -12,7 +12,7 @@ public class ExecutionGroupEntity
     public int RevisedById { get; set; }
     public string ExecutionGroupName { get; private set; } = null!;
     public DateTime? ClosedDate { get; private set; } = null;
-    public bool IsComplete => Executions.All(x => x.ExecutionState != ExecutionStateType.UNTESTED.ToString());
+    public bool IsComplete => Executions.All(x => x.ExecutionState != ExecutionStateType.Untested.ToString());
     public bool IsClosed => ClosedDate.HasValue;
     public List<string> ExecutionGroupNotes { get; set; } = [];
 

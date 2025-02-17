@@ -3,10 +3,9 @@ using Teczter.Adapters.AdapterInterfaces;
 using Teczter.Domain.Entities;
 using Teczter.Domain.ValueObjects;
 using Teczter.Persistence;
-using Teczter.Services.Builders;
 using Teczter.Services.DTOs.Request;
 using Teczter.Services.ServiceInterfaces;
-using Teczter.Services.Validators.ValidatorAbstractions;
+using Teczter.Services.Validation.Validators;
 
 namespace Teczter.Services;
 
@@ -16,14 +15,14 @@ public class TestService : ITestService
     private readonly ITestStepService _testStepService;
     private readonly ITestBuilder _builder;
     private readonly IUnitOfWork _uow;
-    private readonly CzAbstractValidator<TestEntity> _testValidator;
+    private readonly IValidator<TestEntity> _testValidator;
 
     public TestService(
         ITestAdapter testAdapter,
         ITestStepService testStepService,
         ITestBuilder builder,
         IUnitOfWork uow,
-        CzAbstractValidator<TestEntity> testValidator)
+        IValidator<TestEntity> testValidator)
     {
         _testAdapter = testAdapter;
         _testStepService = testStepService;
@@ -103,16 +102,12 @@ public class TestService : ITestService
 
     public async Task RemoveTestStep(TestEntity test, Guid testStepId)
     {
-        var testStep = await _testStepService.GetTestStepById(testStepId);
-
-        if (testStep == null || testStep.Test.Id != test.Id)
-        {
-            throw new InvalidOperationException("Cannot Remove a test step that does not exit or is does not belong to this test.");
-        }
-
-        ValidateTestState(test);
+        var testStep = test.TestSteps.SingleOrDefault(s => s.Id == testStepId) ?? 
+            throw new InvalidOperationException("Cannot Remove a test step that does not exist, or does not belong to this test.");
 
         test.RemoveTestStep(testStep);
+        ValidateTestState(test);
+
         await _uow.CommitChanges();
     }
 
@@ -130,11 +125,11 @@ public class TestService : ITestService
 
     private void ValidateTestState(TestEntity test)
     {
-        var results = _testValidator.Validate(test);
+        var result = _testValidator.Validate(test);
 
-        if (!results[0].Success)
+        if (!result.Success)
         {
-            throw new InvalidOperationException(ErrorMessageFormatter.CreateValidationErrorMessage(results));
+            throw new InvalidOperationException(result.Message);
         }
     }
 }

@@ -3,13 +3,14 @@ using Teczter.Domain.Exceptions;
 using Teczter.Domain.ValueObjects;
 using Teczter.Services.DTOs.Request;
 using Teczter.Services.ServiceInterfaces;
-using Teczter.Services.Validators.ValidatorAbstractions;
+using Teczter.Services.Validation.Validators;
 
 namespace Teczter.Services.Builders
 {
-    internal class TestBuilder(CzAbstractValidator<TestStepEntity> testStepValidator) : ITestBuilder
+    internal class TestBuilder(IValidator<TestEntity> testValidator, IValidator<TestStepEntity> testStepValidator) : ITestBuilder
     {
-        private readonly CzAbstractValidator<TestStepEntity> _testStepValidator = testStepValidator;
+        private readonly IValidator<TestEntity> _testValidator = testValidator;
+        private readonly IValidator<TestStepEntity> _testStepValidator = testStepValidator;
 
         private TestEntity _test = null!;
 
@@ -33,11 +34,11 @@ namespace Teczter.Services.Builders
                     LinkUrls = step.LinkUrls
                 };
 
-                var validationResults = _testStepValidator.Validate(stepEntity);
+                var stepValidationResults = _testStepValidator.Validate(stepEntity);
 
-                if (!validationResults[0].Success)
+                if (!stepValidationResults.Success)
                 {
-                    throw new CzValidationException(ErrorMessageFormatter.CreateValidationErrorMessage(validationResults));
+                    throw new CzValidationException(stepValidationResults.Message!);
                 }
 
                 testStepEntities.Add(stepEntity);
@@ -114,6 +115,7 @@ namespace Teczter.Services.Builders
 
         public TestEntity Build()
         {
+            var validationResult = _testValidator.Validate(_test);
             return _test;
         }
 

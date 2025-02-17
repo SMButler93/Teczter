@@ -2,7 +2,7 @@
 
 public enum ExecutionStateType
 {
-    PASS = 1,
-    FAIL = 2,
-    UNTESTED = 3
+    Pass = 1,
+    Fail = 2,
+    Untested = 3
 }
