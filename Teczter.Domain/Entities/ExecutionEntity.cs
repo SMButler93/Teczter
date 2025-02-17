@@ -4,7 +4,7 @@ namespace Teczter.Domain.Entities;
 
 public class ExecutionEntity
 {
-    private string _executionState = ExecutionStateType.UNTESTED.ToString();
+    private string _executionState = ExecutionStateType.Untested.ToString();
 
     public Guid Id { get; private set; }
     public Guid ExecutionGroupId { get; init; }
@@ -15,7 +15,7 @@ public class ExecutionEntity
     public DateTime RevisedOn { get; set; } = DateTime.Now;
     public int RevisedById { get; set; }
     public Guid TestId { get; set; }
-    public bool HasPassed => ExecutionState == ExecutionStateType.PASS.ToString();
+    public bool HasPassed => ExecutionState == ExecutionStateType.Pass.ToString();
     public Guid? FailedStepId { get; private set; } = null;
     public string? FailureReason { get; private set; } = null;
     public int? TestedById { get; private set; } = null;
@@ -50,7 +50,7 @@ public class ExecutionEntity
     public void Pass(int userId)
     {
         TestedById = userId;
-        ExecutionState = ExecutionStateType.PASS.ToString();
+        ExecutionState = ExecutionStateType.Pass.ToString();
     }
 
     public void Fail(int userId, Guid testStepId, string failureReason)
@@ -58,7 +58,7 @@ public class ExecutionEntity
         TestedById = userId;
         FailedStepId = testStepId;
         FailureReason = failureReason;
-        ExecutionState = ExecutionStateType.FAIL.ToString();
+        ExecutionState = ExecutionStateType.Fail.ToString();
     }
 
     public void AddNotes(string notes)

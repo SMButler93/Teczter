@@ -2,9 +2,9 @@
 
 public enum Pillar
 {
-    ACCOUNTING = 1,
-    CORE = 2,
-    OPERATIONS = 3,
-    TRADING = 4,
-    UNOWNED = 5
+    Accounting = 1,
+    Core = 2,
+    Operations = 3,
+    Trading = 4,
+    Unowned = 5
 }

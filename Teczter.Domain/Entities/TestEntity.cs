@@ -5,7 +5,7 @@ namespace Teczter.Domain.Entities;
 
 public class TestEntity
 {
-    private string _owningPillar = Pillar.UNOWNED.ToString();
+    private string _owningPillar = Pillar.Unowned.ToString();
 
     public Guid Id { get; private set; }
     public bool IsDeleted { get; set; }
@@ -18,10 +18,8 @@ public class TestEntity
     public List<LinkUrl> LinkUrls { get; set; } = [];
     public string OwningPillar
     {
-        get
-        {
-            return _owningPillar;
-        }
+        get => _owningPillar;
+
         set
         {
             if (!ValidateOwningPillar(value))
@@ -39,7 +37,7 @@ public class TestEntity
     {
         var validValues = Enum.GetNames(typeof(Pillar));
 
-        return validValues.Contains(pillar.ToUpper());
+        return validValues.Contains(pillar);
     } 
 
     public void AddTestStep(TestStepEntity step)

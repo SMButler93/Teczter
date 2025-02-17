@@ -26,6 +26,6 @@ public class CreateOrUpdateTestRequestValidator : AbstractValidator<TestCommandR
 
     private bool OwningPillarIsValidValue(string pillar)
     {
-        return Pillars.Contains(pillar.ToUpper());
+        return Pillars.Contains(pillar);
     }
 }
