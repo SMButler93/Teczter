@@ -3,9 +3,9 @@ using Teczter.Domain;
 
 namespace Teczter.Services.Builders;
 
-public static class ErrorMessageFormatter
+public static class ErrorMessageBuilder
 {
-    public static string CreateValidationErrorMessage(TeczterValidationResult[] errors)
+    public static string CreateValidationErrorMessage(IEnumerable<string> errors)
     {
         var sb = new StringBuilder();
         var errorCount = 0;
@@ -14,7 +14,7 @@ public static class ErrorMessageFormatter
 
         foreach (var error in errors)
         {
-            sb.AppendLine($"\n\t{++errorCount}. {error.Message}");
+            sb.AppendLine($"\n\t{++errorCount}. {error}");
         }
 
         return sb.ToString();

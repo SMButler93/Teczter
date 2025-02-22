@@ -6,7 +6,7 @@ namespace Teczter.Services.ServiceInterfaces;
 public interface ITestService
 {
     Task<TestEntity> CreateNewTest(TestCommandRequestDto test);
-    Task<List<TestEntity>> GetTestSearchResults(string? testName, string? pillarOwner);
+    Task<List<TestEntity>> GetTestSearchResults(string? testTitle, string? pillarOwner);
     Task<TestEntity?> GetTestById(Guid id);
     Task DeleteTest(TestEntity test);
     Task UpdateTest(TestEntity test, TestCommandRequestDto testUpdates);

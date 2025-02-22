@@ -1,9 +1,9 @@
-﻿using Teczter.Domain.Entities;
+﻿using FluentValidation;
+using Teczter.Domain.Entities;
 using Teczter.Domain.Exceptions;
 using Teczter.Domain.ValueObjects;
 using Teczter.Services.DTOs.Request;
 using Teczter.Services.ServiceInterfaces;
-using Teczter.Services.Validation.Validators;
 
 namespace Teczter.Services.Builders
 {
@@ -36,9 +36,10 @@ namespace Teczter.Services.Builders
 
                 var stepValidationResults = _testStepValidator.Validate(stepEntity);
 
-                if (!stepValidationResults.Success)
+                if (!stepValidationResults.IsValid)
                 {
-                    throw new TeczterValidationException(stepValidationResults.Message!);
+                    var errorMessages = stepValidationResults.Errors.Select(x => x.ErrorMessage);
+                    throw new TeczterValidationException(ErrorMessageBuilder.CreateValidationErrorMessage(errorMessages));
                 }
 
                 testStepEntities.Add(stepEntity);

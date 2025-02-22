@@ -1,18 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Teczter.Adapters.AdapterInterfaces;
 using Teczter.Domain.Entities;
 using Teczter.Domain.ValueObjects;
 using Teczter.Persistence;
+using Teczter.Services.Builders;
 using Teczter.Services.DTOs.Request;
 using Teczter.Services.ServiceInterfaces;
-using Teczter.Services.Validation.Validators;
 
 namespace Teczter.Services;
 
 public class TestService : ITestService
 {
     private readonly ITestAdapter _testAdapter;
-    private readonly ITestStepService _testStepService;
     private readonly ITestBuilder _builder;
     private readonly IUnitOfWork _uow;
     private readonly IValidator<TestEntity> _testValidator;
@@ -25,7 +25,6 @@ public class TestService : ITestService
         IValidator<TestEntity> testValidator)
     {
         _testAdapter = testAdapter;
-        _testStepService = testStepService;
         _builder = builder;
         _uow = uow;
         _testValidator = testValidator;
@@ -55,12 +54,12 @@ public class TestService : ITestService
             .NewInstance()
             .SetTitle(request.Title)
             .SetDescription(request.Description)
-            .SetPillarOwner(request.Pillar)
+            .SetPillarOwner(request.OwningPillar)
             .AddLinkUrls(request.LinkUrls)
             .AddSteps(request.TestSteps)
             .Build();
 
-        ValidateTestState(test);
+        await ValidateTestState(test);
 
         await _testAdapter.CreateNewTest(test);
         await _uow.CommitChanges();
@@ -94,7 +93,7 @@ public class TestService : ITestService
         var linkUrl = test.LinkUrls.SingleOrDefault(x => x.Url == url) ?? 
             throw new InvalidOperationException("Cannot remove a link that does not belong to this test");
 
-        ValidateTestState(test);
+        await ValidateTestState(test);
 
         test.RemoveLinkUrl(linkUrl);
         await _uow.CommitChanges();
@@ -106,7 +105,7 @@ public class TestService : ITestService
             throw new InvalidOperationException("Cannot Remove a test step that does not exist, or does not belong to this test.");
 
         test.RemoveTestStep(testStep);
-        ValidateTestState(test);
+        await ValidateTestState(test);
 
         await _uow.CommitChanges();
     }
@@ -116,20 +115,21 @@ public class TestService : ITestService
         _builder.UsingContext(test)
             .SetTitle(testUpdates.Title)
             .SetDescription(testUpdates.Description)
-            .SetPillarOwner(testUpdates.Pillar);
+            .SetPillarOwner(testUpdates.OwningPillar);
 
-        ValidateTestState(test);
+        await ValidateTestState(test);
 
         await _uow.CommitChanges();
     }
 
-    private void ValidateTestState(TestEntity test)
+    private async Task ValidateTestState(TestEntity test)
     {
-        var result = _testValidator.Validate(test);
+        var result = await _testValidator.ValidateAsync(test);
 
-        if (!result.Success)
+        if (!result.IsValid)
         {
-            throw new InvalidOperationException(result.Message);
+            var errorMessages = result.Errors.Select(x => x.ErrorMessage);
+            throw new InvalidOperationException(ErrorMessageBuilder.CreateValidationErrorMessage(errorMessages));
         }
     }
 }
