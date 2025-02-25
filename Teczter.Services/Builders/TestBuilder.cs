@@ -116,7 +116,6 @@ namespace Teczter.Services.Builders
 
         public TestEntity Build()
         {
-            var validationResult = _testValidator.Validate(_test);
             return _test;
         }
 

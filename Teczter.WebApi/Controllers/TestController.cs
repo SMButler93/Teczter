@@ -60,9 +60,14 @@ public class TestController : ControllerBase
     [Route("/CreateTest")]
     public async Task<IActionResult> CreateTest([FromBody] TestCommandRequestDto request)
     {
-        var test = await _testService.CreateNewTest(request);
+        var validatedtest = await _testService.CreateNewTest(request);
 
-        var dto = new TestDetailedDto(test);
+        if (!validatedtest.IsValid)
+        {
+            return BadRequest(validatedtest.ErrorMessages);
+        }
+
+        var dto = new TestDetailedDto(validatedtest.Value!);
 
         return CreatedAtAction(nameof(GetTest), new { dto.Id }, dto);
     }
@@ -78,7 +83,12 @@ public class TestController : ControllerBase
             return NotFound($"Test {id} does not exist");
         }
 
-        await _testService.UpdateTest(test, request);
+        var validatedTest = await _testService.UpdateTest(test, request);
+
+        if (!validatedTest.IsValid)
+        {
+            return BadRequest(validatedTest.ErrorMessages);
+        }
 
         return Ok(new TestDetailedDto(test));
     }
@@ -94,7 +104,12 @@ public class TestController : ControllerBase
             return NotFound($"Test {id} does not exist");
         }
 
-        await _testService.AddLinkUrl(test, url);
+        var validatedTest = await _testService.AddLinkUrl(test, url);
+
+        if (!validatedTest.IsValid)
+        {
+            return BadRequest(validatedTest.ErrorMessages);
+        }
 
         return Ok(new TestDetailedDto(test));
     }
@@ -110,7 +125,12 @@ public class TestController : ControllerBase
             return NotFound($"test {id} does not exist.");
         }
 
-        await _testService.RemoveLinkUrl(test, url);
+        var validatedTest = await _testService.RemoveLinkUrl(test, url);
+
+        if (!validatedTest.IsValid)
+        {
+            return BadRequest(validatedTest.ErrorMessages);
+        }
 
         return Ok(new TestDetailedDto(test));
     }
@@ -126,7 +146,12 @@ public class TestController : ControllerBase
             return NotFound($"Test {id} does not exist");
         }
 
-        await _testService.AddTestStep(test, request);
+        var validatedTest = await _testService.AddTestStep(test, request);
+
+        if (!validatedTest.IsValid)
+        {
+            return BadRequest(validatedTest.ErrorMessages);
+        }
 
         return Ok(new TestDetailedDto(test));
     }
@@ -142,7 +167,12 @@ public class TestController : ControllerBase
             return NotFound($"test {testId} does not exist.");
         }
 
-        await _testService.RemoveTestStep(test, testStepId);
+        var validatedTest = await _testService.RemoveTestStep(test, testStepId);
+
+        if (!validatedTest.IsValid)
+        {
+            return BadRequest(validatedTest.ErrorMessages);
+        }
 
         return Ok(new TestDetailedDto(test));
     }

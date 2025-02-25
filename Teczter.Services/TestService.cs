@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Teczter.Adapters.AdapterInterfaces;
 using Teczter.Domain.Entities;
+using Teczter.Domain.ValidationObjects;
 using Teczter.Domain.ValueObjects;
 using Teczter.Persistence;
 using Teczter.Services.Builders;
@@ -30,25 +31,35 @@ public class TestService : ITestService
         _testValidator = testValidator;
     }
 
-    public async Task AddLinkUrl(TestEntity test, string url)
+    public async Task<TeczterValidationResult<TestEntity>> AddLinkUrl(TestEntity test, string url)
     {
         var linkUrl = new LinkUrl(url);
 
         _builder.UsingContext(test)
             .AddLinkUrl(linkUrl);
 
-        await _uow.CommitChanges();
+        var result = await ValidateTestState(test);
+
+        if (!result.IsValid) { _uow.Rollback(); }
+        if (result.IsValid) { await _uow.CommitChanges(); }
+
+        return result;
     }
 
-    public async Task AddTestStep(TestEntity test, TestStepCommandRequestDto testStep)
+    public async Task<TeczterValidationResult<TestEntity>> AddTestStep(TestEntity test, TestStepCommandRequestDto testStep)
     {
         _builder.UsingContext(test)
             .AddStep(testStep);
 
-        await _uow.CommitChanges();
+        var result = await ValidateTestState(test);
+
+        if (!result.IsValid) { _uow.Rollback(); }
+        if (result.IsValid) { await _uow.CommitChanges(); }
+
+        return result;
     }
 
-    public async Task<TestEntity> CreateNewTest(TestCommandRequestDto request)
+    public async Task<TeczterValidationResult<TestEntity>> CreateNewTest(TestCommandRequestDto request)
     {
         var test = _builder
             .NewInstance()
@@ -59,12 +70,16 @@ public class TestService : ITestService
             .AddSteps(request.TestSteps)
             .Build();
 
-        await ValidateTestState(test);
+        var result = await ValidateTestState(test);
 
-        await _testAdapter.CreateNewTest(test);
-        await _uow.CommitChanges();
+        if (!result.IsValid) { _uow.Rollback(); }
+        if (result.IsValid) 
+        {
+            await _testAdapter.CreateNewTest(test);
+            await _uow.CommitChanges(); 
+        }
 
-        return test;
+        return result;
     }
 
     public async Task DeleteTest(TestEntity test)
@@ -88,48 +103,59 @@ public class TestService : ITestService
         return await TestSearchQuery.ToListAsync();
     }
 
-    public async Task RemoveLinkUrl(TestEntity test, string url)
+    public async Task<TeczterValidationResult<TestEntity>> RemoveLinkUrl(TestEntity test, string url)
     {
         var linkUrl = test.LinkUrls.SingleOrDefault(x => x.Url == url) ?? 
             throw new InvalidOperationException("Cannot remove a link that does not belong to this test");
 
-        await ValidateTestState(test);
-
         test.RemoveLinkUrl(linkUrl);
-        await _uow.CommitChanges();
+
+        var result = await ValidateTestState(test);
+
+        if (!result.IsValid) { _uow.Rollback(); }
+        if (result.IsValid) { await _uow.CommitChanges(); }
+
+        return result;
     }
 
-    public async Task RemoveTestStep(TestEntity test, Guid testStepId)
+    public async Task<TeczterValidationResult<TestEntity>> RemoveTestStep(TestEntity test, Guid testStepId)
     {
         var testStep = test.TestSteps.SingleOrDefault(s => s.Id == testStepId) ?? 
             throw new InvalidOperationException("Cannot Remove a test step that does not exist, or does not belong to this test.");
 
         test.RemoveTestStep(testStep);
-        await ValidateTestState(test);
+        var result = await ValidateTestState(test);
 
-        await _uow.CommitChanges();
+        if (!result.IsValid) { _uow.Rollback(); }
+        if (result.IsValid) { await _uow.CommitChanges(); }
+
+        return result;
     }
 
-    public async Task UpdateTest(TestEntity test, TestCommandRequestDto testUpdates)
+    public async Task<TeczterValidationResult<TestEntity>> UpdateTest(TestEntity test, TestCommandRequestDto testUpdates)
     {
         _builder.UsingContext(test)
             .SetTitle(testUpdates.Title)
             .SetDescription(testUpdates.Description)
             .SetPillarOwner(testUpdates.OwningPillar);
 
-        await ValidateTestState(test);
+        var result = await ValidateTestState(test);
 
-        await _uow.CommitChanges();
+        if (!result.IsValid) { _uow.Rollback(); }
+        if(result.IsValid) { await _uow.CommitChanges(); }
+
+        return result;
     }
 
-    private async Task ValidateTestState(TestEntity test)
+    private async Task<TeczterValidationResult<TestEntity>> ValidateTestState(TestEntity test)
     {
         var result = await _testValidator.ValidateAsync(test);
 
         if (!result.IsValid)
         {
-            var errorMessages = result.Errors.Select(x => x.ErrorMessage);
-            throw new InvalidOperationException(ErrorMessageBuilder.CreateValidationErrorMessage(errorMessages));
+            return TeczterValidationResult<TestEntity>.Fail(result.Errors.Select(x => x.ErrorMessage).ToArray());
         }
+
+        return TeczterValidationResult<TestEntity>.Succeed(test);
     }
 }

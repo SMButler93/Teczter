@@ -16,7 +16,7 @@ public class TestCommandRequestValidator : AbstractValidator<TestCommandRequestD
 
         RuleFor(x => x.Title)
             .NotEmpty().WithMessage("A test must have a title.")
-            .MustAsync(BeUniqueTitle).WithMessage("A test must have a unique title.");
+            .Must(BeUniqueTitle).WithMessage("A test must have a unique title.");
 
         RuleFor(x => x.Description)
             .NotEmpty().WithMessage("A test must have a description");
@@ -29,9 +29,9 @@ public class TestCommandRequestValidator : AbstractValidator<TestCommandRequestD
             .SetValidator(new TestStepCommandRequestValidator());
     }
 
-    private async Task<bool> BeUniqueTitle(string title, CancellationToken token)
+    private bool BeUniqueTitle(string title)
     {
-        var existingTests = await _testValidationRepository.GetTestEntitiesWithTitle(title).ConfigureAwait(false);
+        var existingTests = _testValidationRepository.GetTestEntitiesWithTitle(title).Result;
         return existingTests.Count == 0;
     }
 

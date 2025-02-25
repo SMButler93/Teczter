@@ -9,10 +9,14 @@ namespace Teczter.Services.Validation;
 public class TestValidator : AbstractValidator<TestEntity>
 {
     private readonly ITestValidationRepository _testValidationRepository;
+    private readonly IValidator<TestStepEntity> _testStepValidator;
 
-    public TestValidator(ITestValidationRepository testValidationRepository)
+    public TestValidator(
+        ITestValidationRepository testValidationRepository,
+        IValidator<TestStepEntity> testStepValidator)
     {
         _testValidationRepository = testValidationRepository;
+        _testStepValidator = testStepValidator;
 
         RuleFor(x => x.Title)
             .NotEmpty().WithMessage("A test must have a title.")
@@ -35,7 +39,10 @@ public class TestValidator : AbstractValidator<TestEntity>
 
         RuleFor(x => x.TestSteps)
             .Must(HaveNoDuplicateStepPlacements).WithMessage("An error has occured with the test step placements being duplicated.")
-            .Must(HasNoMissingStepPlacements).WithMessage("An error has occured with test step placements not being sequential.");
+            .Must(HaveNoMissingStepPlacements).WithMessage("An error has occured with test step placements not being sequential.");
+
+        RuleForEach(x => x.TestSteps)
+            .SetValidator(_testStepValidator);
     }
 
     private async Task<bool> BeUniqueTitle(string title, CancellationToken token)
@@ -56,7 +63,7 @@ public class TestValidator : AbstractValidator<TestEntity>
         return distinctStepPlacements.Count == testSteps.Count;
     }
 
-    private bool HasNoMissingStepPlacements(List<TestStepEntity> testSteps)
+    private bool HaveNoMissingStepPlacements(List<TestStepEntity> testSteps)
     {
         var stepPlacements = testSteps.Select(x => x.StepPlacement).ToArray();
 
