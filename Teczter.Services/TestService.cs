@@ -7,6 +7,7 @@ using Teczter.Domain.ValueObjects;
 using Teczter.Persistence;
 using Teczter.Services.Builders;
 using Teczter.Services.DTOs.Request;
+using Teczter.Services.RequestDtos.Request;
 using Teczter.Services.ServiceInterfaces;
 
 namespace Teczter.Services;
@@ -59,7 +60,7 @@ public class TestService : ITestService
         return result;
     }
 
-    public async Task<TeczterValidationResult<TestEntity>> CreateNewTest(TestCommandRequestDto request)
+    public async Task<TeczterValidationResult<TestEntity>> CreateNewTest(CreateTestRequestDto request)
     {
         var test = _builder
             .NewInstance()
@@ -132,7 +133,7 @@ public class TestService : ITestService
         return result;
     }
 
-    public async Task<TeczterValidationResult<TestEntity>> UpdateTest(TestEntity test, TestCommandRequestDto testUpdates)
+    public async Task<TeczterValidationResult<TestEntity>> UpdateTest(TestEntity test, UpdateTestRequestDto testUpdates)
     {
         _builder.UsingContext(test)
             .SetTitle(testUpdates.Title)

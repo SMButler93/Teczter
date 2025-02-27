@@ -6,11 +6,11 @@ using Teczter.Services.ServiceInterfaces;
 
 namespace Teczter.WebApi.RequestValidations;
 
-public class TestCommandRequestValidator : AbstractValidator<TestCommandRequestDto>
+public class CreateTestRequestValidator : AbstractValidator<CreateTestRequestDto>
 {
     private readonly ITestValidationRepository _testValidationRepository;
 
-    public TestCommandRequestValidator(ITestValidationRepository testValidationrespository)
+    public CreateTestRequestValidator(ITestValidationRepository testValidationrespository)
     {
         _testValidationRepository = testValidationrespository;
 

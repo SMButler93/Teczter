@@ -3,7 +3,7 @@ using Teczter.Domain.ValueObjects;
 
 namespace Teczter.Services.DTOs.Request;
 
-public class TestCommandRequestDto
+public class CreateTestRequestDto
 {
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;

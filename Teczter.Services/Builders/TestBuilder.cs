@@ -34,14 +34,6 @@ namespace Teczter.Services.Builders
                     LinkUrls = step.LinkUrls
                 };
 
-                var stepValidationResults = _testStepValidator.Validate(stepEntity);
-
-                if (!stepValidationResults.IsValid)
-                {
-                    var errorMessages = stepValidationResults.Errors.Select(x => x.ErrorMessage);
-                    throw new TeczterValidationException(ErrorMessageBuilder.CreateValidationErrorMessage(errorMessages));
-                }
-
                 testStepEntities.Add(stepEntity);
             }
 

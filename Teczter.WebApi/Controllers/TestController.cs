@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Teczter.Services.DTOs.Request;
+using Teczter.Services.RequestDtos.Request;
 using Teczter.Services.ServiceInterfaces;
 using Teczter.WebApi.ResponseDtos;
 
@@ -58,7 +59,7 @@ public class TestController : ControllerBase
 
     [HttpPost]
     [Route("/CreateTest")]
-    public async Task<IActionResult> CreateTest([FromBody] TestCommandRequestDto request)
+    public async Task<IActionResult> CreateTest([FromBody] CreateTestRequestDto request)
     {
         var validatedtest = await _testService.CreateNewTest(request);
 
@@ -73,8 +74,8 @@ public class TestController : ControllerBase
     }
 
     [HttpPut]
-    [Route("/{id:guid}/Update")]
-    public async Task<IActionResult> UpdateTest(Guid id, TestCommandRequestDto request)
+    [Route("/{id:guid}/UpdateTestDetails")]
+    public async Task<IActionResult> UpdateTest(Guid id, UpdateTestRequestDto request)
     {
         var test = await _testService.GetTestById(id);
 

@@ -10,6 +10,6 @@ public class TestValidationRespository(TeczterDbContext dbContext) : ITestValida
 
     public async Task<List<TestEntity>> GetTestEntitiesWithTitle(string title)
     {
-        return await _dbContext.Tests.Where(x => x.Title == title).ToListAsync();
+        return await _dbContext.Tests.Where(x => x.Title.ToLower() == title.ToLower()).ToListAsync();
     }
 }
