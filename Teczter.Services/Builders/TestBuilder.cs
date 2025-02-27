@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Teczter.Domain.Entities;
-using Teczter.Domain.Exceptions;
 using Teczter.Domain.ValueObjects;
 using Teczter.Services.DTOs.Request;
 using Teczter.Services.ServiceInterfaces;

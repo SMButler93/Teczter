@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 using Teczter.Adapters.AdapterInterfaces;
 using Teczter.Domain.Entities;
@@ -41,9 +42,7 @@ public class TestService : ITestService
 
         var result = await ValidateTestState(test);
 
-        if (!result.IsValid) { _uow.Rollback(); }
-        if (result.IsValid) { await _uow.CommitChanges(); }
-
+        await EvaluateValidationResultAndPersistence(result);
         return result;
     }
 
@@ -54,9 +53,7 @@ public class TestService : ITestService
 
         var result = await ValidateTestState(test);
 
-        if (!result.IsValid) { _uow.Rollback(); }
-        if (result.IsValid) { await _uow.CommitChanges(); }
-
+        await EvaluateValidationResultAndPersistence(result);
         return result;
     }
 
@@ -73,13 +70,7 @@ public class TestService : ITestService
 
         var result = await ValidateTestState(test);
 
-        if (!result.IsValid) { _uow.Rollback(); }
-        if (result.IsValid) 
-        {
-            await _testAdapter.CreateNewTest(test);
-            await _uow.CommitChanges(); 
-        }
-
+        await EvaluateValidationResultAndPersistence(result);
         return result;
     }
 
@@ -113,9 +104,7 @@ public class TestService : ITestService
 
         var result = await ValidateTestState(test);
 
-        if (!result.IsValid) { _uow.Rollback(); }
-        if (result.IsValid) { await _uow.CommitChanges(); }
-
+        await EvaluateValidationResultAndPersistence(result);
         return result;
     }
 
@@ -127,9 +116,7 @@ public class TestService : ITestService
         test.RemoveTestStep(testStep);
         var result = await ValidateTestState(test);
 
-        if (!result.IsValid) { _uow.Rollback(); }
-        if (result.IsValid) { await _uow.CommitChanges(); }
-
+        await EvaluateValidationResultAndPersistence(result);
         return result;
     }
 
@@ -142,9 +129,7 @@ public class TestService : ITestService
 
         var result = await ValidateTestState(test);
 
-        if (!result.IsValid) { _uow.Rollback(); }
-        if(result.IsValid) { await _uow.CommitChanges(); }
-
+        await EvaluateValidationResultAndPersistence(result);
         return result;
     }
 
@@ -158,5 +143,16 @@ public class TestService : ITestService
         }
 
         return TeczterValidationResult<TestEntity>.Succeed(test);
+    }
+
+    private async Task EvaluateValidationResultAndPersistence(TeczterValidationResult<TestEntity> result)
+    {
+        if (!result.IsValid)
+        {
+            _uow.Rollback();
+            return;
+        }
+
+        await _uow.CommitChanges();
     }
 }
