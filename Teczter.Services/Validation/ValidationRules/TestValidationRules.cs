@@ -1,27 +1,42 @@
-﻿using Teczter.Domain;
+﻿using System.Linq;
+using Teczter.Adapters.ValidationRepositories.TestValidationRespositories;
 using Teczter.Domain.Entities;
+using Teczter.Domain.Enums;
 
 namespace Teczter.Services.Validation.ValidationRules;
 
 public static class TestValidationRules
 {
-    public static TeczterValidationResult ValidateTitleIsNotEmpty(TestEntity test)
+    public static async Task<bool> BeUniqueTitle(string title, ITestValidationRepository repo, CancellationToken token)
     {
-        if (String.IsNullOrWhiteSpace(test.Title))
-        {
-            return TeczterValidationResult.Fail("A test must have a title.");
-        }
-
-        return TeczterValidationResult.Succeed();
+        var existingTests = await repo.GetTestEntitiesWithTitle(title);
+        return existingTests.Count == 0;
     }
 
-    public static TeczterValidationResult ValidateDescriptionIsNotEmpty(TestEntity test)
+    public static bool BeAValidPillar(string pillar)
     {
-        if (String.IsNullOrWhiteSpace(test.Description))
+        var validPillars = Enum.GetNames(typeof(Pillar)).Select(x => x.ToLower());
+        return validPillars.Contains(pillar.ToLower());
+    }
+
+    public static bool HaveNoDuplicateStepPlacements(List<TestStepEntity> testSteps)
+    {
+        var distinctStepPlacements = testSteps.Select(x => x.StepPlacement).ToHashSet();
+        return distinctStepPlacements.Count == testSteps.Count;
+    }
+
+    public static bool HaveNoMissingStepPlacements(List<TestStepEntity> testSteps)
+    {
+        var stepPlacements = testSteps.Select(x => x.StepPlacement).ToArray();
+
+        for (var i = 1; i <= stepPlacements.Length; i++)
         {
-            return TeczterValidationResult.Fail("A test must have a description.");
+            if (!stepPlacements.Contains(i))
+            {
+                return false;
+            }
         }
 
-        return TeczterValidationResult.Succeed();
+        return true;
     }
 }

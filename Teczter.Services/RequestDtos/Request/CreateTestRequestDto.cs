@@ -1,12 +1,13 @@
-﻿using Teczter.Domain.ValueObjects;
+﻿using Teczter.Domain.Enums;
+using Teczter.Domain.ValueObjects;
 
 namespace Teczter.Services.DTOs.Request;
 
-public class TestCommandRequestDto
+public class CreateTestRequestDto
 {
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
-    public string Pillar { get; set; } = "UNOWNED";
+    public string OwningPillar { get; set; } = Pillar.Unowned.ToString();
     public List<TestStepCommandRequestDto> TestSteps { get; set; } = [];
     public List<LinkUrl> LinkUrls { get; set; } = []; 
 }

@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using Teczter.Domain.Exceptions;
 
 namespace Teczter.Domain.ValueObjects;
 
@@ -16,7 +17,7 @@ public record LinkUrl
         {
             if (!ValidateLinkUrl(value))
             {
-                throw new ArgumentException($"URL: {value} is not considered valid.");
+                throw new TeczterValidationException($"URL: {value} is not considered valid.");
             }
 
             _url = value;

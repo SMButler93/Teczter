@@ -35,9 +35,9 @@ public class TestEntity
 
     private static bool ValidateOwningPillar(string pillar)
     {
-        var validValues = Enum.GetNames(typeof(Pillar));
+        var validValues = Enum.GetNames(typeof(Pillar)).Select(x => x.ToLower());
 
-        return validValues.Contains(pillar);
+        return validValues.Contains(pillar.ToLower());
     } 
 
     public void AddTestStep(TestStepEntity step)

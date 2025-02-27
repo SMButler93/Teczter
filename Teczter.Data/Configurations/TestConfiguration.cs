@@ -44,7 +44,5 @@ public class TestConfiguration : IEntityTypeConfiguration<TestEntity>
             ownedbuilder.Property(y => y.Url)
             .HasColumnName("LinkUrl");
         });
-        
-        builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }
