@@ -21,9 +21,9 @@ public class CreateTestRequestValidator : AbstractValidator<CreateTestRequestDto
         RuleFor(x => x.Description)
             .NotEmpty().WithMessage("A test must have a description");
 
-        RuleFor(x => x.OwningPillar)
-            .NotEmpty().WithMessage("A test must have an owning pillar")
-            .Must(BeAValidPillar).WithMessage("Invalid pillar. Please provide a valid pillar.");
+        RuleFor(x => x.OwningDepartment)
+            .NotEmpty().WithMessage("A test must have an owning department")
+            .Must(BeAValidDepartment).WithMessage("Invalid department. Please provide a valid department.");
 
         RuleForEach(x => x.TestSteps)
             .SetValidator(new TestStepCommandRequestValidator());
@@ -35,9 +35,9 @@ public class CreateTestRequestValidator : AbstractValidator<CreateTestRequestDto
         return existingTests.Count == 0;
     }
 
-    private bool BeAValidPillar(string pillar)
+    private bool BeAValidDepartment(string department)
     {
-        var validPillars = Enum.GetNames(typeof(Pillar)).Select(x => x.ToLower());
-        return validPillars.Contains(pillar.ToLower());
+        var validDepartments = Enum.GetNames(typeof(Department)).Select(x => x.ToLower());
+        return validDepartments.Contains(department.ToLower());
     }
 }

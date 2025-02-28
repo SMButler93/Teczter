@@ -26,9 +26,9 @@ public class TestValidator : AbstractValidator<TestEntity>
         RuleFor(x => x.Description)
             .NotEmpty().WithMessage("A test must have a description");
 
-        RuleFor(x => x.OwningPillar)
-            .NotEmpty().WithMessage("A test must have an owning pillar")
-            .Must(TestValidationRules.BeAValidPillar).WithMessage("Invalid pillar. Please provide a valid pillar.");
+        RuleFor(x => x.OwningDepartment)
+            .NotEmpty().WithMessage("A test must have an owning department.")
+            .Must(TestValidationRules.BeAValidDepartment).WithMessage("Invalid department. Please provide a valid department.");
 
         RuleFor(x => x.CreatedOn)
             .Must(y => y > DateTime.MinValue).WithMessage("Invalid Date. please provide a valid date.")

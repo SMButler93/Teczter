@@ -18,18 +18,9 @@ public class TestStepEntity
 
     public TestEntity Test { get; set; } = null!;
 
-    public void AddLinkUrl(LinkUrl linkUrl)
-    {
-        LinkUrls.Add(linkUrl);
-    }
+    public void AddLinkUrl(LinkUrl linkUrl) => LinkUrls.Add(linkUrl);
 
-    public void RemoveLinkUrl(LinkUrl linkUrl)
-    {
-        LinkUrls.Remove(linkUrl);
-    }
+    public void RemoveLinkUrl(LinkUrl linkUrl) => LinkUrls.Remove(linkUrl);
 
-    public void Delete()
-    {
-        IsDeleted = true;
-    }
+    public void Delete() => IsDeleted = true;
 }

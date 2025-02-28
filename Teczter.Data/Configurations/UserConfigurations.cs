@@ -28,7 +28,7 @@ public class UserConfigurations : IEntityTypeConfiguration<UserEntity>
             .IsRequired()
             .HasMaxLength(25);
 
-        builder.Property(x => x.Pillar)
+        builder.Property(x => x.Department)
             .IsRequired();
 
         builder.HasMany(x => x.AssignedExcutions)

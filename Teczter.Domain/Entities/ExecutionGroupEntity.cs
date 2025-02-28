@@ -18,20 +18,11 @@ public class ExecutionGroupEntity
 
     public List<ExecutionEntity> Executions { get; set; } = [];
 
-    public void AddExecution(ExecutionEntity execution)
-    {
-        Executions.Add(execution);
-    }
+    public void AddExecution(ExecutionEntity execution) => Executions.Add(execution);
 
-    public void DeleteExecution(ExecutionEntity execution)
-    {
-        execution.Delete();
-    }
+    public void DeleteExecution(ExecutionEntity execution) => execution.Delete();
 
-    public void CloseTestRound()
-    {
-        ClosedDate = DateTime.Now;
-    }
+    public void CloseTestRound() => ClosedDate = DateTime.Now;
 
     public void AddNotes(string note)
     {

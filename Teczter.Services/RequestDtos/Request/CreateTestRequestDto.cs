@@ -7,7 +7,7 @@ public class CreateTestRequestDto
 {
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
-    public string OwningPillar { get; set; } = Pillar.Unowned.ToString();
+    public string OwningDepartment { get; set; } = Department.Unowned.ToString();
     public List<TestStepCommandRequestDto> TestSteps { get; set; } = [];
-    public List<LinkUrl> LinkUrls { get; set; } = []; 
+    public List<String> LinkUrls { get; set; } = []; 
 }

@@ -6,16 +6,13 @@ using Teczter.Services.ServiceInterfaces;
 
 namespace Teczter.Services.Builders
 {
-    internal class TestBuilder(IValidator<TestEntity> testValidator, IValidator<TestStepEntity> testStepValidator) : ITestBuilder
+    internal class TestBuilder() : ITestBuilder
     {
-        private readonly IValidator<TestEntity> _testValidator = testValidator;
-        private readonly IValidator<TestStepEntity> _testStepValidator = testStepValidator;
-
         private TestEntity _test = null!;
 
-        public ITestBuilder AddLinkUrl(LinkUrl link)
+        public ITestBuilder AddLinkUrl(string linkUrl)
         {
-            _test.AddLinkUrl(link);
+            _test.AddLinkUrl(linkUrl);
             return this;
         }
 
@@ -85,9 +82,9 @@ namespace Teczter.Services.Builders
             return this;
         }
 
-        public ITestBuilder SetPillarOwner(string pillar)
+        public ITestBuilder SetOwningDepartment(string department)
         {
-            _test.OwningPillar = pillar;
+            _test.OwningDepartment = department;
             return this;
         }
 
@@ -110,7 +107,7 @@ namespace Teczter.Services.Builders
             return _test;
         }
 
-        public ITestBuilder AddLinkUrls(IEnumerable<LinkUrl> links)
+        public ITestBuilder AddLinkUrls(IEnumerable<string> links)
         {
             foreach (var link in links)
             {

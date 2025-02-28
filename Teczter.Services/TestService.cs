@@ -1,12 +1,10 @@
 ﻿using FluentValidation;
-using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 using Teczter.Adapters.AdapterInterfaces;
 using Teczter.Domain.Entities;
+using Teczter.Domain.Exceptions;
 using Teczter.Domain.ValidationObjects;
-using Teczter.Domain.ValueObjects;
 using Teczter.Persistence;
-using Teczter.Services.Builders;
 using Teczter.Services.DTOs.Request;
 using Teczter.Services.RequestDtos.Request;
 using Teczter.Services.ServiceInterfaces;
@@ -22,7 +20,6 @@ public class TestService : ITestService
 
     public TestService(
         ITestAdapter testAdapter,
-        ITestStepService testStepService,
         ITestBuilder builder,
         IUnitOfWork uow,
         IValidator<TestEntity> testValidator)
@@ -35,14 +32,12 @@ public class TestService : ITestService
 
     public async Task<TeczterValidationResult<TestEntity>> AddLinkUrl(TestEntity test, string url)
     {
-        var linkUrl = new LinkUrl(url);
-
         _builder.UsingContext(test)
-            .AddLinkUrl(linkUrl);
+            .AddLinkUrl(url);
 
         var result = await ValidateTestState(test);
 
-        await EvaluateValidationResultAndPersistence(result);
+        await EvaluateValidationResultAndPersist(result);
         return result;
     }
 
@@ -53,7 +48,7 @@ public class TestService : ITestService
 
         var result = await ValidateTestState(test);
 
-        await EvaluateValidationResultAndPersistence(result);
+        await EvaluateValidationResultAndPersist(result);
         return result;
     }
 
@@ -63,14 +58,14 @@ public class TestService : ITestService
             .NewInstance()
             .SetTitle(request.Title)
             .SetDescription(request.Description)
-            .SetPillarOwner(request.OwningPillar)
+            .SetOwningDepartment(request.OwningDepartment)
             .AddLinkUrls(request.LinkUrls)
             .AddSteps(request.TestSteps)
             .Build();
 
         var result = await ValidateTestState(test);
 
-        await EvaluateValidationResultAndPersistence(result);
+        await EvaluateValidationResultAndPersist(result);
         return result;
     }
 
@@ -85,12 +80,12 @@ public class TestService : ITestService
         return await _testAdapter.GetTestById(id);
     }
 
-    public async Task<List<TestEntity>> GetTestSearchResults(string? testTitle, string? pillarOwner)
+    public async Task<List<TestEntity>> GetTestSearchResults(string? testTitle, string? owningDepartment)
     {
         var TestSearchQuery = _testAdapter.GetBasicTestSearchBaseQuery();
         
         TestSearchQuery = testTitle == null ? TestSearchQuery : TestSearchQuery.Where(x => x.Title.Contains(testTitle));
-        TestSearchQuery = pillarOwner == null ? TestSearchQuery : TestSearchQuery.Where(x => x.OwningPillar == pillarOwner);
+        TestSearchQuery = owningDepartment == null ? TestSearchQuery : TestSearchQuery.Where(x => x.OwningDepartment == owningDepartment);
 
         return await TestSearchQuery.ToListAsync();
     }
@@ -104,19 +99,20 @@ public class TestService : ITestService
 
         var result = await ValidateTestState(test);
 
-        await EvaluateValidationResultAndPersistence(result);
+        await EvaluateValidationResultAndPersist(result);
         return result;
     }
 
     public async Task<TeczterValidationResult<TestEntity>> RemoveTestStep(TestEntity test, Guid testStepId)
     {
         var testStep = test.TestSteps.SingleOrDefault(s => s.Id == testStepId) ?? 
-            throw new InvalidOperationException("Cannot Remove a test step that does not exist, or does not belong to this test.");
+            throw new TeczterValidationException("Cannot Remove a test step that does not exist, or does not belong to this test.");
 
         test.RemoveTestStep(testStep);
+
         var result = await ValidateTestState(test);
 
-        await EvaluateValidationResultAndPersistence(result);
+        await EvaluateValidationResultAndPersist(result);
         return result;
     }
 
@@ -125,15 +121,15 @@ public class TestService : ITestService
         _builder.UsingContext(test)
             .SetTitle(testUpdates.Title)
             .SetDescription(testUpdates.Description)
-            .SetPillarOwner(testUpdates.OwningPillar);
+            .SetOwningDepartment(testUpdates.OwningDepartment);
 
         var result = await ValidateTestState(test);
 
-        await EvaluateValidationResultAndPersistence(result);
+        await EvaluateValidationResultAndPersist(result);
         return result;
     }
 
-    private async Task<TeczterValidationResult<TestEntity>> ValidateTestState(TestEntity test)
+    public async Task<TeczterValidationResult<TestEntity>> ValidateTestState(TestEntity test)
     {
         var result = await _testValidator.ValidateAsync(test);
 
@@ -145,7 +141,7 @@ public class TestService : ITestService
         return TeczterValidationResult<TestEntity>.Succeed(test);
     }
 
-    private async Task EvaluateValidationResultAndPersistence(TeczterValidationResult<TestEntity> result)
+    private async Task EvaluateValidationResultAndPersist(TeczterValidationResult<TestEntity> result)
     {
         if (!result.IsValid)
         {
