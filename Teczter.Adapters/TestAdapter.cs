@@ -18,7 +18,7 @@ public class TestAdapter(TeczterDbContext dbContext) : ITestAdapter
     {
         return await _dbContext.Tests
             .Include(x => x.TestSteps.OrderBy(y => y.StepPlacement))
-            .ThenInclude(z => z.LinkUrls)
+            .ThenInclude(y => y.LinkUrls)
             .SingleOrDefaultAsync(x => x.Id == id);
     }
 

@@ -5,7 +5,7 @@ namespace Teczter.Domain.Entities;
 
 public class TestEntity
 {
-    private string _owningPillar = Pillar.Unowned.ToString();
+    private string _owningDepartment = Department.Unowned.ToString();
 
     public Guid Id { get; private set; }
     public bool IsDeleted { get; set; }
@@ -16,35 +16,35 @@ public class TestEntity
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
     public List<LinkUrl> LinkUrls { get; set; } = [];
-    public string OwningPillar
+    public string OwningDepartment
+
     {
-        get => _owningPillar;
+        get => _owningDepartment;
 
         set
         {
-            if (!ValidateOwningPillar(value))
+            if (!ValidateOwningDepartment(value))
             {
-                throw new ArgumentException($"{value} is an invalid pillar.");
+                throw new ArgumentException($"{value} is an invalid department.");
             }
 
-            _owningPillar = value.ToUpper();
+            _owningDepartment = value.ToUpper();
         }
     }
 
     public List<TestStepEntity> TestSteps { get; set; } = [];
 
-    private static bool ValidateOwningPillar(string pillar)
+    private static bool ValidateOwningDepartment(string department)
     {
-        var validValues = Enum.GetNames(typeof(Pillar)).Select(x => x.ToLower());
+        var validValues = Enum.GetNames(typeof(Department)).Select(x => x.ToLower());
 
-        return validValues.Contains(pillar.ToLower());
+        return validValues.Contains(department.ToLower());
     } 
 
     public void AddTestStep(TestStepEntity step)
     {
         TestSteps.Insert(step.StepPlacement - 1, step);
         SetCorrectStepPlacementValues();
-        TestSteps.OrderBy(x => x.StepPlacement);
     }
 
     public void AddTestSteps(List<TestStepEntity> steps)
@@ -60,26 +60,21 @@ public class TestEntity
         step.IsDeleted = true;
         TestSteps.Remove(step);
         SetCorrectStepPlacementValues();
-        TestSteps.OrderBy(x => x.StepPlacement);
     }
 
     private void SetCorrectStepPlacementValues()
     {
+        TestSteps = TestSteps.OrderBy(x => x.StepPlacement).ToList();
+
         for (int i = 0; i < TestSteps.Count; i++)
         {
             TestSteps[i].StepPlacement = i + 1;
         }
     }
 
-    public void AddLinkUrl(LinkUrl linkUrl)
-    {
-        LinkUrls.Add(linkUrl);
-    }
-
-    public void RemoveLinkUrl(LinkUrl linkUrl)
-    {
-        LinkUrls.Remove(linkUrl);
-    }
+    public void AddLinkUrl(string linkUrl) => LinkUrls.Add(new LinkUrl(linkUrl));
+    
+    public void RemoveLinkUrl(LinkUrl linkUrl) => LinkUrls.Remove(linkUrl);
 
     public void Delete()
     {

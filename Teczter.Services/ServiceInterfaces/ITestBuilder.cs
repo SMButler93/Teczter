@@ -10,12 +10,12 @@ public interface ITestBuilder
     ITestBuilder UsingContext(TestEntity test);
     ITestBuilder SetTitle(string title);
     ITestBuilder SetDescription(string description);
-    ITestBuilder SetPillarOwner(string pillar);
+    ITestBuilder SetOwningDepartment(string department);
     ITestBuilder AddSteps(IEnumerable<TestStepCommandRequestDto> steps);
     ITestBuilder AddStep(TestStepCommandRequestDto step);
     ITestBuilder AddSteps(IEnumerable<TestStepEntity> steps);
     ITestBuilder AddStep(TestStepEntity setp);
-    ITestBuilder AddLinkUrls(IEnumerable<LinkUrl> links);
-    ITestBuilder AddLinkUrl(LinkUrl link);
+    ITestBuilder AddLinkUrls(IEnumerable<string> links);
+    ITestBuilder AddLinkUrl(string linkUrl);
     TestEntity Build();
 }

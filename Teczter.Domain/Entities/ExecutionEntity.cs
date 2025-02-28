@@ -61,10 +61,7 @@ public class ExecutionEntity
         ExecutionState = ExecutionStateType.Fail.ToString();
     }
 
-    public void AddNotes(string notes)
-    {
-        Notes = notes;
-    }
+    public void AddNotes(string notes) => Notes = notes;
 
     public ExecutionEntity Retest()
     {
@@ -76,10 +73,7 @@ public class ExecutionEntity
         };
     }
 
-    public void Delete()
-    {
-        IsDeleted = true;
-    }
+    public void Delete() => IsDeleted = true;
 
     public ExecutionEntity CloneExecution(Guid executionGroupId)
     {

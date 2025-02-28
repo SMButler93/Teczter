@@ -8,7 +8,7 @@ namespace Teczter.Services.ServiceInterfaces;
 public interface ITestService
 {
     Task<TeczterValidationResult<TestEntity>> CreateNewTest(CreateTestRequestDto test);
-    Task<List<TestEntity>> GetTestSearchResults(string? testTitle, string? pillarOwner);
+    Task<List<TestEntity>> GetTestSearchResults(string? testTitle, string? owningDepartment);
     Task<TestEntity?> GetTestById(Guid id);
     Task DeleteTest(TestEntity test);
     Task<TeczterValidationResult<TestEntity>> UpdateTest(TestEntity test, UpdateTestRequestDto testUpdates);
@@ -16,4 +16,5 @@ public interface ITestService
     Task<TeczterValidationResult<TestEntity>> RemoveLinkUrl(TestEntity test, string url);
     Task<TeczterValidationResult<TestEntity>> AddTestStep(TestEntity test, TestStepCommandRequestDto testStep);
     Task<TeczterValidationResult<TestEntity>> RemoveTestStep(TestEntity test, Guid testStepId);
+    Task<TeczterValidationResult<TestEntity>> ValidateTestState(TestEntity test);
 }

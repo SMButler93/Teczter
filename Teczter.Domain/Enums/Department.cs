@@ -1,6 +1,6 @@
 ﻿namespace Teczter.Domain.Enums;
 
-public enum Pillar
+public enum Department
 {
     Accounting = 1,
     Core = 2,

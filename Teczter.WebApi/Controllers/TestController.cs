@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
+using Teczter.Domain.Exceptions;
 using Teczter.Services.DTOs.Request;
 using Teczter.Services.RequestDtos.Request;
 using Teczter.Services.ServiceInterfaces;
@@ -18,13 +20,13 @@ public class TestController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetTestSearchResults([FromQuery] string? testname, [FromQuery] string? pillarOwner)
+    public async Task<IActionResult> GetTestSearchResults([FromQuery] string? testname, [FromQuery] string? owningDepartment)
     {
-        var tests = await _testService.GetTestSearchResults(testname, pillarOwner);
+        var tests = await _testService.GetTestSearchResults(testname, owningDepartment);
 
         var testDtos = tests.Select(x => new TestBasicDto(x)).ToList();
 
-        return Ok(testDtos.OrderBy(x => x.Pillar).ThenBy(x => x.Title));
+        return Ok(testDtos.OrderBy(x => x.Department).ThenBy(x => x.Title));
     }
 
     [HttpGet]
@@ -61,16 +63,23 @@ public class TestController : ControllerBase
     [Route("/CreateTest")]
     public async Task<IActionResult> CreateTest([FromBody] CreateTestRequestDto request)
     {
-        var validatedtest = await _testService.CreateNewTest(request);
-
-        if (!validatedtest.IsValid)
+        try
         {
-            return BadRequest(validatedtest.ErrorMessages);
+            var validatedtest = await _testService.CreateNewTest(request);
+     
+            if (!validatedtest.IsValid)
+            {
+                return BadRequest(validatedtest.ErrorMessages);
+            }
+
+            var dto = new TestDetailedDto(validatedtest.Value!);
+
+            return CreatedAtAction(nameof(GetTest), new { dto.Id }, dto);
         }
-
-        var dto = new TestDetailedDto(validatedtest.Value!);
-
-        return CreatedAtAction(nameof(GetTest), new { dto.Id }, dto);
+        catch(TeczterValidationException ex)
+        {
+            return BadRequest(ex);
+        }
     }
 
     [HttpPut]
@@ -167,14 +176,20 @@ public class TestController : ControllerBase
         {
             return NotFound($"test {testId} does not exist.");
         }
-
-        var validatedTest = await _testService.RemoveTestStep(test, testStepId);
-
-        if (!validatedTest.IsValid)
+        try
         {
-            return BadRequest(validatedTest.ErrorMessages);
-        }
+            var validatedTest = await _testService.RemoveTestStep(test, testStepId);
 
-        return Ok(new TestDetailedDto(test));
+            if (!validatedTest.IsValid)
+            {
+                return BadRequest(validatedTest.ErrorMessages);
+            }
+
+            return Ok(new TestDetailedDto(test));
+        }
+        catch (TeczterValidationException ex)
+        {
+            return BadRequest(ex);
+        }
     }
 }

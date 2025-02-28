@@ -13,10 +13,10 @@ public static class TestValidationRules
         return existingTests.Count == 0;
     }
 
-    public static bool BeAValidPillar(string pillar)
+    public static bool BeAValidDepartment(string department)
     {
-        var validPillars = Enum.GetNames(typeof(Pillar)).Select(x => x.ToLower());
-        return validPillars.Contains(pillar.ToLower());
+        var validDepartments = Enum.GetNames(typeof(Department)).Select(x => x.ToLower());
+        return validDepartments.Contains(department.ToLower());
     }
 
     public static bool HaveNoDuplicateStepPlacements(List<TestStepEntity> testSteps)
