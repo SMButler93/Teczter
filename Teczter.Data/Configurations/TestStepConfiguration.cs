@@ -4,24 +4,11 @@ using Teczter.Domain.Entities;
 
 namespace Teczter.Data.Configurations;
 
-public class TestStepConfiguration : IEntityTypeConfiguration<TestStepEntity>
+public class TestStepConfiguration : BaseEntityConfiguration<TestStepEntity>
 {
-    public void Configure(EntityTypeBuilder<TestStepEntity> builder)
+    public override void Configure(EntityTypeBuilder<TestStepEntity> builder)
     {
-        builder.Property(x => x.Id)
-            .ValueGeneratedOnAdd();
-
-        builder.Property(x => x.CreatedOn)
-            .IsRequired();
-
-        builder.Property(x => x.CreatedById)
-            .IsRequired();
-
-        builder.Property(x => x.RevisedOn)
-            .IsRequired();
-
-        builder.Property(x => x.RevisedById)
-            .IsRequired();
+        base.Configure(builder);
 
         builder.Property(x => x.TestId)
             .IsRequired();
@@ -43,7 +30,5 @@ public class TestStepConfiguration : IEntityTypeConfiguration<TestStepEntity>
             ownedbuilder.Property(y => y.Url)
             .HasColumnName("LinkUrl");
         });
-
-        builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }

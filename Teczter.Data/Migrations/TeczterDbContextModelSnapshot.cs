@@ -24,28 +24,34 @@ namespace Teczter.Data.Migrations
 
             modelBuilder.Entity("Teczter.Domain.Entities.ExecutionEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int?>("AssignedUserId")
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid?>("AssignedUserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("CreatedById")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("ExecutionGroupId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ExecutionGroupId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ExecutionState")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("FailedStepId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("FailedStepId")
+                        .HasColumnType("int");
 
                     b.Property<string>("FailureReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -59,8 +65,8 @@ namespace Teczter.Data.Migrations
                     b.Property<DateTime>("RevisedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("TestId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("TestId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("TestedById")
                         .HasColumnType("int");
@@ -80,9 +86,11 @@ namespace Teczter.Data.Migrations
 
             modelBuilder.Entity("Teczter.Domain.Entities.ExecutionGroupEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("ClosedDate")
                         .HasColumnType("datetime2");
@@ -95,8 +103,7 @@ namespace Teczter.Data.Migrations
 
                     b.Property<string>("ExecutionGroupName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.PrimitiveCollection<string>("ExecutionGroupNotes")
                         .IsRequired()
@@ -121,9 +128,11 @@ namespace Teczter.Data.Migrations
 
             modelBuilder.Entity("Teczter.Domain.Entities.TestEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CreatedById")
                         .HasColumnType("int");
@@ -139,7 +148,7 @@ namespace Teczter.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("OwningPillar")
+                    b.Property<string>("OwningDepartment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -164,9 +173,11 @@ namespace Teczter.Data.Migrations
 
             modelBuilder.Entity("Teczter.Domain.Entities.TestStepEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CreatedById")
                         .HasColumnType("int");
@@ -191,8 +202,8 @@ namespace Teczter.Data.Migrations
                     b.Property<int>("StepPlacement")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("TestId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("TestId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -203,13 +214,14 @@ namespace Teczter.Data.Migrations
 
             modelBuilder.Entity("Teczter.Domain.Entities.UserEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AccessLevel")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Department")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -224,9 +236,6 @@ namespace Teczter.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
-
-                    b.Property<int>("Pillar")
-                        .HasColumnType("int");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -279,8 +288,8 @@ namespace Teczter.Data.Migrations
                 {
                     b.OwnsMany("Teczter.Domain.ValueObjects.LinkUrl", "LinkUrls", b1 =>
                         {
-                            b1.Property<Guid>("TestEntityId")
-                                .HasColumnType("uniqueidentifier");
+                            b1.Property<int>("TestEntityId")
+                                .HasColumnType("int");
 
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
@@ -314,8 +323,8 @@ namespace Teczter.Data.Migrations
 
                     b.OwnsMany("Teczter.Domain.ValueObjects.LinkUrl", "LinkUrls", b1 =>
                         {
-                            b1.Property<Guid>("TestStepEntityId")
-                                .HasColumnType("uniqueidentifier");
+                            b1.Property<int>("TestStepEntityId")
+                                .HasColumnType("int");
 
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()

@@ -9,12 +9,12 @@ public interface ITestService
 {
     Task<TeczterValidationResult<TestEntity>> CreateNewTest(CreateTestRequestDto test);
     Task<List<TestEntity>> GetTestSearchResults(string? testTitle, string? owningDepartment);
-    Task<TestEntity?> GetTestById(Guid id);
+    Task<TestEntity?> GetTestById(int id);
     Task DeleteTest(TestEntity test);
     Task<TeczterValidationResult<TestEntity>> UpdateTest(TestEntity test, UpdateTestRequestDto testUpdates);
     Task<TeczterValidationResult<TestEntity>> AddLinkUrl(TestEntity test, string url);
     Task<TeczterValidationResult<TestEntity>> RemoveLinkUrl(TestEntity test, string url);
     Task<TeczterValidationResult<TestEntity>> AddTestStep(TestEntity test, TestStepCommandRequestDto testStep);
-    Task<TeczterValidationResult<TestEntity>> RemoveTestStep(TestEntity test, Guid testStepId);
+    Task<TeczterValidationResult<TestEntity>> RemoveTestStep(TestEntity test, int testStepId);
     Task<TeczterValidationResult<TestEntity>> ValidateTestState(TestEntity test);
 }

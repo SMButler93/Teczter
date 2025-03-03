@@ -75,7 +75,7 @@ public class TestService : ITestService
         await _uow.CommitChanges();
     }
 
-    public async Task<TestEntity?> GetTestById(Guid id)
+    public async Task<TestEntity?> GetTestById(int id)
     {
         return await _testAdapter.GetTestById(id);
     }
@@ -103,7 +103,7 @@ public class TestService : ITestService
         return result;
     }
 
-    public async Task<TeczterValidationResult<TestEntity>> RemoveTestStep(TestEntity test, Guid testStepId)
+    public async Task<TeczterValidationResult<TestEntity>> RemoveTestStep(TestEntity test, int testStepId)
     {
         var testStep = test.TestSteps.SingleOrDefault(s => s.Id == testStepId) ?? 
             throw new TeczterValidationException("Cannot Remove a test step that does not exist, or does not belong to this test.");

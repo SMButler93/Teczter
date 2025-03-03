@@ -14,7 +14,7 @@ public class TestAdapter(TeczterDbContext dbContext) : ITestAdapter
         await _dbContext.Tests.AddAsync(test);
     }
 
-    public async Task<TestEntity?> GetTestById(Guid id)
+    public async Task<TestEntity?> GetTestById(int id)
     {
         return await _dbContext.Tests
             .Include(x => x.TestSteps.OrderBy(y => y.StepPlacement))

@@ -2,21 +2,15 @@
 
 namespace Teczter.Domain.Entities;
 
-public class ExecutionEntity
+public class ExecutionEntity : BaseEntity
 {
     private string _executionState = ExecutionStateType.Untested.ToString();
 
-    public Guid Id { get; private set; }
-    public Guid ExecutionGroupId { get; init; }
-    public int? AssignedUserId { get; set; } = null;
-    public bool IsDeleted { get; private set; }
-    public DateTime CreatedOn { get; } = DateTime.Now;
-    public int CreatedById { get; init; }
-    public DateTime RevisedOn { get; set; } = DateTime.Now;
-    public int RevisedById { get; set; }
-    public Guid TestId { get; set; }
+    public int ExecutionGroupId { get; init; }
+    public Guid? AssignedUserId { get; set; } = null;
+    public int TestId { get; set; }
     public bool HasPassed => ExecutionState == ExecutionStateType.Pass.ToString();
-    public Guid? FailedStepId { get; private set; } = null;
+    public int? FailedStepId { get; private set; } = null;
     public string? FailureReason { get; private set; } = null;
     public int? TestedById { get; private set; } = null;
     public string? Notes { get; private set; } = null;
@@ -53,7 +47,7 @@ public class ExecutionEntity
         ExecutionState = ExecutionStateType.Pass.ToString();
     }
 
-    public void Fail(int userId, Guid testStepId, string failureReason)
+    public void Fail(int userId, int testStepId, string failureReason)
     {
         TestedById = userId;
         FailedStepId = testStepId;
@@ -75,7 +69,7 @@ public class ExecutionEntity
 
     public void Delete() => IsDeleted = true;
 
-    public ExecutionEntity CloneExecution(Guid executionGroupId)
+    public ExecutionEntity CloneExecution(int executionGroupId)
     {
         return new ExecutionEntity
         {

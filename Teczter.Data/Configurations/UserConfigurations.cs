@@ -35,7 +35,5 @@ public class UserConfigurations : IEntityTypeConfiguration<UserEntity>
             .WithOne(y => y.AssignedUser)
             .HasForeignKey(y => y.AssignedUserId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }

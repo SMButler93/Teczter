@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using Teczter.Domain.Entities;
+using Teczter.Domain.ValueObjects;
 
 namespace Teczter.Data;
 

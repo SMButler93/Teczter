@@ -15,15 +15,16 @@ namespace Teczter.Data.Migrations
                 name: "ExecutionGroups",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ExecutionGroupName = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClosedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ExecutionGroupNotes = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedById = table.Column<int>(type: "int", nullable: false),
                     RevisedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RevisedById = table.Column<int>(type: "int", nullable: false),
-                    ExecutionGroupName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    ClosedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ExecutionGroupNotes = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    RevisedById = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -34,15 +35,16 @@ namespace Teczter.Data.Migrations
                 name: "Tests",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(750)", maxLength: 750, nullable: false),
+                    OwningDepartment = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedById = table.Column<int>(type: "int", nullable: false),
                     RevisedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RevisedById = table.Column<int>(type: "int", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(750)", maxLength: 750, nullable: false),
-                    Pillar = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    RevisedById = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,13 +55,12 @@ namespace Teczter.Data.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
-                    Pillar = table.Column<int>(type: "int", nullable: false),
+                    Department = table.Column<int>(type: "int", nullable: false),
                     AccessLevel = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -71,7 +72,7 @@ namespace Teczter.Data.Migrations
                 name: "Tests_LinkUrls",
                 columns: table => new
                 {
-                    TestEntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TestEntityId = table.Column<int>(type: "int", nullable: false),
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     LinkUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -91,15 +92,16 @@ namespace Teczter.Data.Migrations
                 name: "TestSteps",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TestId = table.Column<int>(type: "int", nullable: false),
+                    StepPlacement = table.Column<int>(type: "int", nullable: false),
+                    Instructions = table.Column<string>(type: "nvarchar(750)", maxLength: 750, nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedById = table.Column<int>(type: "int", nullable: false),
                     RevisedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RevisedById = table.Column<int>(type: "int", nullable: false),
-                    TestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StepPlacement = table.Column<int>(type: "int", nullable: false),
-                    Instructions = table.Column<string>(type: "nvarchar(750)", maxLength: 750, nullable: false)
+                    RevisedById = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -115,19 +117,21 @@ namespace Teczter.Data.Migrations
                 name: "Executions",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ExecutionGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AssignedUserId = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedById = table.Column<int>(type: "int", nullable: false),
-                    RevisedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RevisedById = table.Column<int>(type: "int", nullable: false),
-                    TestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FailedStepId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    FailureReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ExecutionGroupId = table.Column<int>(type: "int", nullable: false),
+                    AssignedUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    TestId = table.Column<int>(type: "int", nullable: false),
+                    FailedStepId = table.Column<int>(type: "int", nullable: true),
+                    FailureReason = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     TestedById = table.Column<int>(type: "int", nullable: true),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ExecutionState = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ExecutionState = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedById = table.Column<int>(type: "int", nullable: false),
+                    RevisedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RevisedById = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -161,7 +165,7 @@ namespace Teczter.Data.Migrations
                 name: "TestSteps_LinkUrls",
                 columns: table => new
                 {
-                    TestStepEntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TestStepEntityId = table.Column<int>(type: "int", nullable: false),
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     LinkUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -202,6 +206,12 @@ namespace Teczter.Data.Migrations
                 name: "IX_Executions_TestId",
                 table: "Executions",
                 column: "TestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tests_Title",
+                table: "Tests",
+                column: "Title",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_TestSteps_TestId",

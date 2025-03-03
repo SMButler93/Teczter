@@ -5,5 +5,5 @@ namespace Teczter.Adapters.AdapterInterfaces;
 
 public interface ITestStepAdapter
 {
-    Task<TestStepEntity?> GetTestStepById(Guid id);
+    Task<TestStepEntity?> GetTestStepById(int id);
 }
