@@ -1,4 +1,5 @@
 ﻿using Teczter.Domain.Enums;
+using Teczter.Domain.Exceptions;
 using Teczter.Domain.ValueObjects;
 
 namespace Teczter.Domain.Entities;
@@ -19,7 +20,7 @@ public class TestEntity : BaseEntity
         {
             if (!ValidateOwningDepartment(value))
             {
-                throw new ArgumentException($"{value} is an invalid department.");
+                throw new TeczterValidationException($"{value} is an invalid department.");
             }
 
             _owningDepartment = value.ToUpper();
