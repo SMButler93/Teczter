@@ -4,24 +4,11 @@ using Teczter.Domain.Entities;
 
 namespace Teczter.Data.Configurations;
 
-public class ExecutionGroupConfiguration : IEntityTypeConfiguration<ExecutionGroupEntity>
+public class ExecutionGroupConfiguration : BaseEntityConfiguration<ExecutionGroupEntity>
 {
-    public void Configure(EntityTypeBuilder<ExecutionGroupEntity> builder)
+    public override void Configure(EntityTypeBuilder<ExecutionGroupEntity> builder)
     {
-        builder.Property(x => x.Id)
-            .ValueGeneratedOnAdd();
-
-        builder.Property(x => x.CreatedOn)
-            .IsRequired();
-
-        builder.Property(x => x.CreatedById)
-            .IsRequired();
-
-        builder.Property(x => x.RevisedOn)
-            .IsRequired();
-
-        builder.Property(x => x.RevisedById)
-            .IsRequired();
+        base.Configure(builder);
 
         builder.Property(x => x.ExecutionGroupName)
             .IsRequired();
@@ -33,7 +20,5 @@ public class ExecutionGroupConfiguration : IEntityTypeConfiguration<ExecutionGro
             .WithOne(y => y.ExecutionGroup)
             .HasForeignKey(y => y.ExecutionGroupId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }

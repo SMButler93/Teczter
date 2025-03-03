@@ -5,8 +5,8 @@ namespace Teczter.WebApi.ResponseDtos;
 
 public class TestStepBasicDto
 {
-    public Guid Id { get; private set; }
-    public Guid TestId { get; set; }
+    public int Id { get; private set; }
+    public int TestId { get; set; }
     public int StepPlacement { get; set; }
     public string Instructions { get; set; } = null!;
     public List<LinkUrl> LinkUrls { get; set; } = [];
@@ -23,13 +23,13 @@ public class TestStepBasicDto
 
 public class TestStepDetailedDto
 {
-    public Guid Id { get; private set; }
+    public int Id { get; private set; }
     public bool IsDeleted { get; set; }
     public DateTime CreatedOn { get; } = DateTime.Now;
     public int CreatedById { get; }
     public DateTime RevisedOn { get; set; } = DateTime.Now;
     public int RevisedById { get; set; }
-    public Guid TestId { get; set; }
+    public int TestId { get; set; }
     public int StepPlacement { get; set; }
     public string Instructions { get; set; } = null!;
     public List<LinkUrl> LinkUrls { get; set; } = [];

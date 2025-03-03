@@ -5,7 +5,7 @@ namespace Teczter.WebApi.ResponseDtos;
 
 public class TestBasicDto
 {
-    public Guid Id { get; private set; }
+    public int Id { get; private set; }
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
     public string Department { get; set; } = null!;
@@ -21,7 +21,7 @@ public class TestBasicDto
 
 public class TestDetailedDto
 {
-    public Guid Id { get; private set; }
+    public int Id { get; private set; }
     public bool IsDeleted { get; set; }
     public DateTime CreatedOn { get; } = DateTime.Now;
     public int CreatedById { get; }

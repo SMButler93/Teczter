@@ -8,7 +8,7 @@ namespace Teczter.Adapters;
 
 public class TestStepAdapter(TeczterDbContext _dbContext) : ITestStepAdapter
 {
-    public async Task<TestStepEntity?> GetTestStepById(Guid id)
+    public async Task<TestStepEntity?> GetTestStepById(int id)
     {
         return await _dbContext.TestSteps
             .Include(x => x.Test)

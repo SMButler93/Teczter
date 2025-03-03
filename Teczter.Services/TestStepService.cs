@@ -12,7 +12,7 @@ public class TestStepService : ITestStepService
     {
         _testStepAdapter = testStepAdapter;
     }
-    public async Task<TestStepEntity?> GetTestStepById(Guid id)
+    public async Task<TestStepEntity?> GetTestStepById(int id)
     {
         return await _testStepAdapter.GetTestStepById(id);
     }

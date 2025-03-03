@@ -1,30 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Teczter.Domain.Entities;
 
 namespace Teczter.Data.Configurations;
 
-public class ExecutionConfiguration : IEntityTypeConfiguration<ExecutionGroupEntity>
+public class ExecutionConfiguration : BaseEntityConfiguration<ExecutionEntity>
 {
-    public void Configure(EntityTypeBuilder<ExecutionGroupEntity> builder)
+    public override void Configure(EntityTypeBuilder<ExecutionEntity> builder)
     {
-        builder.Property(x => x.Id)
-            .ValueGeneratedOnAdd();
+        base.Configure(builder);
 
-        builder.Property(x => x.CreatedOn)
+        builder.Property(x => x.ExecutionGroupId)
             .IsRequired();
 
-        builder.Property(x => x.CreatedById)
-            .IsRequired();
-
-        builder.Property(x => x.RevisedOn)
-            .IsRequired();
-
-        builder.Property(x => x.RevisedById)
-            .IsRequired();
-
-        builder.Property(x => x.ExecutionGroupName)
-            .IsRequired()
-            .HasMaxLength(50);
+        builder.Property(x => x.FailureReason)
+            .HasMaxLength(250);
     }
 }

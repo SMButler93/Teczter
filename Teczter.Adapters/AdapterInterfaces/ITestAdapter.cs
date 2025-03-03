@@ -6,5 +6,5 @@ public interface ITestAdapter
 {
     Task CreateNewTest(TestEntity test);
     IQueryable<TestEntity> GetBasicTestSearchBaseQuery();
-    Task<TestEntity?> GetTestById(Guid id);
+    Task<TestEntity?> GetTestById(int id);
 }

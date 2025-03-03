@@ -4,7 +4,7 @@ namespace Teczter.Domain.Entities;
 
 public class UserEntity
 {
-    public int Id { get; private set; }
+    public Guid Id { get; private set; }
     public bool IsDeleted { get; set; }
     public string Username { get; set; } = null!;
     public string Email { get; set; } = null!;

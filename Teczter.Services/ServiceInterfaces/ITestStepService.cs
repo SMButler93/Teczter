@@ -4,5 +4,5 @@ namespace Teczter.Services.ServiceInterfaces;
 
 public interface ITestStepService
 {
-    Task<TestStepEntity?> GetTestStepById(Guid id);
+    Task<TestStepEntity?> GetTestStepById(int id);
 }
