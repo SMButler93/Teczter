@@ -50,7 +50,7 @@ public class TestServiceTests
         var result = await sut.ValidateTestState(validTest);
 
         //Assert:
-        Should.Equals(true, result.IsValid);
+        result.IsValid.ShouldBeTrue();
     }
 
     [Test]
@@ -67,7 +67,7 @@ public class TestServiceTests
         var result = await sut.ValidateTestState(validTest);
 
         //Assert:
-        Should.Equals(false, result.IsValid);
+        result.IsValid.ShouldBeFalse();
     }
 
     [Test]
@@ -81,7 +81,7 @@ public class TestServiceTests
         var result = sut.DeleteTest(test);
 
         //Assert
-        Should.Equals(true, test.IsDeleted);
+        test.IsDeleted.ShouldBeTrue();
     }
 
     private TestEntity GetBasicTestInstance()
