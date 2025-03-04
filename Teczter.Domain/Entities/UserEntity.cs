@@ -1,10 +1,11 @@
-﻿using Teczter.Domain.Enums;
+﻿using Teczter.Domain.Entities.interfaces;
+using Teczter.Domain.Enums;
 
 namespace Teczter.Domain.Entities;
 
-public class UserEntity
+public class UserEntity : IHasGuidid, ISoftDeleteable
 {
-    public Guid Id { get; private set; }
+    public Guid Id { get; set; }
     public bool IsDeleted { get; set; }
     public string Username { get; set; } = null!;
     public string Email { get; set; } = null!;

@@ -15,14 +15,14 @@ public class TestServiceTests
 {
     private readonly Mock<ITestAdapter> _testAdapterMock;
     private readonly Mock<ITestBuilder> _testBuilderMock;
-    private readonly IUnitOfWork _uowFake;
+    private readonly UnitOfWorkFake _uow;
     private readonly Mock<IValidator<TestEntity>> _testValidatorMock;
 
     public TestServiceTests()
     {
         _testAdapterMock = new Mock<ITestAdapter>();
         _testBuilderMock = new Mock<ITestBuilder>();
-        _uowFake = new UnitOfWorkFake();
+        _uow = new UnitOfWorkFake();
         _testValidatorMock = new Mock<IValidator<TestEntity>>();
     }
 
@@ -31,7 +31,7 @@ public class TestServiceTests
         return new TestService(
             _testAdapterMock.Object,
             _testBuilderMock.Object,
-            _uowFake,
+            _uow,
             _testValidatorMock.Object
             );
     }

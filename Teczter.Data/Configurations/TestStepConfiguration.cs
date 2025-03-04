@@ -4,11 +4,27 @@ using Teczter.Domain.Entities;
 
 namespace Teczter.Data.Configurations;
 
-public class TestStepConfiguration : BaseEntityConfiguration<TestStepEntity>
+public class TestStepConfiguration : IEntityTypeConfiguration<TestStepEntity>
 {
-    public override void Configure(EntityTypeBuilder<TestStepEntity> builder)
+    public void Configure(EntityTypeBuilder<TestStepEntity> builder)
     {
-        base.Configure(builder);
+        builder.Property(x => x.Id)
+            .ValueGeneratedOnAdd();
+
+        builder.Property(x => x.CreatedOn)
+            .IsRequired();
+
+        builder.Property(x => x.CreatedById)
+            .IsRequired();
+
+        builder.Property(x => x.RevisedOn)
+            .IsRequired();
+
+        builder.Property(x => x.RevisedById)
+            .IsRequired();
+
+        builder.Property(x => x.IsDeleted)
+            .IsRequired();
 
         builder.Property(x => x.TestId)
             .IsRequired();

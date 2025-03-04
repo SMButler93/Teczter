@@ -1,13 +1,20 @@
-﻿using Teczter.Domain.Enums;
+﻿using Teczter.Domain.Entities.interfaces;
+using Teczter.Domain.Enums;
 using Teczter.Domain.Exceptions;
 using Teczter.Domain.ValueObjects;
 
 namespace Teczter.Domain.Entities;
 
-public class TestEntity : BaseEntity
+public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
 {
     private string _owningDepartment = Department.Unowned.ToString();
 
+    public int Id { get; set; }
+    public DateTime CreatedOn { get; } = DateTime.Now;
+    public int CreatedById { get; set; }
+    public DateTime RevisedOn { get; set; } = DateTime.Now;
+    public int RevisedById { get; set; }
+    public bool IsDeleted { get; set; }
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
     public List<LinkUrl> LinkUrls { get; set; } = [];
