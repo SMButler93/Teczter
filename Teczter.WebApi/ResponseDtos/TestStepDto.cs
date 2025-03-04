@@ -3,25 +3,7 @@ using Teczter.Domain.ValueObjects;
 
 namespace Teczter.WebApi.ResponseDtos;
 
-public class TestStepBasicDto
-{
-    public int Id { get; private set; }
-    public int TestId { get; set; }
-    public int StepPlacement { get; set; }
-    public string Instructions { get; set; } = null!;
-    public List<LinkUrl> LinkUrls { get; set; } = [];
-
-    public TestStepBasicDto(TestStepEntity testStep)
-    {
-        Id = testStep.Id;
-        TestId = testStep.Id;
-        StepPlacement = testStep.StepPlacement;
-        Instructions = testStep.Instructions;
-        LinkUrls = testStep.LinkUrls;
-    }
-}
-
-public class TestStepDetailedDto
+public class TestStepDto
 {
     public int Id { get; private set; }
     public bool IsDeleted { get; set; }
@@ -36,7 +18,7 @@ public class TestStepDetailedDto
 
     public TestEntity Test { get; set; } = null!;
 
-    public TestStepDetailedDto(TestStepEntity testStep)
+    public TestStepDto(TestStepEntity testStep)
     {
         Id = testStep.Id;
         IsDeleted = testStep.IsDeleted;
