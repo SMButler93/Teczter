@@ -1,9 +1,16 @@
-﻿using Teczter.Domain.Enums;
+﻿using Teczter.Domain.Entities.interfaces;
+using Teczter.Domain.Enums;
 
 namespace Teczter.Domain.Entities;
 
-public class ExecutionGroupEntity : BaseEntity
+public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 {
+    public int Id { get; set; }
+    public DateTime CreatedOn { get; } = DateTime.Now;
+    public int CreatedById { get; set; }
+    public DateTime RevisedOn { get; set; } = DateTime.Now;
+    public int RevisedById { get; set; }
+    public bool IsDeleted { get; set; }
     public string ExecutionGroupName { get; private set; } = null!;
     public DateTime? ClosedDate { get; private set; } = null;
     public bool IsComplete => Executions.All(x => x.ExecutionState != ExecutionStateType.Untested.ToString());

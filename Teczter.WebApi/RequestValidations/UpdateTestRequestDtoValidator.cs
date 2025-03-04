@@ -13,9 +13,7 @@ public class UpdateTestRequestDtoValidator : AbstractValidator<UpdateTestRequest
         _testValidationRepository = testValidationRepository;
 
         RuleFor(x => x.Title)
-            .NotEmpty().WithMessage("A test must have a title.")
-            .Must(title => TestValidationRules.BeUniqueTitle(title, _testValidationRepository, new CancellationToken()).Result)
-            .WithMessage(dto => $"A test with the title '{dto.Title}' already exists. A title must be unique.");
+            .NotEmpty().WithMessage("A test must have a title.");
 
         RuleFor(x => x.Description)
             .NotEmpty().WithMessage("A test must have a description");

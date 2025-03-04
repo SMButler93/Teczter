@@ -24,11 +24,6 @@ public record LinkUrl
         }
     }
 
-    public LinkUrl()
-    {
-
-    }
-
     public LinkUrl(string url)
     {
         Url = url;

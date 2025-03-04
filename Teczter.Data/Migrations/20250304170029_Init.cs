@@ -17,14 +17,14 @@ namespace Teczter.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ExecutionGroupName = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ClosedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ExecutionGroupNotes = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedById = table.Column<int>(type: "int", nullable: false),
                     RevisedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RevisedById = table.Column<int>(type: "int", nullable: false)
+                    RevisedById = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    ExecutionGroupName = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClosedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ExecutionGroupNotes = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -37,14 +37,14 @@ namespace Teczter.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(750)", maxLength: 750, nullable: false),
-                    OwningDepartment = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedById = table.Column<int>(type: "int", nullable: false),
                     RevisedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RevisedById = table.Column<int>(type: "int", nullable: false)
+                    RevisedById = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(750)", maxLength: 750, nullable: false),
+                    OwningDepartment = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -94,14 +94,14 @@ namespace Teczter.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TestId = table.Column<int>(type: "int", nullable: false),
-                    StepPlacement = table.Column<int>(type: "int", nullable: false),
-                    Instructions = table.Column<string>(type: "nvarchar(750)", maxLength: 750, nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedById = table.Column<int>(type: "int", nullable: false),
                     RevisedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RevisedById = table.Column<int>(type: "int", nullable: false)
+                    RevisedById = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    TestId = table.Column<int>(type: "int", nullable: false),
+                    StepPlacement = table.Column<int>(type: "int", nullable: false),
+                    Instructions = table.Column<string>(type: "nvarchar(750)", maxLength: 750, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -119,6 +119,11 @@ namespace Teczter.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedById = table.Column<int>(type: "int", nullable: false),
+                    RevisedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RevisedById = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     ExecutionGroupId = table.Column<int>(type: "int", nullable: false),
                     AssignedUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     TestId = table.Column<int>(type: "int", nullable: false),
@@ -126,12 +131,7 @@ namespace Teczter.Data.Migrations
                     FailureReason = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     TestedById = table.Column<int>(type: "int", nullable: true),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ExecutionState = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedById = table.Column<int>(type: "int", nullable: false),
-                    RevisedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RevisedById = table.Column<int>(type: "int", nullable: false)
+                    ExecutionState = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

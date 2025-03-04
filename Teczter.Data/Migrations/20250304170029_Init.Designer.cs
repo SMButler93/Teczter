@@ -12,7 +12,7 @@ using Teczter.Data;
 namespace Teczter.Data.Migrations
 {
     [DbContext(typeof(TeczterDbContext))]
-    [Migration("20250303205006_Init")]
+    [Migration("20250304170029_Init")]
     partial class Init
     {
         /// <inheritdoc />

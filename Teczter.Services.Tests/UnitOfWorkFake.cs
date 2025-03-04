@@ -1,4 +1,6 @@
-﻿namespace Teczter.Persistence;
+﻿using Teczter.Persistence;
+
+namespace Teczter.Services.Tests;
 
 public class UnitOfWorkFake : IUnitOfWork
 {

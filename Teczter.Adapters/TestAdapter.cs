@@ -19,11 +19,11 @@ public class TestAdapter(TeczterDbContext dbContext) : ITestAdapter
         return await _dbContext.Tests
             .Include(x => x.TestSteps.OrderBy(y => y.StepPlacement))
             .ThenInclude(y => y.LinkUrls)
-            .SingleOrDefaultAsync(x => x.Id == id);
+            .SingleOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
     }
 
     public IQueryable<TestEntity> GetBasicTestSearchBaseQuery()
     {
-        return _dbContext.Tests;
+        return _dbContext.Tests.Where(x => !x.IsDeleted);
     }
 }

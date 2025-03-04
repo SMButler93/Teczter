@@ -4,11 +4,30 @@ using Teczter.Domain.Entities;
 
 namespace Teczter.Data.Configurations;
 
-public class ExecutionGroupConfiguration : BaseEntityConfiguration<ExecutionGroupEntity>
+public class ExecutionGroupConfiguration : IEntityTypeConfiguration<ExecutionGroupEntity>
 {
-    public override void Configure(EntityTypeBuilder<ExecutionGroupEntity> builder)
+    public void Configure(EntityTypeBuilder<ExecutionGroupEntity> builder)
     {
-        base.Configure(builder);
+        builder.Property(x => x.Id)
+            .ValueGeneratedOnAdd();
+
+        builder.Property(x => x.CreatedOn)
+            .IsRequired();
+
+        builder.Property(x => x.CreatedById)
+            .IsRequired();
+
+        builder.Property(x => x.RevisedOn)
+            .IsRequired();
+
+        builder.Property(x => x.RevisedById)
+            .IsRequired();
+
+        builder.Property(x => x.IsDeleted)
+            .IsRequired(); ;
+
+        builder.Property(x => x.Id)
+            .ValueGeneratedOnAdd();
 
         builder.Property(x => x.ExecutionGroupName)
             .IsRequired();
