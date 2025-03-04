@@ -23,7 +23,7 @@ public class TestController : ControllerBase
     {
         var tests = await _testService.GetTestSearchResults(testname, owningDepartment);
 
-        var testDtos = tests.Select(x => new TestBasicDto(x)).ToList();
+        var testDtos = tests.Select(x => new TestDto(x)).ToList();
 
         return Ok(testDtos.OrderBy(x => x.Department).ThenBy(x => x.Title));
     }
@@ -39,7 +39,7 @@ public class TestController : ControllerBase
             return NotFound($"Test {id} does not exist");
         }
 
-        return Ok(new TestDetailedDto(test));
+        return Ok(new TestDto(test));
     }
 
     [HttpDelete]
@@ -71,7 +71,7 @@ public class TestController : ControllerBase
                 return BadRequest(validatedtest.ErrorMessages);
             }
 
-            var dto = new TestDetailedDto(validatedtest.Value!);
+            var dto = new TestDto(validatedtest.Value!);
 
             return CreatedAtAction(nameof(GetTest), new { dto.Id }, dto);
         }
@@ -99,7 +99,7 @@ public class TestController : ControllerBase
             return BadRequest(validatedTest.ErrorMessages);
         }
 
-        return Ok(new TestDetailedDto(test));
+        return Ok(new TestDto(test));
     }
 
     [HttpPut]
@@ -120,7 +120,7 @@ public class TestController : ControllerBase
             return BadRequest(validatedTest.ErrorMessages);
         }
 
-        return Ok(new TestDetailedDto(test));
+        return Ok(new TestDto(test));
     }
 
     [HttpPut]
@@ -143,7 +143,7 @@ public class TestController : ControllerBase
                 return BadRequest(validatedTest.ErrorMessages);
             }
 
-            return Ok(new TestDetailedDto(test));
+            return Ok(new TestDto(test));
         }
         catch(TeczterValidationException ex)
         {
@@ -169,7 +169,7 @@ public class TestController : ControllerBase
             return BadRequest(validatedTest.ErrorMessages);
         }
 
-        return Ok(new TestDetailedDto(test));
+        return Ok(new TestDto(test));
     }
 
     [HttpPut]
@@ -191,7 +191,7 @@ public class TestController : ControllerBase
                 return BadRequest(validatedTest.ErrorMessages);
             }
 
-            return Ok(new TestDetailedDto(test));
+            return Ok(new TestDto(test));
         }
         catch (TeczterValidationException ex)
         {
