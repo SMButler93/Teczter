@@ -36,11 +36,6 @@ public class TestStepConfiguration : IEntityTypeConfiguration<TestStepEntity>
             .IsRequired()
             .HasMaxLength(750);
 
-        builder.HasOne(x => x.Test)
-            .WithMany(y => y.TestSteps)
-            .HasForeignKey(x => x.TestId)
-            .OnDelete(DeleteBehavior.NoAction);
-
         builder.OwnsMany(x => x.LinkUrls, ownedbuilder =>
         {
             ownedbuilder.Property(y => y.Url)

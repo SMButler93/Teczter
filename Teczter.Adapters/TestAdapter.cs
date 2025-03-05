@@ -24,6 +24,8 @@ public class TestAdapter(TeczterDbContext dbContext) : ITestAdapter
 
     public IQueryable<TestEntity> GetBasicTestSearchBaseQuery()
     {
-        return _dbContext.Tests.Where(x => !x.IsDeleted);
+        return _dbContext.Tests
+            .Include(x => x.TestSteps)
+            .Where(x => !x.IsDeleted);
     }
 }

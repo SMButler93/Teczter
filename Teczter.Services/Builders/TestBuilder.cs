@@ -27,7 +27,7 @@ namespace Teczter.Services.Builders
                     TestId = _test.Id,
                     StepPlacement = step.StepPlacement,
                     Instructions = step.Instructions,
-                    LinkUrls = step.LinkUrls
+                    LinkUrls = step.LinkUrls.Select(x => new LinkUrl(x)).ToList()
                 };
 
                 testStepEntities.Add(stepEntity);
@@ -46,7 +46,7 @@ namespace Teczter.Services.Builders
                    TestId = _test.Id,
                    StepPlacement = step.StepPlacement,
                    Instructions = step.Instructions,
-                   LinkUrls = step.LinkUrls
+                   LinkUrls = step.LinkUrls.Select(x => new LinkUrl(x)).ToList()
                });
 
             return this;

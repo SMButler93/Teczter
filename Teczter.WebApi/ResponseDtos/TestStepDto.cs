@@ -16,8 +16,6 @@ public class TestStepDto
     public string Instructions { get; set; } = null!;
     public List<LinkUrl> LinkUrls { get; set; } = [];
 
-    public TestEntity Test { get; set; } = null!;
-
     public TestStepDto(TestStepEntity testStep)
     {
         Id = testStep.Id;
@@ -30,6 +28,5 @@ public class TestStepDto
         StepPlacement = testStep.StepPlacement;
         Instructions = testStep.Instructions;
         LinkUrls = testStep.LinkUrls;
-        Test = testStep.Test;
     }
 }
