@@ -38,7 +38,7 @@ public class TestConfiguration : IEntityTypeConfiguration<TestEntity>
             .HasMaxLength(750);
 
         builder.HasMany(x => x.TestSteps)
-            .WithOne(y => y.Test)
+            .WithOne()
             .HasForeignKey(y => y.TestId)
             .OnDelete(DeleteBehavior.Cascade);
 

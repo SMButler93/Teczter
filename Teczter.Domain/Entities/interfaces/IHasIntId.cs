@@ -2,5 +2,5 @@
 
 internal interface IHasIntId
 {
-    int Id { get; set; }
+    int Id { get; }
 }

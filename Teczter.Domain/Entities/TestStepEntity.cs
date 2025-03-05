@@ -6,7 +6,9 @@ namespace Teczter.Domain.Entities;
 
 public class TestStepEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 {
-    public int Id { get; set; }
+    private int _id;
+
+    public int Id => _id;
     public DateTime CreatedOn { get; } = DateTime.Now;
     public int CreatedById { get; set; }
     public DateTime RevisedOn { get; set; } = DateTime.Now;
@@ -16,8 +18,6 @@ public class TestStepEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
     public int StepPlacement { get; set; }
     public string Instructions { get; set; } = null!;
     public List<LinkUrl> LinkUrls { get; set; } = [];
-
-    public TestEntity Test { get; set; } = null!;
 
     public void AddLinkUrl(LinkUrl linkUrl) => LinkUrls.Add(linkUrl);
 

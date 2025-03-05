@@ -6,8 +6,9 @@ namespace Teczter.Domain.Entities;
 public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 {
     private string _executionState = ExecutionStateType.Untested.ToString();
+    private int _id;
 
-    public int Id { get; set; }
+    public int Id => _id;
     public DateTime CreatedOn { get; } = DateTime.Now;
     public int CreatedById { get; set; }
     public DateTime RevisedOn { get; set; } = DateTime.Now;

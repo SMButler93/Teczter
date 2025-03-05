@@ -8,8 +8,9 @@ namespace Teczter.Domain.Entities;
 public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
 {
     private string _owningDepartment = Department.Unowned.ToString();
+    private int _id;
 
-    public int Id { get; set; }
+    public int Id => _id;
     public DateTime CreatedOn { get; } = DateTime.Now;
     public int CreatedById { get; set; }
     public DateTime RevisedOn { get; set; } = DateTime.Now;
