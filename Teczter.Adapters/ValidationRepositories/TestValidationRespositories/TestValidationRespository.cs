@@ -8,8 +8,8 @@ public class TestValidationRespository(TeczterDbContext dbContext) : ITestValida
 {
     private readonly TeczterDbContext _dbContext = dbContext;
 
-    public async Task<List<TestEntity>> GetTestEntitiesWithTitle(string title)
+    public List<TestEntity> GetTestEntitiesWithTitle(string title)
     {
-        return await _dbContext.Tests.Where(x => x.Title.ToLower() == title.ToLower()).ToListAsync();
+        return _dbContext.Tests.Where(x => x.Title.ToLower() == title.ToLower() && !x.IsDeleted).ToList();
     }
 }

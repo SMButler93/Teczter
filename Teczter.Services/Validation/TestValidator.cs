@@ -41,7 +41,7 @@ public class TestValidator : AbstractValidator<TestEntity>
 
         RuleFor(x => x.TestSteps)
             .Must(TestValidationRules.HaveNoDuplicateStepPlacements).WithMessage("An error has occured with the test step placements being duplicated.")
-            .Must(TestValidationRules.HaveNoMissingStepPlacements).WithMessage("An error has occured with test step placements not being sequential.");
+            .Must(TestValidationRules.HaveNoMissingStepPlacements).WithMessage("An error has occured due to test step placements not being sequential.");
 
         RuleForEach(x => x.TestSteps)
             .SetValidator(_testStepValidator);

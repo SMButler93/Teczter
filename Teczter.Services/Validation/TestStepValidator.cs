@@ -15,11 +15,11 @@ public class TestStepValidator : AbstractValidator<TestStepEntity>
             .NotEmpty().WithMessage("A test step must have instructions.");
 
         RuleFor(x => x.CreatedOn)
-            .Must(x => x > DateTime.MinValue).WithMessage("Invalid Date. please provide a valid date.")
-            .Must(x => x < DateTime.MaxValue).WithMessage("Invalid Date. please provide a valid date.");
+            .Must(x => x > DateTime.MinValue && x < DateTime.MaxValue)
+            .WithMessage("Invalid Date. please provide a valid date.");
 
         RuleFor(x => x.RevisedOn)
-            .Must(x => x > DateTime.MinValue).WithMessage("Invalid Date. please provide a valid date.")
-            .Must(x => x < DateTime.MaxValue).WithMessage("Invalid Date. please provide a valid date.");
+            .Must(x => x > DateTime.MinValue && x < DateTime.MaxValue)
+            .WithMessage("Invalid Date. please provide a valid date.");
     }
 }
