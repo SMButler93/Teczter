@@ -54,8 +54,10 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
     {
         foreach(var step in steps)
         {
-            AddTestStep(step);
+            TestSteps.Add(step);
         }
+
+        OrderTestSteps();
     }
 
     public void RemoveTestStep(TestStepEntity step)
