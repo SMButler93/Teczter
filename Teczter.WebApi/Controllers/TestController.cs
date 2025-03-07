@@ -7,7 +7,7 @@ using Teczter.WebApi.ResponseDtos;
 
 namespace Teczter.Services.Controllers;
 
-[Route("api/[controller]")]
+[Route("Teczter/[controller]")]
 [ApiController]
 public class TestController : ControllerBase
 {
@@ -29,7 +29,7 @@ public class TestController : ControllerBase
     }
 
     [HttpGet]
-    [Route("/TestDetails/{id:int}")]
+    [Route("{id:int}")]
     public async Task<IActionResult> GetTest(int id)
     {
         var test = await _testService.GetTestById(id);
@@ -43,7 +43,7 @@ public class TestController : ControllerBase
     }
 
     [HttpDelete]
-    [Route("/TestDetails/{id:int}/Delete")]
+    [Route("{id:int}/Delete")]
     public async Task<IActionResult> DeleteTest(int id)
     {
         var test = await _testService.GetTestById(id);
@@ -59,7 +59,7 @@ public class TestController : ControllerBase
     }
 
     [HttpPost]
-    [Route("/CreateTest")]
+    [Route("CreateTest")]
     public async Task<IActionResult> CreateTest([FromBody] CreateTestRequestDto request)
     {
         try
@@ -82,7 +82,7 @@ public class TestController : ControllerBase
     }
 
     [HttpPut]
-    [Route("/UpdateTestDetails")]
+    [Route("{id:int}/UpdateTestDetails")]
     public async Task<IActionResult> UpdateTest([FromQuery] int id, [FromBody] UpdateTestRequestDto request)
     {
         var test = await _testService.GetTestById(id);
@@ -103,7 +103,7 @@ public class TestController : ControllerBase
     }
 
     [HttpPut]
-    [Route("/{id:int}/AddUrlResource")]
+    [Route("{id:int}/AddUrlResource")]
     public async Task<IActionResult> AddLinkUrl(int id, [FromBody] string url)
     {
         var test = await _testService.GetTestById(id);
@@ -124,7 +124,7 @@ public class TestController : ControllerBase
     }
 
     [HttpPut]
-    [Route("/{id:int}/RemoveUrlResource")]
+    [Route("{id:int}/RemoveUrlResource")]
     public async Task<IActionResult> RemoveLinkUrl(int id, [FromBody] string url)
     {
         var test = await _testService.GetTestById(id);
@@ -152,7 +152,7 @@ public class TestController : ControllerBase
     }
 
     [HttpPut]
-    [Route("/{id:int}/AddTestStep")]
+    [Route("{id:int}/AddTestStep")]
     public async Task<IActionResult> AddTestStep(int id, [FromBody] TestStepCommandRequestDto request)
     {
         var test = await _testService.GetTestById(id);
@@ -173,7 +173,7 @@ public class TestController : ControllerBase
     }
 
     [HttpPut]
-    [Route("/{testId:int}/RemoveTestStep/{testStepId:int}")]
+    [Route("{testId:int}/RemoveTestStep/{testStepId:int}")]
     public async Task<IActionResult> RemoveTestStep(int testId, int testStepId)
     {
         var test = await _testService.GetTestById(testId);

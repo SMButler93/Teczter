@@ -67,12 +67,20 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
 
     private void SetCorrectStepPlacementValues()
     {
-        TestSteps = TestSteps.OrderBy(x => x.StepPlacement).ToList();
+        OrderTestSteps();
 
         for (int i = 0; i < TestSteps.Count; i++)
         {
             TestSteps[i].StepPlacement = i + 1;
         }
+    }
+
+    private void OrderTestSteps()
+    {
+        TestSteps = TestSteps
+            .OrderBy(x => x.StepPlacement)
+            .ThenByDescending(x => x.RevisedOn)
+            .ToList();
     }
 
     public void AddLinkUrl(string linkUrl) => LinkUrls.Add(new LinkUrl(linkUrl));
