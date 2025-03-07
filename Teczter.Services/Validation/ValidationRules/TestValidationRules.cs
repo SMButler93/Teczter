@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Teczter.Adapters.ValidationRepositories.TestValidationRespositories;
+﻿using Teczter.Adapters.ValidationRepositories.TestValidationRespositories;
 using Teczter.Domain.Entities;
 using Teczter.Domain.Enums;
 
@@ -9,13 +8,13 @@ public static class TestValidationRules
 {
     public static bool BeUniqueTitle(string title, ITestValidationRepository repo)
     {
-        var existingTests = repo.GetTestEntitiesWithTitle(title).Result;
+        var existingTests = repo.GetTestEntitiesWithTitle(title);
         return existingTests.Count == 0;
     }
 
     public static bool BeUniqueTitle(TestEntity test, ITestValidationRepository repo)
     {
-        var existingTests = repo.GetTestEntitiesWithTitle(test.Title).Result;
+        var existingTests = repo.GetTestEntitiesWithTitle(test.Title);
         return existingTests.Count == 0 || (existingTests.Count == 1 && existingTests[0].Id == test.Id);
     }
 
@@ -27,7 +26,7 @@ public static class TestValidationRules
 
     public static bool HaveNoDuplicateStepPlacements(List<TestStepEntity> testSteps)
     {
-        var distinctStepPlacements = testSteps.Select(x => x.StepPlacement).ToHashSet();
+        var distinctStepPlacements = testSteps.Select(x => x.StepPlacement).Distinct().ToList();
         return distinctStepPlacements.Count == testSteps.Count;
     }
 

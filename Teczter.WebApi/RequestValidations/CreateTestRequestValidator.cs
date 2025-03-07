@@ -16,7 +16,7 @@ public class CreateTestRequestValidator : AbstractValidator<CreateTestRequestDto
         RuleFor(x => x.Title)
             .NotEmpty().WithMessage("A test must have a title.")
             .Must(x => TestValidationRules.BeUniqueTitle(x, _testValidationRepository))
-            .WithMessage("A test must have a unique title.");
+            .WithMessage("This title is already being used. A test must have a unique title.");
 
         RuleFor(x => x.Description)
             .NotEmpty().WithMessage("A test must have a description");

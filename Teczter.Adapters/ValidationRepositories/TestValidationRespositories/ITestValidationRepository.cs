@@ -4,6 +4,6 @@ namespace Teczter.Adapters.ValidationRepositories.TestValidationRespositories
 {
     public interface ITestValidationRepository
     {
-        Task<List<TestEntity>> GetTestEntitiesWithTitle(string title);
+        List<TestEntity> GetTestEntitiesWithTitle(string title);
     }
 }

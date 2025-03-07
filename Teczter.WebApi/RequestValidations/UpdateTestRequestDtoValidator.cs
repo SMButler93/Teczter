@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Teczter.Adapters.ValidationRepositories.TestValidationRespositories;
 using Teczter.Services.RequestDtos.Request;
 using Teczter.Services.Validation.ValidationRules;
 
@@ -7,11 +6,8 @@ namespace Teczter.WebApi.RequestValidations;
 
 public class UpdateTestRequestDtoValidator : AbstractValidator<UpdateTestRequestDto>
 {
-    private readonly ITestValidationRepository _testValidationRepository;
-    public UpdateTestRequestDtoValidator(ITestValidationRepository testValidationRepository)
+    public UpdateTestRequestDtoValidator()
     {
-        _testValidationRepository = testValidationRepository;
-
         RuleFor(x => x.Title)
             .NotEmpty().WithMessage("A test must have a title.");
 

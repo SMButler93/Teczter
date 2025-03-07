@@ -20,6 +20,9 @@ public class TestConfiguration : IEntityTypeConfiguration<TestEntity>
         builder.Property(x => x.RevisedOn)
             .IsRequired();
 
+        builder.Property(x => x.RevisedOn)
+            .IsConcurrencyToken();
+
         builder.Property(x => x.RevisedById)
             .IsRequired();
 
