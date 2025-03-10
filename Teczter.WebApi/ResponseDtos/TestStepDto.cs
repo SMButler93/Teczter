@@ -1,5 +1,4 @@
 ﻿using Teczter.Domain.Entities;
-using Teczter.Domain.ValueObjects;
 
 namespace Teczter.WebApi.ResponseDtos;
 
@@ -14,7 +13,7 @@ public class TestStepDto
     public int TestId { get; set; }
     public int StepPlacement { get; set; }
     public string Instructions { get; set; } = null!;
-    public List<LinkUrl> LinkUrls { get; set; } = [];
+    public List<string> LinkUrls { get; set; } = [];
 
     public TestStepDto(TestStepEntity testStep)
     {
@@ -27,6 +26,6 @@ public class TestStepDto
         TestId = testStep.Id;
         StepPlacement = testStep.StepPlacement;
         Instructions = testStep.Instructions;
-        LinkUrls = testStep.LinkUrls;
+        LinkUrls = testStep.Urls;
     }
 }

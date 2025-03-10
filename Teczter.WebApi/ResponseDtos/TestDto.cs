@@ -1,5 +1,4 @@
 ﻿using Teczter.Domain.Entities;
-using Teczter.Domain.ValueObjects;
 
 namespace Teczter.WebApi.ResponseDtos;
 
@@ -13,7 +12,7 @@ public class TestDto
     public int RevisedById { get; set; }
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
-    public List<LinkUrl> LinkUrls { get; set; } = [];
+    public List<string> LinkUrls { get; set; } = [];
     public string Department { get; set; } = null!;
 
     public List<TestStepDto> TestSteps { get; set; } = [];
@@ -28,7 +27,7 @@ public class TestDto
         RevisedById = test.RevisedById;
         Title = test.Title;
         Description = test.Description;
-        LinkUrls = test.LinkUrls;
+        LinkUrls = test.Urls;
         Department = test.OwningDepartment;
         TestSteps = test.TestSteps.Select(x => new TestStepDto(x)).ToList();
     }

@@ -38,11 +38,5 @@ public class TestStepConfiguration : IEntityTypeConfiguration<TestStepEntity>
         builder.Property(x => x.Instructions)
             .IsRequired()
             .HasMaxLength(750);
-
-        builder.OwnsMany(x => x.LinkUrls, ownedbuilder =>
-        {
-            ownedbuilder.Property(y => y.Url)
-            .HasColumnName("LinkUrl");
-        });
     }
 }

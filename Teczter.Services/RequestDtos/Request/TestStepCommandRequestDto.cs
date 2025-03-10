@@ -1,6 +1,4 @@
-﻿using Teczter.Domain.ValueObjects;
-
-namespace Teczter.Services.DTOs.Request;
+﻿namespace Teczter.Services.DTOs.Request;
 
 public class TestStepCommandRequestDto
 {

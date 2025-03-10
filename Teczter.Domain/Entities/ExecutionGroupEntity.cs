@@ -5,9 +5,7 @@ namespace Teczter.Domain.Entities;
 
 public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 {
-    private int _id;
-
-    public int Id => _id;
+    public int Id { get; private set; }
     public DateTime CreatedOn { get; } = DateTime.Now;
     public int CreatedById { get; set; }
     public DateTime RevisedOn { get; set; } = DateTime.Now;

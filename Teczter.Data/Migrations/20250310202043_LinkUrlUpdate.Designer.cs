@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Teczter.Data;
 
@@ -11,9 +12,11 @@ using Teczter.Data;
 namespace Teczter.Data.Migrations
 {
     [DbContext(typeof(TeczterDbContext))]
-    partial class TeczterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250310202043_LinkUrlUpdate")]
+    partial class LinkUrlUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,6 +131,26 @@ namespace Teczter.Data.Migrations
                     b.ToTable("ExecutionGroups");
                 });
 
+            modelBuilder.Entity("Teczter.Domain.Entities.LinkUrl", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Url")
+                        .IsUnique();
+
+                    b.ToTable("LinkUrl");
+                });
+
             modelBuilder.Entity("Teczter.Domain.Entities.TestEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -165,10 +188,6 @@ namespace Teczter.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(75)
                         .HasColumnType("nvarchar(75)");
-
-                    b.PrimitiveCollection<string>("Urls")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -212,10 +231,6 @@ namespace Teczter.Data.Migrations
 
                     b.Property<int>("TestId")
                         .HasColumnType("int");
-
-                    b.PrimitiveCollection<string>("Urls")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -264,6 +279,36 @@ namespace Teczter.Data.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("TestStep_Urls", b =>
+                {
+                    b.Property<int>("LinkUrlsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TestStepEntityId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LinkUrlsId", "TestStepEntityId");
+
+                    b.HasIndex("TestStepEntityId");
+
+                    b.ToTable("TestStep_Urls");
+                });
+
+            modelBuilder.Entity("Test_Urls", b =>
+                {
+                    b.Property<int>("LinkUrlsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TestEntityId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LinkUrlsId", "TestEntityId");
+
+                    b.HasIndex("TestEntityId");
+
+                    b.ToTable("Test_Urls");
+                });
+
             modelBuilder.Entity("Teczter.Domain.Entities.ExecutionEntity", b =>
                 {
                     b.HasOne("Teczter.Domain.Entities.UserEntity", "AssignedUser")
@@ -301,6 +346,36 @@ namespace Teczter.Data.Migrations
                     b.HasOne("Teczter.Domain.Entities.TestEntity", null)
                         .WithMany("TestSteps")
                         .HasForeignKey("TestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TestStep_Urls", b =>
+                {
+                    b.HasOne("Teczter.Domain.Entities.LinkUrl", null)
+                        .WithMany()
+                        .HasForeignKey("LinkUrlsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Teczter.Domain.Entities.TestStepEntity", null)
+                        .WithMany()
+                        .HasForeignKey("TestStepEntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Test_Urls", b =>
+                {
+                    b.HasOne("Teczter.Domain.Entities.LinkUrl", null)
+                        .WithMany()
+                        .HasForeignKey("LinkUrlsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Teczter.Domain.Entities.TestEntity", null)
+                        .WithMany()
+                        .HasForeignKey("TestEntityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
