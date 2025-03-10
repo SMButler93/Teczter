@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-using Teczter.Domain.Entities;
-using Teczter.Domain.ValueObjects;
+﻿using Teczter.Domain.Entities;
 using Teczter.Services.DTOs.Request;
 using Teczter.Services.ServiceInterfaces;
 
@@ -27,7 +25,7 @@ namespace Teczter.Services.Builders
                     TestId = _test.Id,
                     StepPlacement = step.StepPlacement,
                     Instructions = step.Instructions,
-                    LinkUrls = step.LinkUrls.Select(x => new LinkUrl(x)).ToList()
+                    Urls = step.LinkUrls
                 };
 
                 testStepEntities.Add(stepEntity);
@@ -46,7 +44,7 @@ namespace Teczter.Services.Builders
                    TestId = _test.Id,
                    StepPlacement = step.StepPlacement,
                    Instructions = step.Instructions,
-                   LinkUrls = step.LinkUrls.Select(x => new LinkUrl(x)).ToList()
+                   Urls = step.LinkUrls
                });
 
             return this;

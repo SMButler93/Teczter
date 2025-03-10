@@ -44,11 +44,5 @@ public class TestConfiguration : IEntityTypeConfiguration<TestEntity>
             .WithOne()
             .HasForeignKey(y => y.TestId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.OwnsMany(x => x.LinkUrls, ownedbuilder =>
-        {
-            ownedbuilder.Property(y => y.Url)
-            .HasColumnName("LinkUrl");
-        });
     }
 }

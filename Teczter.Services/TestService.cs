@@ -94,7 +94,7 @@ public class TestService : ITestService
 
     public async Task<TeczterValidationResult<TestEntity>> RemoveLinkUrl(TestEntity test, string url)
     {
-        var linkUrl = test.LinkUrls.SingleOrDefault(x => x.Url == url) ?? 
+        var linkUrl = test.Urls.SingleOrDefault(x => x == url) ?? 
             throw new TeczterValidationException("Cannot remove a link that does not belong to this test");
 
         test.RemoveLinkUrl(linkUrl);

@@ -5,8 +5,7 @@ namespace Teczter.Domain.Entities;
 
 public class UserEntity : IHasGuidid, ISoftDeleteable
 {
-    private Guid _id;
-    public Guid Id => _id;
+    public Guid Id { get; private set; }
     public bool IsDeleted { get; set; }
     public string Username { get; set; } = null!;
     public string Email { get; set; } = null!;

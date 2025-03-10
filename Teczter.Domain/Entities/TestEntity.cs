@@ -1,16 +1,14 @@
 ﻿using Teczter.Domain.Entities.interfaces;
 using Teczter.Domain.Enums;
 using Teczter.Domain.Exceptions;
-using Teczter.Domain.ValueObjects;
 
 namespace Teczter.Domain.Entities;
 
 public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
 {
     private string _owningDepartment = Department.Unowned.ToString();
-    private int _id;
 
-    public int Id => _id;
+    public int Id { get; private set; }
     public DateTime CreatedOn { get; } = DateTime.Now;
     public int CreatedById { get; set; }
     public DateTime RevisedOn { get; set; } = DateTime.Now;
@@ -18,7 +16,7 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
     public bool IsDeleted { get; set; }
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
-    public List<LinkUrl> LinkUrls { get; set; } = [];
+    public List<string> Urls { get; set; } = [];
     public string OwningDepartment
 
     {
@@ -85,9 +83,15 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
             .ToList();
     }
 
-    public void AddLinkUrl(string linkUrl) => LinkUrls.Add(new LinkUrl(linkUrl));
+    public void AddLinkUrl(string url)
+    {
+        if (Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var _))
+        {
+            Urls.Add(url);
+        }
+    }
     
-    public void RemoveLinkUrl(LinkUrl linkUrl) => LinkUrls.Remove(linkUrl);
+    public void RemoveLinkUrl(string url) => Urls.Remove(url);
 
     public void Delete()
     {
