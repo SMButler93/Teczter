@@ -27,4 +27,12 @@ public class TestStepEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
     public void RemoveLinkUrl(string linkUrl) => Urls.Remove(linkUrl);
 
     public void Delete() => IsDeleted = true;
+
+    public void Update(int stepPlacement, string instructions, List<string> urls)
+    {
+        StepPlacement = stepPlacement;
+        Instructions = instructions;
+        Urls = urls;
+        RevisedOn = DateTime.Now;
+    }
 }

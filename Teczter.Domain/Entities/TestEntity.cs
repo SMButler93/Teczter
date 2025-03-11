@@ -6,8 +6,6 @@ namespace Teczter.Domain.Entities;
 
 public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
 {
-    private string _owningDepartment = Department.Unowned.ToString();
-
     public int Id { get; private set; }
     public DateTime CreatedOn { get; } = DateTime.Now;
     public int CreatedById { get; set; }
@@ -17,30 +15,9 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
     public List<string> Urls { get; set; } = [];
-    public string OwningDepartment
-
-    {
-        get => _owningDepartment;
-
-        set
-        {
-            if (!ValidateOwningDepartment(value))
-            {
-                throw new TeczterValidationException($"{value} is an invalid department.");
-            }
-
-            _owningDepartment = value.ToUpper();
-        }
-    }
+    public Department OwningDepartment { get; set; }
 
     public List<TestStepEntity> TestSteps { get; set; } = [];
-
-    private static bool ValidateOwningDepartment(string department)
-    {
-        var validValues = Enum.GetNames(typeof(Department)).Select(x => x.ToLower());
-
-        return validValues.Contains(department.ToLower());
-    } 
 
     public void AddTestStep(TestStepEntity step)
     {
@@ -64,6 +41,8 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
         TestSteps.Remove(step);
         SetCorrectStepPlacementValues();
     }
+
+    public void EnsureTestStepOrderingIsValidPostUpdate() => SetCorrectStepPlacementValues();
 
     private void SetCorrectStepPlacementValues()
     {

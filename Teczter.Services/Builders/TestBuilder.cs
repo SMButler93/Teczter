@@ -1,4 +1,5 @@
 ﻿using Teczter.Domain.Entities;
+using Teczter.Domain.Enums;
 using Teczter.Services.DTOs.Request;
 using Teczter.Services.ServiceInterfaces;
 
@@ -25,7 +26,7 @@ namespace Teczter.Services.Builders
                     TestId = _test.Id,
                     StepPlacement = step.StepPlacement,
                     Instructions = step.Instructions,
-                    Urls = step.LinkUrls
+                    Urls = step.Urls
                 };
 
                 testStepEntities.Add(stepEntity);
@@ -44,7 +45,7 @@ namespace Teczter.Services.Builders
                    TestId = _test.Id,
                    StepPlacement = step.StepPlacement,
                    Instructions = step.Instructions,
-                   Urls = step.LinkUrls
+                   Urls = step.Urls
                });
 
             return this;
@@ -80,7 +81,7 @@ namespace Teczter.Services.Builders
             return this;
         }
 
-        public ITestBuilder SetOwningDepartment(string department)
+        public ITestBuilder SetOwningDepartment(Department department)
         {
             _test.OwningDepartment = department;
             return this;

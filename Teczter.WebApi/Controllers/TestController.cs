@@ -83,7 +83,7 @@ public class TestController : ControllerBase
 
     [HttpPut]
     [Route("{id:int}/UpdateTestDetails")]
-    public async Task<IActionResult> UpdateTest([FromQuery] int id, [FromBody] UpdateTestRequestDto request)
+    public async Task<IActionResult> UpdateTest(int id, [FromBody] UpdateTestRequestDto request)
     {
         var test = await _testService.GetTestById(id);
 
@@ -182,9 +182,38 @@ public class TestController : ControllerBase
         {
             return NotFound($"test {testId} does not exist.");
         }
+
         try
         {
             var validatedTest = await _testService.RemoveTestStep(test, testStepId);
+
+            if (!validatedTest.IsValid)
+            {
+                return BadRequest(validatedTest.ErrorMessages);
+            }
+
+            return Ok(new TestDto(test));
+        }
+        catch (TeczterValidationException ex)
+        {
+            return BadRequest(ex);
+        }
+    }
+
+    [HttpPut]
+    [Route("{testId:int}/UpdateTestStep/{testStepId:int}")]
+    public async Task<IActionResult> UpdateTestStep(int testId, int testStepId, [FromBody] TestStepCommandRequestDto request)
+    {
+        var test = await _testService.GetTestById(testId);
+
+        if (test == null)
+        {
+            return NotFound($"test {testId} does not exist.");
+        }
+
+        try
+        {
+            var validatedTest = await _testService.UpdateTestStep(test, testStepId, request);
 
             if (!validatedTest.IsValid)
             {

@@ -1,4 +1,5 @@
 ﻿using Teczter.Domain.Entities;
+using Teczter.Domain.Enums;
 using Teczter.Services.DTOs.Request;
 
 namespace Teczter.Services.ServiceInterfaces;
@@ -9,7 +10,7 @@ public interface ITestBuilder
     ITestBuilder UsingContext(TestEntity test);
     ITestBuilder SetTitle(string title);
     ITestBuilder SetDescription(string description);
-    ITestBuilder SetOwningDepartment(string department);
+    ITestBuilder SetOwningDepartment(Department department);
     ITestBuilder AddSteps(IEnumerable<TestStepCommandRequestDto> steps);
     ITestBuilder AddStep(TestStepCommandRequestDto step);
     ITestBuilder AddSteps(IEnumerable<TestStepEntity> steps);

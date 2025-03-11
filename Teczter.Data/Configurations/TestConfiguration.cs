@@ -40,6 +40,10 @@ public class TestConfiguration : IEntityTypeConfiguration<TestEntity>
             .IsRequired()
             .HasMaxLength(750);
 
+        builder.Property(x => x.OwningDepartment)
+            .IsRequired()
+            .HasConversion<string>();
+
         builder.HasMany(x => x.TestSteps)
             .WithOne()
             .HasForeignKey(y => y.TestId)

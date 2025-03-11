@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Shouldly;
 using Teczter.Adapters.AdapterInterfaces;
 using Teczter.Domain.Entities;
+using Teczter.Domain.Enums;
 using Teczter.Persistence;
 using Teczter.Services.ServiceInterfaces;
 
@@ -91,7 +92,7 @@ public class TestServiceTests
             IsDeleted = false,
             Title = "Basic test instance.",
             Description = "A basic instance for testing.",
-            OwningDepartment = "Accounting",
+            OwningDepartment = Department.Accounting,
             TestSteps = GetBasicTestStepInstances()
         };
     }

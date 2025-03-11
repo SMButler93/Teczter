@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using Shouldly;
 using Teczter.Domain.Entities;
+using Teczter.Domain.Enums;
 using Teczter.Domain.Exceptions;
 
 namespace Teczter.Domain.Tests.TestEntityTests;
@@ -15,7 +16,7 @@ public class TestEntityTests
             IsDeleted = false,
             Title = "Basic test instance.",
             Description = "Basic instance for testing.",
-            OwningDepartment = "Operations",
+            OwningDepartment = Department.Operations,
             TestSteps = GetBasicTestStepInstances()
         };
     }
@@ -72,30 +73,6 @@ public class TestEntityTests
         //Assert:
         sut.IsDeleted.ShouldBeTrue();
         sut.TestSteps.All(x => x.IsDeleted).ShouldBeTrue();
-    }
-
-    [Test]
-    public void SetOwningDepartment_WhenInvalid_ShouldThrow()
-    {
-        //Arrange:
-        var sut = GetSubjectUnderTest();
-        var invalidDepartment = "Invaliddept";
-
-        //Act&Assert:
-        Should.Throw<TeczterValidationException>(() => sut.OwningDepartment = invalidDepartment);
-
-    }
-
-    [Test]
-    public void SetOwningDepartment_WhenValid_ShouldNotThrow()
-    {
-        //Arrange:
-        var sut = GetSubjectUnderTest();
-        var validDepartment = "Operations";
-
-        //Act&Assert:
-        Should.NotThrow(() => sut.OwningDepartment = validDepartment);
-
     }
 
     [Test]
