@@ -87,7 +87,7 @@ public class TestService : ITestService
     {
         var TestSearchQuery = _testAdapter.GetBasicTestSearchBaseQuery();
         
-        TestSearchQuery = testTitle == null ? TestSearchQuery : TestSearchQuery.Where(x => x.Title.Contains(testTitle, StringComparison.OrdinalIgnoreCase));
+        TestSearchQuery = testTitle == null ? TestSearchQuery : TestSearchQuery.Where(x => x.Title.Contains(testTitle));
         TestSearchQuery = owningDepartment == null ? TestSearchQuery : TestSearchQuery.Where(x => x.OwningDepartment.ToString() == owningDepartment);
 
         return await TestSearchQuery.ToListAsync();
