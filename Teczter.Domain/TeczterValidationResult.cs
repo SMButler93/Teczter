@@ -1,4 +1,4 @@
-﻿namespace Teczter.Domain.ValidationObjects;
+﻿namespace Teczter.Domain;
 
 public record TeczterValidationResult<T>
 {

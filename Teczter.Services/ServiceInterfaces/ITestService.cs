@@ -1,5 +1,5 @@
-﻿using Teczter.Domain.Entities;
-using Teczter.Domain.ValidationObjects;
+﻿using Teczter.Domain;
+using Teczter.Domain.Entities;
 using Teczter.Services.DTOs.Request;
 using Teczter.Services.RequestDtos.Request;
 

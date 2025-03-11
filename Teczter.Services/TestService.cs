@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Teczter.Adapters.AdapterInterfaces;
+using Teczter.Domain;
 using Teczter.Domain.Entities;
 using Teczter.Domain.Enums;
 using Teczter.Domain.Exceptions;
-using Teczter.Domain.ValidationObjects;
 using Teczter.Persistence;
 using Teczter.Services.DTOs.Request;
 using Teczter.Services.RequestDtos.Request;

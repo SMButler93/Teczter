@@ -1,4 +1,5 @@
-﻿using Teczter.Domain.Entities.interfaces;
+﻿using System.Text.RegularExpressions;
+using Teczter.Domain.Entities.interfaces;
 using Teczter.Domain.Enums;
 using Teczter.Domain.Exceptions;
 
@@ -64,12 +65,14 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
 
     public void AddLinkUrl(string url)
     {
-        if (Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var _))
+        if (!IsValidUrl(url))
         {
-            Urls.Add(url);
+            throw new TeczterValidationException($"{url} is an invalid URL.");
         }
+
+        Urls.Add(url);
     }
-    
+
     public void RemoveLinkUrl(string url) => Urls.Remove(url);
 
     public void Delete()
@@ -80,5 +83,14 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
         }
 
         IsDeleted = true;
+    }
+
+    private static bool IsValidUrl(string url)
+    {
+        var pattern = @"^(https?:\/\/www\.|www\.)[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.(com|co\.uk|org)$";
+
+        var regex = new Regex(pattern);
+
+        return regex.IsMatch(url);
     }
 }
