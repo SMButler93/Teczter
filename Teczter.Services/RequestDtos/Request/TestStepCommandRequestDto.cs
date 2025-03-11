@@ -4,5 +4,5 @@ public class TestStepCommandRequestDto
 {
     public int StepPlacement { get; set; }
     public string Instructions { get; set; } = null!;
-    public List<string> LinkUrls { get; set; } = [];
+    public List<string> Urls { get; set; } = [];
 }

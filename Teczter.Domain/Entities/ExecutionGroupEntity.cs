@@ -13,7 +13,7 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
     public bool IsDeleted { get; set; }
     public string ExecutionGroupName { get; private set; } = null!;
     public DateTime? ClosedDate { get; private set; } = null;
-    public bool IsComplete => Executions.All(x => x.ExecutionState != ExecutionStateType.Untested.ToString());
+    public bool IsComplete => Executions.All(x => x.ExecutionState != ExecutionStateType.Untested);
     public bool IsClosed => ClosedDate.HasValue;
     public List<string> ExecutionGroupNotes { get; set; } = [];
 

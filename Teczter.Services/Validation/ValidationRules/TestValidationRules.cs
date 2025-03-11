@@ -20,8 +20,7 @@ public static class TestValidationRules
 
     public static bool BeAValidDepartment(string department)
     {
-        var validDepartments = Enum.GetNames(typeof(Department)).Select(x => x.ToLower());
-        return validDepartments.Contains(department.ToLower());
+        return Enum.TryParse<Department>(department, true, out var _);
     }
 
     public static bool HaveNoDuplicateStepPlacements(List<TestStepEntity> testSteps)

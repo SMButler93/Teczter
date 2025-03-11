@@ -1,9 +1,10 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Teczter.Adapters.AdapterInterfaces;
+using Teczter.Domain;
 using Teczter.Domain.Entities;
+using Teczter.Domain.Enums;
 using Teczter.Domain.Exceptions;
-using Teczter.Domain.ValidationObjects;
 using Teczter.Persistence;
 using Teczter.Services.DTOs.Request;
 using Teczter.Services.RequestDtos.Request;
@@ -58,7 +59,7 @@ public class TestService : ITestService
             .NewInstance()
             .SetTitle(request.Title)
             .SetDescription(request.Description)
-            .SetOwningDepartment(request.OwningDepartment)
+            .SetOwningDepartment(Enum.Parse<Department>(request.OwningDepartment))
             .AddLinkUrls(request.LinkUrls ?? [])
             .AddSteps(request.TestSteps)
             .Build();
@@ -86,18 +87,18 @@ public class TestService : ITestService
     {
         var TestSearchQuery = _testAdapter.GetBasicTestSearchBaseQuery();
         
-        TestSearchQuery = testTitle == null ? TestSearchQuery : TestSearchQuery.Where(x => x.Title.Contains(testTitle));
-        TestSearchQuery = owningDepartment == null ? TestSearchQuery : TestSearchQuery.Where(x => x.OwningDepartment == owningDepartment);
+        TestSearchQuery = testTitle == null ? TestSearchQuery : TestSearchQuery.Where(x => x.Title.Contains(testTitle, StringComparison.OrdinalIgnoreCase));
+        TestSearchQuery = owningDepartment == null ? TestSearchQuery : TestSearchQuery.Where(x => x.OwningDepartment.ToString() == owningDepartment);
 
         return await TestSearchQuery.ToListAsync();
     }
 
     public async Task<TeczterValidationResult<TestEntity>> RemoveLinkUrl(TestEntity test, string url)
     {
-        var linkUrl = test.Urls.SingleOrDefault(x => x == url) ?? 
+        var existingUrl = test.Urls.SingleOrDefault(x => x.Equals(x, StringComparison.OrdinalIgnoreCase)) ?? 
             throw new TeczterValidationException("Cannot remove a link that does not belong to this test");
 
-        test.RemoveLinkUrl(linkUrl);
+        test.RemoveLinkUrl(existingUrl);
 
         var result = await ValidateTestState(test);
 
@@ -108,7 +109,7 @@ public class TestService : ITestService
     public async Task<TeczterValidationResult<TestEntity>> RemoveTestStep(TestEntity test, int testStepId)
     {
         var testStep = test.TestSteps.SingleOrDefault(x => x.Id == testStepId && !x.IsDeleted) ?? 
-            throw new TeczterValidationException("Cannot Remove a test step that does not exist, has already been deleted, " +
+            throw new TeczterValidationException("Cannot remove a test step that does not exist, has already been deleted, " +
             "or does not belong to this test.");
 
         test.RemoveTestStep(testStep);
@@ -124,7 +125,22 @@ public class TestService : ITestService
         _builder.UsingContext(test)
             .SetTitle(testUpdates.Title)
             .SetDescription(testUpdates.Description)
-            .SetOwningDepartment(testUpdates.OwningDepartment);
+            .SetOwningDepartment(Enum.Parse<Department>(testUpdates.OwningDepartment, true));
+
+        var result = await ValidateTestState(test);
+
+        await EvaluateValidationResultAndPersist(result);
+        return result;
+    }
+
+    public async Task<TeczterValidationResult<TestEntity>> UpdateTestStep(TestEntity test, int testStepId, TestStepCommandRequestDto request)
+    {
+        var testStep = test.TestSteps.SingleOrDefault(x => x.Id == testStepId && !x.IsDeleted) ??
+            throw new TeczterValidationException("Cannot update a test step that does not exist or has already been deleted");
+
+        testStep.Update(request.StepPlacement, request.Instructions, request.Urls);
+
+        test.EnsureTestStepOrderingIsValidPostUpdate();
 
         var result = await ValidateTestState(test);
 

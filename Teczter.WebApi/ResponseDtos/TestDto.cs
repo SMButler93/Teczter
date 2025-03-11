@@ -28,7 +28,7 @@ public class TestDto
         Title = test.Title;
         Description = test.Description;
         LinkUrls = test.Urls;
-        Department = test.OwningDepartment;
+        Department = test.OwningDepartment.ToString();
         TestSteps = test.TestSteps.Select(x => new TestStepDto(x)).ToList();
     }
 }

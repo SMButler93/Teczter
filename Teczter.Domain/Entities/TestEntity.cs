@@ -1,4 +1,5 @@
-﻿using Teczter.Domain.Entities.interfaces;
+﻿using System.Text.RegularExpressions;
+using Teczter.Domain.Entities.interfaces;
 using Teczter.Domain.Enums;
 using Teczter.Domain.Exceptions;
 
@@ -6,8 +7,6 @@ namespace Teczter.Domain.Entities;
 
 public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
 {
-    private string _owningDepartment = Department.Unowned.ToString();
-
     public int Id { get; private set; }
     public DateTime CreatedOn { get; } = DateTime.Now;
     public int CreatedById { get; set; }
@@ -17,30 +16,9 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
     public List<string> Urls { get; set; } = [];
-    public string OwningDepartment
-
-    {
-        get => _owningDepartment;
-
-        set
-        {
-            if (!ValidateOwningDepartment(value))
-            {
-                throw new TeczterValidationException($"{value} is an invalid department.");
-            }
-
-            _owningDepartment = value.ToUpper();
-        }
-    }
+    public Department OwningDepartment { get; set; }
 
     public List<TestStepEntity> TestSteps { get; set; } = [];
-
-    private static bool ValidateOwningDepartment(string department)
-    {
-        var validValues = Enum.GetNames(typeof(Department)).Select(x => x.ToLower());
-
-        return validValues.Contains(department.ToLower());
-    } 
 
     public void AddTestStep(TestStepEntity step)
     {
@@ -65,6 +43,8 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
         SetCorrectStepPlacementValues();
     }
 
+    public void EnsureTestStepOrderingIsValidPostUpdate() => SetCorrectStepPlacementValues();
+
     private void SetCorrectStepPlacementValues()
     {
         OrderTestSteps();
@@ -85,12 +65,14 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
 
     public void AddLinkUrl(string url)
     {
-        if (Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var _))
+        if (!IsValidUrl(url))
         {
-            Urls.Add(url);
+            throw new TeczterValidationException($"{url} is an invalid URL.");
         }
+
+        Urls.Add(url);
     }
-    
+
     public void RemoveLinkUrl(string url) => Urls.Remove(url);
 
     public void Delete()
@@ -101,5 +83,14 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
         }
 
         IsDeleted = true;
+    }
+
+    private static bool IsValidUrl(string url)
+    {
+        var pattern = @"^(https?:\/\/www\.|www\.)[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.(com|co\.uk|org)$";
+
+        var regex = new Regex(pattern);
+
+        return regex.IsMatch(url);
     }
 }

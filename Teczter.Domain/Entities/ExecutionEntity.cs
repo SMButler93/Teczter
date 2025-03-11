@@ -5,7 +5,7 @@ namespace Teczter.Domain.Entities;
 
 public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 {
-    private string _executionState = ExecutionStateType.Untested.ToString();
+    private ExecutionStateType _executionState = ExecutionStateType.Untested;
 
     public int Id { get; private set; }
     public DateTime CreatedOn { get; } = DateTime.Now;
@@ -16,42 +16,21 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
     public int ExecutionGroupId { get; init; }
     public Guid? AssignedUserId { get; set; } = null;
     public int TestId { get; set; }
-    public bool HasPassed => ExecutionState == ExecutionStateType.Pass.ToString();
+    public bool HasPassed => ExecutionState == ExecutionStateType.Pass;
     public int? FailedStepId { get; private set; } = null;
     public string? FailureReason { get; private set; } = null;
     public int? TestedById { get; private set; } = null;
     public string? Notes { get; private set; } = null;
-    public string ExecutionState
-    {
-        get
-        {
-            return _executionState;
-        }
-        private set
-        {
-            if (ValidateTestState(value))
-            {
-                _executionState = value.ToUpper();
-            }
-        }
-    }
-
+    public ExecutionStateType ExecutionState { get; set; }
     public ExecutionGroupEntity ExecutionGroup { get; } = null!;
     public TestEntity Test { get; set; } = null!;
     public TestStepEntity? FailedStep { get; set; }
     public UserEntity? AssignedUser { get; set; }
 
-    private static bool ValidateTestState(string state)
-    {
-        var validValues = Enum.GetNames(typeof(ExecutionStateType));
-
-        return validValues.Contains(state.ToUpper());
-    }
-
     public void Pass(int userId)
     {
         TestedById = userId;
-        ExecutionState = ExecutionStateType.Pass.ToString();
+        ExecutionState = ExecutionStateType.Pass;
     }
 
     public void Fail(int userId, int testStepId, string failureReason)
@@ -59,7 +38,7 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         TestedById = userId;
         FailedStepId = testStepId;
         FailureReason = failureReason;
-        ExecutionState = ExecutionStateType.Fail.ToString();
+        ExecutionState = ExecutionStateType.Fail;
     }
 
     public void AddNotes(string notes) => Notes = notes;
