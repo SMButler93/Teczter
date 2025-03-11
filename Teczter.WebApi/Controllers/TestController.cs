@@ -19,9 +19,9 @@ public class TestController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetTestSearchResults([FromQuery] string? testname, [FromQuery] string? owningDepartment)
+    public async Task<IActionResult> GetTestSearchResults([FromQuery] string? testName, [FromQuery] string? owningDepartment)
     {
-        var tests = await _testService.GetTestSearchResults(testname, owningDepartment);
+        var tests = await _testService.GetTestSearchResults(testName, owningDepartment);
 
         var testDtos = tests.Select(x => new TestDto(x)).ToList();
 
