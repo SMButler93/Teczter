@@ -14,13 +14,13 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
     public int RevisedById { get; set; }
     public bool IsDeleted { get; set; }
     public int ExecutionGroupId { get; init; }
-    public Guid? AssignedUserId { get; set; } = null;
+    public Guid? AssignedUserId { get; set; }
     public int TestId { get; set; }
     public bool HasPassed => ExecutionState == ExecutionStateType.Pass;
-    public int? FailedStepId { get; private set; } = null;
-    public string? FailureReason { get; private set; } = null;
-    public int? TestedById { get; private set; } = null;
-    public string? Notes { get; private set; } = null;
+    public int? FailedStepId { get; private set; }
+    public string? FailureReason { get; private set; }
+    public int? TestedById { get; private set; }
+    public string? Notes { get; private set; }
     public ExecutionStateType ExecutionState { get; set; }
     public ExecutionGroupEntity ExecutionGroup { get; } = null!;
     public TestEntity Test { get; set; } = null!;
