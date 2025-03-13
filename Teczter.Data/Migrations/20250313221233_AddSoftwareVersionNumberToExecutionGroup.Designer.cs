@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Teczter.Data;
 
@@ -11,9 +12,11 @@ using Teczter.Data;
 namespace Teczter.Data.Migrations
 {
     [DbContext(typeof(TeczterDbContext))]
-    partial class TeczterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250313221233_AddSoftwareVersionNumberToExecutionGroup")]
+    partial class AddSoftwareVersionNumberToExecutionGroup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
