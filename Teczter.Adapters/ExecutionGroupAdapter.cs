@@ -20,4 +20,11 @@ public class ExecutionGroupAdapter : IExecutionGroupAdapter
             .Include(x => x.Executions)
             .Where(x => !x.IsDeleted);
     }
+
+    public async Task<ExecutionGroupEntity?> GetExecutionGroupById(int id)
+    {
+        return await _dbContext.ExecutionGroups
+            .Include(x => x.Executions)
+            .SingleOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+    }
 }

@@ -23,6 +23,36 @@ namespace Teczter.Services.Controllers
             var dtos = executionGroups.Select(x => new ExecutionGroupDto(x)).ToList();
 
             return Ok(dtos.OrderBy(x => x.CreatedOn).ThenBy(x => x.SoftwareVersionNumber));
-        } 
+        }
+
+        [HttpGet]
+        [Route("{id:int}")]
+        public async Task<IActionResult> GetExecutionGroupById(int id)
+        {
+            var executionGroup = await _executionGroupService.GetExecutionGroupById(id);
+
+            if (executionGroup == null)
+            {
+                return NotFound($"ExecutionGroup {id} does not exist");
+            }
+
+            return Ok(new ExecutionGroupDto(executionGroup));
+        }
+
+        [HttpDelete]
+        [Route("{id:int}/Delete")]
+        public async Task<IActionResult> DeleteExecutionGroup(int id)
+        {
+            var executionGroup = await _executionGroupService.GetExecutionGroupById(id);
+
+            if (executionGroup == null)
+            {
+                return NotFound($"ExecutionGroup {id} does not exist");
+            }
+
+            await _executionGroupService.DeleteExecutionGroup(executionGroup);
+
+            return NoContent();
+        }
     }
 }

@@ -61,7 +61,10 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         {
             ExecutionGroupId = executionGroupId,
             TestId = TestId,
-            Test = Test
+            Test = Test,
+            AssignedUserId = AssignedUserId,
+            Notes = Notes,
+            ExecutionState = ExecutionStateType.Untested
         };
     }
 }
