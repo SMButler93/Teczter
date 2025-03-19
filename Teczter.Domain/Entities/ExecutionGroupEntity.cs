@@ -11,7 +11,7 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
     public DateTime RevisedOn { get; set; } = DateTime.Now;
     public int RevisedById { get; set; }
     public bool IsDeleted { get; set; }
-    public string ExecutionGroupName { get; private set; } = null!;
+    public string ExecutionGroupName { get; set; } = null!;
     public string? SoftwareVersionNumber { get; set; }
     public DateTime? ClosedDate { get; private set; } = null;
     public bool IsComplete => Executions.All(x => x.ExecutionState != ExecutionStateType.Untested);
@@ -41,12 +41,12 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         ExecutionGroupNotes.Add(note);
     }
 
-    public ExecutionGroupEntity CloneExecutionGroup(string newGroupName)
+    public ExecutionGroupEntity CloneExecutionGroup(string newGroupName, string? versionNumber)
     {
         return new ExecutionGroupEntity
         {
             ExecutionGroupName = newGroupName,
-            Executions = Executions.Select(x => x.CloneExecution(Id)).ToList(),
+            SoftwareVersionNumber = versionNumber,
             ExecutionGroupNotes = ExecutionGroupNotes
         };
     }

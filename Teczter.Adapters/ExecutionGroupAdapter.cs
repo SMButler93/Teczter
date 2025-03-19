@@ -14,6 +14,11 @@ public class ExecutionGroupAdapter : IExecutionGroupAdapter
         _dbContext = dbContext;
     }
 
+    public async Task CreateNewExecutionGroup(ExecutionGroupEntity executionGroup)
+    {
+        await _dbContext.ExecutionGroups.AddAsync(executionGroup);
+    }
+
     public IQueryable<ExecutionGroupEntity> GetBasicExecutionGroupSearchQuery()
     {
         return _dbContext.ExecutionGroups
