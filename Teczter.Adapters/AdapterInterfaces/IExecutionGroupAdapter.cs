@@ -6,4 +6,5 @@ public interface IExecutionGroupAdapter
 {
     IQueryable<ExecutionGroupEntity> GetBasicExecutionGroupSearchQuery();
     Task<ExecutionGroupEntity?> GetExecutionGroupById(int id);
+    Task CreateNewExecutionGroup(ExecutionGroupEntity executionGroup);
 }
