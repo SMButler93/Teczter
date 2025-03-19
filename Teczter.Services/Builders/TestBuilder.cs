@@ -3,122 +3,109 @@ using Teczter.Domain.Enums;
 using Teczter.Services.DTOs.Request;
 using Teczter.Services.ServiceInterfaces;
 
-namespace Teczter.Services.Builders
+namespace Teczter.Services.Builders;
+
+internal class TestBuilder() : ITestBuilder
 {
-    internal class TestBuilder() : ITestBuilder
+    private TestEntity _test = null!;
+
+    public ITestBuilder AddLinkUrl(string linkUrl)
     {
-        private TestEntity _test = null!;
+        _test.AddLinkUrl(linkUrl);
+        return this;
+    }
 
-        public ITestBuilder AddLinkUrl(string linkUrl)
+    public ITestBuilder AddSteps(IEnumerable<TestStepCommandRequestDto> steps)
+    {
+        var testStepEntities = new List<TestStepEntity>();
+
+        foreach (var step in steps)
         {
-            _test.AddLinkUrl(linkUrl);
-            return this;
+            AddStep(step);
         }
 
-        public ITestBuilder AddSteps(IEnumerable<TestStepCommandRequestDto> steps)
-        {
-            var testStepEntities = new List<TestStepEntity>();
+        return this;
+    }
 
-            foreach(var step in steps)
-            {
-                var stepEntity = new TestStepEntity
-                {
-                    TestId = _test.Id,
-                    StepPlacement = step.StepPlacement,
-                    Instructions = step.Instructions,
-                    Urls = step.Urls
-                };
+    public ITestBuilder AddStep(TestStepCommandRequestDto step)
+    {
+        _test.AddTestStep(
+           new TestStepEntity
+           {
+               TestId = _test.Id,
+               StepPlacement = step.StepPlacement,
+               Instructions = step.Instructions,
+               Urls = step.Urls
+           });
 
-                testStepEntities.Add(stepEntity);
-            }
+        return this;
+    }
 
-            _test.AddTestSteps(testStepEntities);
-
-            return this;
-        }
-
-        public ITestBuilder AddStep(TestStepCommandRequestDto step)
-        {
-            _test.AddTestStep(
-               new TestStepEntity
-               {
-                   TestId = _test.Id,
-                   StepPlacement = step.StepPlacement,
-                   Instructions = step.Instructions,
-                   Urls = step.Urls
-               });
-
-            return this;
-        }
-
-        public ITestBuilder AddSteps(IEnumerable<TestStepEntity> steps)
-        {
-            foreach(var step in steps)
-            {
-                _test.AddTestStep(step);
-            }
-
-            return this;
-        }
-
-        public ITestBuilder AddStep(TestStepEntity step)
+    public ITestBuilder AddSteps(IEnumerable<TestStepEntity> steps)
+    {
+        foreach (var step in steps)
         {
             _test.AddTestStep(step);
-            return this;
         }
 
-        public ITestBuilder NewInstance()
+        return this;
+    }
+
+    public ITestBuilder AddStep(TestStepEntity step)
+    {
+        _test.AddTestStep(step);
+        return this;
+    }
+
+    public ITestBuilder NewInstance()
+    {
+        _test = new();
+        return this;
+    }
+
+    public ITestBuilder SetDescription(string description)
+    {
+        _test.Description = description;
+        return this;
+    }
+
+    public ITestBuilder SetOwningDepartment(Department department)
+    {
+        _test.OwningDepartment = department;
+        return this;
+    }
+
+    public ITestBuilder SetTitle(string title)
+    {
+        _test.Title = title;
+        return this;
+    }
+
+    public ITestBuilder UsingContext(TestEntity test)
+    {
+        _test = test;
+        SetRevisonDetails();
+
+        return this;
+    }
+
+    public TestEntity Build()
+    {
+        return _test;
+    }
+
+    public ITestBuilder AddLinkUrls(IEnumerable<string> links)
+    {
+        foreach (var link in links)
         {
-            _test = new();
-            SetRevisonDetails();
-
-            return this;
+            _test.AddLinkUrl(link);
         }
 
-        public ITestBuilder SetDescription(string description)
-        {
-            _test.Description = description;
-            return this;
-        }
+        return this;
+    }
 
-        public ITestBuilder SetOwningDepartment(Department department)
-        {
-            _test.OwningDepartment = department;
-            return this;
-        }
-
-        public ITestBuilder SetTitle(string title)
-        {
-            _test.Title = title;
-            return this;
-        }
-
-        public ITestBuilder UsingContext(TestEntity test)
-        {
-            _test = test;
-            SetRevisonDetails();
-
-            return this;
-        }
-
-        public TestEntity Build()
-        {
-            return _test;
-        }
-
-        public ITestBuilder AddLinkUrls(IEnumerable<string> links)
-        {
-            foreach (var link in links)
-            {
-                _test.AddLinkUrl(link);
-            }
-
-            return this;
-        }
-
-        private void SetRevisonDetails()
-        {
-            _test.RevisedOn = DateTime.Now;
-        }
+    private void SetRevisonDetails()
+    {
+        _test.RevisedOn = DateTime.Now;
     }
 }
