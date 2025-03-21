@@ -14,8 +14,8 @@ public interface ITestService
     Task<TeczterValidationResult<TestEntity>> UpdateTest(TestEntity test, UpdateTestRequestDto testUpdates);
     Task<TeczterValidationResult<TestEntity>> AddLinkUrl(TestEntity test, string url);
     Task<TeczterValidationResult<TestEntity>> RemoveLinkUrl(TestEntity test, string url);
-    Task<TeczterValidationResult<TestEntity>> AddTestStep(TestEntity test, TestStepCommandRequestDto testStep);
+    Task<TeczterValidationResult<TestEntity>> AddTestStep(TestEntity test, CreateTestStepRequestDto testStep);
     Task<TeczterValidationResult<TestEntity>> RemoveTestStep(TestEntity test, int testStepId);
-    Task<TeczterValidationResult<TestEntity>> UpdateTestStep(TestEntity test, int testStepId, TestStepCommandRequestDto request);
+    Task<TeczterValidationResult<TestEntity>> UpdateTestStep(TestEntity test, int testStepId, CreateTestStepRequestDto request);
     Task<TeczterValidationResult<TestEntity>> ValidateTestState(TestEntity test);
 }
