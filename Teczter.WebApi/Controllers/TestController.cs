@@ -81,7 +81,7 @@ public class TestController : ControllerBase
         }
     }
 
-    [HttpPut]
+    [HttpPatch]
     [Route("{id:int}/UpdateTestDetails")]
     public async Task<IActionResult> UpdateTest(int id, [FromBody] UpdateTestRequestDto request)
     {

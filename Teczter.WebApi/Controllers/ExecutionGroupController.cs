@@ -68,9 +68,14 @@ namespace Teczter.Services.Controllers
                 return NotFound($"ExecutionGroup {id} does not exist");
             }
 
-            var newExecutiongroup = await _executionGroupService.CloneExecutionGroup(executionGroupToClone, newExecutionGroupname, softwareVersionNumber);
+            var ValidatedExecutionGroup = await _executionGroupService.CloneExecutionGroup(executionGroupToClone, newExecutionGroupname, softwareVersionNumber);
 
-            var dto = new ExecutionGroupDto(newExecutiongroup);
+            if (!ValidatedExecutionGroup.IsValid)
+            {
+                return BadRequest(ValidatedExecutionGroup.ErrorMessages);
+            }
+
+            var dto = new ExecutionGroupDto(ValidatedExecutionGroup.Value!);
 
             return CreatedAtAction(nameof(GetExecutionGroup), new { dto.Id }, dto);
         }
@@ -79,9 +84,14 @@ namespace Teczter.Services.Controllers
         [Route("Create")]
         public async Task<IActionResult> CreateExecutionGroup([FromBody] CreateExecutionGroupRequestDto request)
         {
-            var ExecutionGroup = await _executionGroupService.CreateNewExecutionGroup(request);
+            var validatedExecutionGroup = await _executionGroupService.CreateNewExecutionGroup(request);
 
-            var dto = new ExecutionGroupDto(ExecutionGroup);
+            if (!validatedExecutionGroup.IsValid)
+            {
+                return BadRequest(validatedExecutionGroup.ErrorMessages);
+            }
+
+            var dto = new ExecutionGroupDto(validatedExecutionGroup.Value!);
 
             return CreatedAtAction(nameof(GetExecutionGroup), new { dto.Id }, dto);
         }

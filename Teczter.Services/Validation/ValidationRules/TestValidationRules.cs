@@ -15,7 +15,7 @@ public static class TestValidationRules
     public static bool BeUniqueTitle(TestEntity test, ITestValidationRepository repo)
     {
         var existingTests = repo.GetTestEntitiesWithTitle(test.Title);
-        return existingTests.Count == 0 || (existingTests.Count == 1 && existingTests[0].Id == test.Id);
+        return existingTests.Count == 0 || (existingTests.Count == 1 && existingTests.First().Id == test.Id);
     }
 
     public static bool BeAValidDepartment(string department)

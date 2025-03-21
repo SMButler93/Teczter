@@ -55,15 +55,14 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 
     public void Delete() => IsDeleted = true;
 
-    public ExecutionEntity CloneExecution(int executionGroupId)
+    public ExecutionEntity CloneExecution()
     {
         return new ExecutionEntity
         {
-            ExecutionGroupId = executionGroupId,
-            TestId = TestId,
-            Test = Test,
-            AssignedUserId = AssignedUserId,
-            Notes = Notes,
+            TestId = this.TestId,
+            Test = this.Test,
+            AssignedUserId = this.AssignedUserId,
+            Notes = this.Notes,
             ExecutionState = ExecutionStateType.Untested
         };
     }

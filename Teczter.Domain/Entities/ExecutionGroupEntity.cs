@@ -43,11 +43,18 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 
     public ExecutionGroupEntity CloneExecutionGroup(string newGroupName, string? versionNumber)
     {
-        return new ExecutionGroupEntity
+        var executionGroup =  new ExecutionGroupEntity
         {
             ExecutionGroupName = newGroupName,
             SoftwareVersionNumber = versionNumber,
-            ExecutionGroupNotes = ExecutionGroupNotes
+            ExecutionGroupNotes = this.ExecutionGroupNotes,
         };
+
+        foreach (var execution in this.Executions)
+        {
+            executionGroup.AddExecution(execution.CloneExecution());
+        }
+
+        return executionGroup;
     }
 }
