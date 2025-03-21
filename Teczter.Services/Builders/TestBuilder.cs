@@ -15,7 +15,7 @@ internal class TestBuilder() : ITestBuilder
         return this;
     }
 
-    public ITestBuilder AddSteps(IEnumerable<TestStepCommandRequestDto> steps)
+    public ITestBuilder AddSteps(IEnumerable<CreateTestStepRequestDto> steps)
     {
         var testStepEntities = new List<TestStepEntity>();
 
@@ -27,7 +27,7 @@ internal class TestBuilder() : ITestBuilder
         return this;
     }
 
-    public ITestBuilder AddStep(TestStepCommandRequestDto step)
+    public ITestBuilder AddStep(CreateTestStepRequestDto step)
     {
         _test.AddTestStep(
            new TestStepEntity

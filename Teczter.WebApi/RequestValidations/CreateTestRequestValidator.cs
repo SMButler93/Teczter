@@ -8,10 +8,12 @@ namespace Teczter.WebApi.RequestValidations;
 public class CreateTestRequestValidator : AbstractValidator<CreateTestRequestDto>
 {
     private readonly ITestValidationRepository _testValidationRepository;
+    private readonly IValidator<CreateTestStepRequestDto> _testStepValidator;
 
-    public CreateTestRequestValidator(ITestValidationRepository testValidationrespository)
+    public CreateTestRequestValidator(ITestValidationRepository testValidationrespository, IValidator<CreateTestStepRequestDto> testStepValidator)
     {
         _testValidationRepository = testValidationrespository;
+        _testStepValidator = testStepValidator;
 
         RuleFor(x => x.Title)
             .NotEmpty().WithMessage("A test must have a title.")
@@ -26,6 +28,6 @@ public class CreateTestRequestValidator : AbstractValidator<CreateTestRequestDto
             .Must(TestValidationRules.BeAValidDepartment).WithMessage("Invalid department. Please provide a valid department.");
 
         RuleForEach(x => x.TestSteps)
-            .SetValidator(new TestStepCommandRequestValidator());
+            .SetValidator(_testStepValidator);
     }
 }

@@ -3,9 +3,9 @@ using Teczter.Services.DTOs.Request;
 
 namespace Teczter.WebApi.RequestValidations;
 
-public class TestStepCommandRequestValidator : AbstractValidator<TestStepCommandRequestDto>
+public class CreateTestStepRequestValidator : AbstractValidator<CreateTestStepRequestDto>
 {
-    public TestStepCommandRequestValidator()
+    public CreateTestStepRequestValidator()
     {
         RuleFor(x => x.StepPlacement)
         .NotEmpty().WithMessage("A test step placement value must be provided for a test step.")

@@ -4,9 +4,9 @@ using Teczter.Services.Validation.ValidationRules;
 
 namespace Teczter.WebApi.RequestValidations;
 
-public class UpdateTestRequestDtoValidator : AbstractValidator<UpdateTestRequestDto>
+public class UpdateTestRequestValidator : AbstractValidator<UpdateTestRequestDto>
 {
-    public UpdateTestRequestDtoValidator()
+    public UpdateTestRequestValidator()
     {
         RuleFor(x => x.Title)
             .NotEmpty().WithMessage("A test must have a title.");

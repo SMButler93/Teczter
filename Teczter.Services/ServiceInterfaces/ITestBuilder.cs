@@ -11,8 +11,8 @@ public interface ITestBuilder
     ITestBuilder SetTitle(string title);
     ITestBuilder SetDescription(string description);
     ITestBuilder SetOwningDepartment(Department department);
-    ITestBuilder AddSteps(IEnumerable<TestStepCommandRequestDto> steps);
-    ITestBuilder AddStep(TestStepCommandRequestDto step);
+    ITestBuilder AddSteps(IEnumerable<CreateTestStepRequestDto> steps);
+    ITestBuilder AddStep(CreateTestStepRequestDto step);
     ITestBuilder AddSteps(IEnumerable<TestStepEntity> steps);
     ITestBuilder AddStep(TestStepEntity setp);
     ITestBuilder AddLinkUrls(IEnumerable<string> links);

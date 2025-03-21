@@ -1,6 +1,6 @@
 ﻿namespace Teczter.Services.DTOs.Request;
 
-public class TestStepCommandRequestDto
+public class CreateTestStepRequestDto
 {
     public int StepPlacement { get; set; }
     public string Instructions { get; set; } = null!;

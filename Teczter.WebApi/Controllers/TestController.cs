@@ -153,7 +153,7 @@ public class TestController : ControllerBase
 
     [HttpPut]
     [Route("{id:int}/AddTestStep")]
-    public async Task<IActionResult> AddTestStep(int id, [FromBody] TestStepCommandRequestDto request)
+    public async Task<IActionResult> AddTestStep(int id, [FromBody] CreateTestStepRequestDto request)
     {
         var test = await _testService.GetTestById(id);
 
@@ -202,7 +202,7 @@ public class TestController : ControllerBase
 
     [HttpPut]
     [Route("{testId:int}/UpdateTestStep/{testStepId:int}")]
-    public async Task<IActionResult> UpdateTestStep(int testId, int testStepId, [FromBody] TestStepCommandRequestDto request)
+    public async Task<IActionResult> UpdateTestStep(int testId, int testStepId, [FromBody] CreateTestStepRequestDto request)
     {
         var test = await _testService.GetTestById(testId);
 

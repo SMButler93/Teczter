@@ -42,7 +42,7 @@ public class TestService : ITestService
         return result;
     }
 
-    public async Task<TeczterValidationResult<TestEntity>> AddTestStep(TestEntity test, TestStepCommandRequestDto testStep)
+    public async Task<TeczterValidationResult<TestEntity>> AddTestStep(TestEntity test, CreateTestStepRequestDto testStep)
     {
         _builder.UsingContext(test)
             .AddStep(testStep);
@@ -133,7 +133,7 @@ public class TestService : ITestService
         return result;
     }
 
-    public async Task<TeczterValidationResult<TestEntity>> UpdateTestStep(TestEntity test, int testStepId, TestStepCommandRequestDto request)
+    public async Task<TeczterValidationResult<TestEntity>> UpdateTestStep(TestEntity test, int testStepId, CreateTestStepRequestDto request)
     {
         var testStep = test.TestSteps.SingleOrDefault(x => x.Id == testStepId && !x.IsDeleted) ??
             throw new TeczterValidationException("Cannot update a test step that does not exist or has already been deleted");
