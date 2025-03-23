@@ -5,8 +5,6 @@ namespace Teczter.Domain.Entities;
 
 public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 {
-    private ExecutionStateType _executionState = ExecutionStateType.Untested;
-
     public int Id { get; private set; }
     public DateTime CreatedOn { get; } = DateTime.Now;
     public int CreatedById { get; set; }
@@ -20,7 +18,7 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
     public int? FailedStepId { get; private set; }
     public string? FailureReason { get; private set; }
     public int? TestedById { get; private set; }
-    public string? Notes { get; private set; }
+    public List<string> Notes { get; private set; } = [];
     public ExecutionStateType ExecutionState { get; set; }
     public ExecutionGroupEntity ExecutionGroup { get; } = null!;
     public TestEntity Test { get; set; } = null!;
@@ -41,7 +39,7 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         ExecutionState = ExecutionStateType.Fail;
     }
 
-    public void AddNotes(string notes) => Notes = notes;
+    public void AddNotes(string note) => Notes.Add(note);
 
     public ExecutionEntity Retest()
     {

@@ -1,25 +1,36 @@
 ﻿using Teczter.Domain.Entities;
-using Teczter.Domain.Enums;
 
 namespace Teczter.WebApi.ResponseDtos;
 
 public class ExecutionGroupDto
 {
-    public int Id { get; private set; }
+    public int Id { get; }
     public DateTime CreatedOn { get; }
-    public int CreatedById { get; set; }
-    public DateTime RevisedOn { get; set; }
-    public int RevisedById { get; set; }
-    public bool IsDeleted { get; set; }
-    public string ExecutionGroupName { get; private set; } = null!;
-    public string? SoftwareVersionNumber { get; set; }
-    public DateTime? ClosedDate { get; private set; } = null;
-    public bool IsComplete { get; set; }
+    public int CreatedById { get; }
+    public DateTime RevisedOn { get; }
+    public int RevisedById { get; }
+    public bool IsDeleted { get; }
+    public string ExecutionGroupName { get; }
+    public string? SoftwareVersionNumber { get; }
+    public DateTime? ClosedDate { get; }
+    public bool IsComplete { get; }
     public bool IsClosed => ClosedDate.HasValue;
-    public List<string> ExecutionGroupNotes { get; set; } = [];
+    public List<string> ExecutionGroupNotes { get; }
+    public List<ExecutionDto> Executions { get; }
 
     public ExecutionGroupDto(ExecutionGroupEntity entity)
     {
-
+        Id = entity.Id;
+        CreatedOn = entity.CreatedOn;
+        CreatedById = entity.CreatedById;
+        RevisedOn = entity.RevisedOn;
+        RevisedById = entity.RevisedById;
+        IsDeleted = entity.IsDeleted;
+        ExecutionGroupName = entity.ExecutionGroupName;
+        SoftwareVersionNumber = entity.SoftwareVersionNumber;
+        ClosedDate = entity.ClosedDate;
+        IsComplete = entity.IsComplete;
+        ExecutionGroupNotes = entity.ExecutionGroupNotes;
+        Executions = entity.Executions.Select(x => new ExecutionDto(x)).ToList();
     }
 }

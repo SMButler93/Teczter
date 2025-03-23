@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
-using Teczter.Data;
 using Teczter.Persistence;
 using Teczter.Services.Builders;
 using Teczter.Services.ServiceInterfaces;
@@ -15,6 +13,7 @@ public static class ServiceLayerDependencyInjection
         services.AddScoped<ITestService, TestService>();
         services.AddScoped<ITestBuilder, TestBuilder>();
         services.AddScoped<IExecutionGroupService, ExecutionGroupService>();
+        services.AddScoped<IExecutionGroupBuilder, ExecutionGroupBuilder>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 }
