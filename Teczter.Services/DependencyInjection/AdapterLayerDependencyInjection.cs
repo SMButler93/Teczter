@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Teczter.Adapters;
 using Teczter.Adapters.AdapterInterfaces;
+using Teczter.Adapters.ValidationRepositories.ExecutionGroupValidationRepositories;
 using Teczter.Adapters.ValidationRepositories.TestValidationRespositories;
 
 namespace Teczter.Services.DependencyInjection;
@@ -16,5 +17,6 @@ public static class AdapterLayerDependencyInjection
 
         //Validation repositories
         services.AddScoped<ITestValidationRepository, TestValidationRespository>();
+        services.AddScoped<IExecutionGroupValidationRepository, ExecutionGroupValidationRepository>();
     }
 }

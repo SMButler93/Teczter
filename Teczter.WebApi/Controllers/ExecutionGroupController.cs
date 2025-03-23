@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Teczter.Domain.Exceptions;
 using Teczter.Services.RequestDtos.Request;
 using Teczter.Services.ServiceInterfaces;
 using Teczter.WebApi.ResponseDtos;
@@ -94,6 +93,13 @@ namespace Teczter.Services.Controllers
             var dto = new ExecutionGroupDto(validatedExecutionGroup.Value!);
 
             return CreatedAtAction(nameof(GetExecutionGroup), new { dto.Id }, dto);
+        }
+
+        [HttpPost]
+        [Route("{id:int}/CreateExecution")]
+        public async Task<IActionResult> CreateExecution([FromBody] CreateExecutionRequestDto request)
+        {
+            throw new NotImplementedException();
         }
     }
 }
