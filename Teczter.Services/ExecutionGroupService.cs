@@ -43,9 +43,22 @@ public class ExecutionGroupService : IExecutionGroupService
         return result;
     }
 
+    public async Task<TeczterValidationResult<ExecutionGroupEntity>> CreateExecution(ExecutionGroupEntity executionGroup, CreateExecutionRequestDto request)
+    {
+        var group = _builder
+            .UsingContext(executionGroup)
+            .AddExecution(request)
+            .Build();
+
+        var result = await ValidateExecutionGroup(group);
+
+        await EvaluateValidationResultAndPersist(result);
+        return result;
+    }
+
     public async Task<TeczterValidationResult<ExecutionGroupEntity>> CreateNewExecutionGroup(CreateExecutionGroupRequestDto request)
     {
-        var executionGroup = _builder
+        var group = _builder
             .NewInstance()
             .SetName(request.ExecutionGroupName)
             .SetSoftwareVersionNumber(request.SoftwareVersionNumber)
@@ -53,9 +66,9 @@ public class ExecutionGroupService : IExecutionGroupService
             .AddExecutions(request.Executions)
             .Build();
 
-        await _executionGroupAdapter.CreateNewExecutionGroup(executionGroup);
+        await _executionGroupAdapter.CreateNewExecutionGroup(group);
 
-        var result = await ValidateExecutionGroup(executionGroup);
+        var result = await ValidateExecutionGroup(group);
 
         await EvaluateValidationResultAndPersist(result);
         return result;

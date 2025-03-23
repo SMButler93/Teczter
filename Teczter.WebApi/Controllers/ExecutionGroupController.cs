@@ -97,9 +97,25 @@ namespace Teczter.Services.Controllers
 
         [HttpPost]
         [Route("{id:int}/CreateExecution")]
-        public async Task<IActionResult> CreateExecution([FromBody] CreateExecutionRequestDto request)
+        public async Task<IActionResult> CreateExecution(int id, [FromBody] CreateExecutionRequestDto request)
         {
-            throw new NotImplementedException();
+            var executionGroup = await _executionGroupService.GetExecutionGroupById(id);
+
+            if (executionGroup == null)
+            {
+                return NotFound($"ExecutionGroup {id} does not exist");
+            }
+
+            var validatedExecutionGroup = await _executionGroupService.CreateExecution(executionGroup, request);
+
+            if (!validatedExecutionGroup.IsValid)
+            {
+                return BadRequest(validatedExecutionGroup.ErrorMessages);
+            }
+
+            var dto = new ExecutionGroupDto(validatedExecutionGroup.Value!);
+
+            return CreatedAtAction(nameof(GetExecutionGroup), new { dto.Id }, dto);
         }
     }
 }
