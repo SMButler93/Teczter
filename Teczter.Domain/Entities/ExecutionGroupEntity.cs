@@ -26,13 +26,11 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
     {
         foreach(var execution in Executions)
         {
-            DeleteExecution(execution);
+            execution.Delete();
         }
 
         IsDeleted = true;
     }
-
-    public void DeleteExecution(ExecutionEntity execution) => execution.Delete();
 
     public void CloseTestRound() => ClosedDate = DateTime.Now;
 

@@ -34,7 +34,7 @@ namespace Teczter.Services.Controllers
 
             if (executionGroup == null)
             {
-                return NotFound($"ExecutionGroup {id} does not exist");
+                return NotFound($"Execution group {id} does not exist");
             }
 
             return Ok(new ExecutionGroupDto(executionGroup));
@@ -48,7 +48,12 @@ namespace Teczter.Services.Controllers
 
             if (executionGroup == null)
             {
-                return NotFound($"ExecutionGroup {id} does not exist");
+                return NotFound($"Execution group {id} does not exist");
+            }
+
+            if (executionGroup.IsComplete)
+            {
+                return BadRequest("Cannot delete an execution group that has been closed.");
             }
 
             await _executionGroupService.DeleteExecutionGroup(executionGroup);
@@ -64,7 +69,7 @@ namespace Teczter.Services.Controllers
 
             if (executionGroupToClone == null)
             {
-                return NotFound($"ExecutionGroup {id} does not exist");
+                return NotFound($"Execution group {id} does not exist");
             }
 
             var ValidatedExecutionGroup = await _executionGroupService.CloneExecutionGroup(executionGroupToClone, newExecutionGroupname, softwareVersionNumber);
@@ -103,7 +108,12 @@ namespace Teczter.Services.Controllers
 
             if (executionGroup == null)
             {
-                return NotFound($"ExecutionGroup {id} does not exist");
+                return NotFound($"Execution group {id} does not exist");
+            }
+
+            if (executionGroup.IsComplete)
+            {
+                return BadRequest("Cannot add new executions to an execution group that has closed.");
             }
 
             var validatedExecutionGroup = await _executionGroupService.CreateExecution(executionGroup, request);

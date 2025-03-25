@@ -13,6 +13,7 @@ public static class AdapterLayerDependencyInjection
         services.AddScoped<ITestAdapter, TestAdapter>();
         services.AddScoped<ITestStepAdapter, TestStepAdapter>();
         services.AddScoped<IExecutionGroupAdapter, ExecutionGroupAdapter>();
+        services.AddScoped<IExecutionAdapter, ExecutionAdapter>();
         services.AddScoped<IUserAdapter, UserAdapter>();
 
         //Validation repositories
