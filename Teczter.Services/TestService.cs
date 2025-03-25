@@ -15,17 +15,20 @@ namespace Teczter.Services;
 public class TestService : ITestService
 {
     private readonly ITestAdapter _testAdapter;
+    private readonly IExecutionAdapter _executionAdapter;
     private readonly ITestBuilder _builder;
     private readonly IUnitOfWork _uow;
     private readonly IValidator<TestEntity> _testValidator;
 
     public TestService(
         ITestAdapter testAdapter,
+        IExecutionAdapter executionAdapter,
         ITestBuilder builder,
         IUnitOfWork uow,
         IValidator<TestEntity> testValidator)
     {
         _testAdapter = testAdapter;
+        _executionAdapter = executionAdapter;
         _builder = builder;
         _uow = uow;
         _testValidator = testValidator;
@@ -75,6 +78,13 @@ public class TestService : ITestService
     public async Task DeleteTest(TestEntity test)
     {
         test.Delete();
+        var executionsToDelete = await _executionAdapter.GetExecutionsForTest(test.Id);
+
+        foreach (var execution in executionsToDelete)
+        {
+            execution.Delete();
+        }
+
         await _uow.CommitChanges();
     }
 

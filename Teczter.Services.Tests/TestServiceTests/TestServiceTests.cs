@@ -6,7 +6,6 @@ using Shouldly;
 using Teczter.Adapters.AdapterInterfaces;
 using Teczter.Domain.Entities;
 using Teczter.Domain.Enums;
-using Teczter.Persistence;
 using Teczter.Services.ServiceInterfaces;
 
 namespace Teczter.Services.Tests.TestServiceTests;
@@ -15,6 +14,7 @@ namespace Teczter.Services.Tests.TestServiceTests;
 public class TestServiceTests
 {
     private readonly Mock<ITestAdapter> _testAdapterMock;
+    private readonly Mock<IExecutionAdapter> _executionAdapterMock;
     private readonly Mock<ITestBuilder> _testBuilderMock;
     private readonly UnitOfWorkFake _uow;
     private readonly Mock<IValidator<TestEntity>> _testValidatorMock;
@@ -22,6 +22,7 @@ public class TestServiceTests
     public TestServiceTests()
     {
         _testAdapterMock = new Mock<ITestAdapter>();
+        _executionAdapterMock = new Mock<IExecutionAdapter>();
         _testBuilderMock = new Mock<ITestBuilder>();
         _uow = new UnitOfWorkFake();
         _testValidatorMock = new Mock<IValidator<TestEntity>>();
@@ -31,6 +32,7 @@ public class TestServiceTests
     {
         return new TestService(
             _testAdapterMock.Object,
+            _executionAdapterMock.Object,
             _testBuilderMock.Object,
             _uow,
             _testValidatorMock.Object
