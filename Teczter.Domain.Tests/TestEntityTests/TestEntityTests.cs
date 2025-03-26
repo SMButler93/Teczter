@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using Shouldly;
 using Teczter.Domain.Entities;
-using Teczter.Domain.Enums;
 using Teczter.Domain.Exceptions;
 
 namespace Teczter.Domain.Tests.TestEntityTests;
@@ -9,16 +8,9 @@ namespace Teczter.Domain.Tests.TestEntityTests;
 [TestFixture]
 public class TestEntityTests
 {
-    public TestEntity GetSubjectUnderTest()
+    public static TestEntity GetSubjectUnderTest()
     {
-        return new TestEntity()
-        {
-            IsDeleted = false,
-            Title = "Basic test instance.",
-            Description = "Basic instance for testing.",
-            OwningDepartment = Department.Operations,
-            TestSteps = GetBasicTestStepInstances()
-        };
+        return TestInstanceProvider.GetBasicTestInstanceWithNumberOfTestSteps(4);
     }
 
     [Test]
@@ -54,11 +46,11 @@ public class TestEntityTests
         //Assert:
         sut.TestSteps.Count.ShouldBe(5);
         sut.TestSteps[1].Instructions.ShouldBe("The new step two.");
-        sut.TestSteps[1].StepPlacement.ShouldBe(2);
-        sut.TestSteps[4].StepPlacement.ShouldBe(5);
-        sut.TestSteps[3].StepPlacement.ShouldBe(4);
-        sut.TestSteps[2].StepPlacement.ShouldBe(3);
         sut.TestSteps[0].StepPlacement.ShouldBe(1);
+        sut.TestSteps[1].StepPlacement.ShouldBe(2);
+        sut.TestSteps[2].StepPlacement.ShouldBe(3);
+        sut.TestSteps[3].StepPlacement.ShouldBe(4);
+        sut.TestSteps[4].StepPlacement.ShouldBe(5);
     }
 
     [Test]
@@ -72,7 +64,7 @@ public class TestEntityTests
 
         //Assert:
         sut.IsDeleted.ShouldBeTrue();
-        sut.TestSteps.All(x => x.IsDeleted).ShouldBeTrue();
+        sut.TestSteps.ShouldAllBe(x => x.IsDeleted);
     }
 
     [Test]
@@ -95,32 +87,5 @@ public class TestEntityTests
 
         //Act&Assert:
         Should.NotThrow(() => sut.AddLinkUrl(validUrl));
-    }
-
-    private List<TestStepEntity> GetBasicTestStepInstances()
-    {
-        return
-        [
-            new TestStepEntity()
-            {
-                StepPlacement = 1,
-                Instructions = "Step one."
-            },
-            new TestStepEntity()
-            {
-                StepPlacement = 2,
-                Instructions = "Step two."
-            },
-            new TestStepEntity()
-            {
-                StepPlacement = 3,
-                Instructions = "Step three."
-            },
-            new TestStepEntity()
-            {
-                StepPlacement = 4,
-                Instructions = "Step four."
-            }
-        ];
     }
 }

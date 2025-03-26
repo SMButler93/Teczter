@@ -19,7 +19,7 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
     public string? FailureReason { get; private set; }
     public int? TestedById { get; private set; }
     public List<string> Notes { get; private set; } = [];
-    public ExecutionStateType ExecutionState { get; set; }
+    public ExecutionStateType ExecutionState { get; set; } = ExecutionStateType.Untested;
     public ExecutionGroupEntity ExecutionGroup { get; } = null!;
     public TestEntity Test { get; set; } = null!;
     public TestStepEntity? FailedStep { get; set; }
@@ -29,6 +29,7 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
     {
         TestedById = userId;
         ExecutionState = ExecutionStateType.Pass;
+        RevisedOn = DateTime.Now;
     }
 
     public void Fail(int userId, int testStepId, string failureReason)
@@ -37,21 +38,30 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         FailedStepId = testStepId;
         FailureReason = failureReason;
         ExecutionState = ExecutionStateType.Fail;
+        RevisedOn = DateTime.Now;
     }
 
-    public void AddNotes(string note) => Notes.Add(note);
-
-    public ExecutionEntity Retest()
+    public void AddNotes(string note)
     {
-        return new ExecutionEntity
-        {
-            ExecutionGroupId = this.ExecutionGroupId,
-            IsDeleted = this.IsDeleted,
-            TestId = this.TestId,
-        };
+        Notes.Add(note);
+        RevisedOn = DateTime.Now;
     }
 
-    public void Delete() => IsDeleted = true;
+    public void Reset()
+    {
+        RevisedOn = DateTime.Now;
+        IsDeleted = false;
+        FailedStep = null;
+        FailureReason = null;
+        TestedById = null;
+        ExecutionState = ExecutionStateType.Untested;
+    }
+
+    public void Delete()
+    {
+        IsDeleted = true;
+        RevisedOn = DateTime.Now;
+    }
 
     public ExecutionEntity CloneExecution()
     {
