@@ -17,6 +17,7 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
     public bool IsComplete => Executions.All(x => x.ExecutionState != ExecutionStateType.Untested);
     public bool IsClosed => ClosedDate.HasValue;
     public List<string> ExecutionGroupNotes { get; set; } = [];
+    public int PassedTestPercentage => PassRate();
 
     public List<ExecutionEntity> Executions { get; set; } = [];
 
@@ -30,13 +31,15 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         }
 
         IsDeleted = true;
+        RevisedOn = DateTime.Now;
     }
 
     public void CloseTestRound() => ClosedDate = DateTime.Now;
 
-    public void AddNotes(string note)
+    public void AddNote(string note)
     {
         ExecutionGroupNotes.Add(note);
+        RevisedOn = DateTime.Now;
     }
 
     public ExecutionGroupEntity CloneExecutionGroup(string newGroupName, string? versionNumber)
@@ -55,4 +58,12 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 
         return executionGroup;
     }
+
+    private int PassRate()
+    {
+        var numberOftests = Executions.Count;
+        var passedTests = Executions.Where(x => x.HasPassed).ToList().Count;
+
+        return (100 / numberOftests) * passedTests;
+    } 
 }
