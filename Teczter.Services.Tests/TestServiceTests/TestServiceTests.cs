@@ -40,7 +40,7 @@ public class TestServiceTests
     {
         //Arrange:
         var test = GetBasicTestInstance();
-        var validationResult = new ValidationResult { Errors = [] };
+        var validationResult = new ValidationResult();
         _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>())).Returns(Task.FromResult(validationResult));
 
         //Act:
@@ -220,6 +220,18 @@ public class TestServiceTests
         result.Value.ShouldNotBeNull();
         stepToUpdate.StepPlacement.ShouldBe(4);
         test.TestSteps.Count.ShouldBe(4);
+    }
+
+    [Test]
+    public void UpdateTestStep_WhenTestStepDoesNotExist_ShouldThrowTeczterValidationresult()
+    {
+        //Arrange:
+        var test = GetBasicTestInstance();
+        var stepToUpdate = new TestStepEntity { Id = 5, StepPlacement = 5, Instructions = "step 5." };
+        var request = new UpdateTestStepRequestDto { StepPlacement = 4, };
+
+        //Act & Assert:
+        Should.Throw<TeczterValidationException>(() => _sut.UpdateTestStep(test, stepToUpdate.Id, request));
     }
 
     private static TestEntity GetBasicTestInstance()
