@@ -150,7 +150,7 @@ public class TestService : ITestService
 
         testStep.Update(request.StepPlacement, request.Instructions, request.Urls);
 
-        test.SetCorrectStepPlacementValues();
+        test.SetCorrectStepPlacementValuesOnUpdate();
 
         var result = await ValidateTestState(test);
 
