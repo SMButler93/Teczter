@@ -7,7 +7,7 @@ namespace Teczter.Domain.Entities;
 
 public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
 {
-    public int Id { get; private set; }
+    public int Id { get; set; }
     public DateTime CreatedOn { get; } = DateTime.Now;
     public int CreatedById { get; set; }
     public DateTime RevisedOn { get; set; } = DateTime.Now;
@@ -43,9 +43,7 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
         SetCorrectStepPlacementValues();
     }
 
-    public void EnsureTestStepOrderingIsValidPostUpdate() => SetCorrectStepPlacementValues();
-
-    private void SetCorrectStepPlacementValues()
+    public void SetCorrectStepPlacementValues()
     {
         OrderTestSteps();
 
@@ -59,7 +57,7 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
     {
         TestSteps = TestSteps
             .OrderBy(x => x.StepPlacement)
-            .ThenByDescending(x => x.RevisedOn)
+            .ThenBy(x => x.RevisedOn)
             .ToList();
     }
 

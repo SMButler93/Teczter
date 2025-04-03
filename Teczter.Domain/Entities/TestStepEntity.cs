@@ -6,7 +6,7 @@ namespace Teczter.Domain.Entities;
 
 public class TestStepEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 {
-    public int Id { get; private set; }
+    public int Id { get; set; }
     public DateTime CreatedOn { get; } = DateTime.Now;
     public int CreatedById { get; set; }
     public DateTime RevisedOn { get; set; } = DateTime.Now;
@@ -40,11 +40,11 @@ public class TestStepEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         RevisedOn = DateTime.Now;
     }
 
-    public void Update(int stepPlacement, string instructions, List<string> urls)
+    public void Update(int? stepPlacement, string? instructions, List<string> urls)
     {
-        StepPlacement = stepPlacement;
-        Instructions = instructions;
-        Urls = urls;
+        StepPlacement = stepPlacement ?? StepPlacement;
+        Instructions = instructions  ?? Instructions;
+        Urls.AddRange(urls);
         RevisedOn = DateTime.Now;
     }
 
