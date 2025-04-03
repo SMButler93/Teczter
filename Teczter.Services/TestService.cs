@@ -143,14 +143,14 @@ public class TestService : ITestService
         return result;
     }
 
-    public async Task<TeczterValidationResult<TestEntity>> UpdateTestStep(TestEntity test, int testStepId, CreateTestStepRequestDto request)
+    public async Task<TeczterValidationResult<TestEntity>> UpdateTestStep(TestEntity test, int testStepId, UpdateTestStepRequestDto request)
     {
         var testStep = test.TestSteps.SingleOrDefault(x => x.Id == testStepId && !x.IsDeleted) ??
             throw new TeczterValidationException("Cannot update a test step that does not exist or has already been deleted");
 
         testStep.Update(request.StepPlacement, request.Instructions, request.Urls);
 
-        test.EnsureTestStepOrderingIsValidPostUpdate();
+        test.SetCorrectStepPlacementValues();
 
         var result = await ValidateTestState(test);
 
