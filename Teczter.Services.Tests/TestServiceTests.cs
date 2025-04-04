@@ -11,7 +11,7 @@ using Teczter.Domain.Exceptions;
 using Teczter.Services.RequestDtos.Request;
 using Teczter.Services.ServiceInterfaces;
 
-namespace Teczter.Services.Tests.TestServiceTests;
+namespace Teczter.Services.Tests;
 
 [TestFixture]
 public class TestServiceTests
@@ -28,10 +28,10 @@ public class TestServiceTests
     public void Setup()
     {
         _sut = new TestService(
-            _testAdapterMock.Object, 
-            _executionAdapterMock.Object, 
-            _testBuilderMock.Object, 
-            _uow, 
+            _testAdapterMock.Object,
+            _executionAdapterMock.Object,
+            _testBuilderMock.Object,
+            _uow,
             _testValidatorMock.Object);
     }
 
@@ -41,7 +41,7 @@ public class TestServiceTests
         //Arrange:
         var test = GetBasicTestInstance();
         var validationResult = new ValidationResult();
-        _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>())).Returns(Task.FromResult(validationResult));
+        _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
 
         //Act:
         var result = await _sut.ValidateTestState(test);
@@ -57,7 +57,7 @@ public class TestServiceTests
         //Arrange:
         var test = GetBasicTestInstance();
         var validationResult = new ValidationResult { Errors = [new ValidationFailure()] };
-        _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>())).Returns(Task.FromResult(validationResult));
+        _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
 
         //Act:
         var result = await _sut.ValidateTestState(test);
@@ -73,7 +73,7 @@ public class TestServiceTests
         //Arrange:
         var test = GetBasicTestInstance();
         List<ExecutionEntity> executionsSearchResult = [];
-        _executionAdapterMock.Setup(x => x.GetExecutionsForTest(test.Id)).Returns(Task.FromResult(executionsSearchResult));
+        _executionAdapterMock.Setup(x => x.GetExecutionsForTest(test.Id)).ReturnsAsync(executionsSearchResult);
 
         //Act:
         await _sut.DeleteTest(test);
@@ -152,7 +152,7 @@ public class TestServiceTests
         var validationResult = new ValidationResult();
         var url = "www.url.com";
         test.Urls.Add(url);
-        _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>())).Returns(Task.FromResult(validationResult));
+        _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
 
         //Act:
         var result = await _sut.RemoveLinkUrl(test, url);
@@ -180,7 +180,7 @@ public class TestServiceTests
         var test = GetBasicTestInstance();
         var stepToRemove = test.TestSteps[0];
         var validationResult = new ValidationResult();
-        _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>())).Returns(Task.FromResult(validationResult));
+        _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
 
         //Act:
         var result = await _sut.RemoveTestStep(test, stepToRemove.Id);
@@ -211,7 +211,7 @@ public class TestServiceTests
         var validationresult = new ValidationResult();
         var stepToUpdate = test.TestSteps.Single(x => x.StepPlacement == 1);
         var request = new UpdateTestStepRequestDto { StepPlacement = 4, };
-        _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>())).Returns(Task.FromResult(validationresult));
+        _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>())).ReturnsAsync(validationresult);
 
         //Act:
         var result = await _sut.UpdateTestStep(test, stepToUpdate.Id, request);
@@ -249,7 +249,7 @@ public class TestServiceTests
 
     private static List<TestStepEntity> GetBasicTestStepInstances()
     {
-        return 
+        return
         [
             new TestStepEntity()
             {
