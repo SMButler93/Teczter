@@ -1,4 +1,4 @@
-﻿namespace Teczter.Services.DTOs.Request;
+﻿namespace Teczter.Services.RequestDtos;
 
 public class CreateTestStepRequestDto
 {

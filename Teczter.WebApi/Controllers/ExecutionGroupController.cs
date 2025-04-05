@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Teczter.Services.RequestDtos.Request;
+using Teczter.Services.RequestDtos;
 using Teczter.Services.ServiceInterfaces;
 using Teczter.WebApi.ResponseDtos;
 

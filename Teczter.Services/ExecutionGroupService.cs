@@ -4,7 +4,7 @@ using Teczter.Adapters.AdapterInterfaces;
 using Teczter.Domain;
 using Teczter.Domain.Entities;
 using Teczter.Persistence;
-using Teczter.Services.RequestDtos.Request;
+using Teczter.Services.RequestDtos;
 using Teczter.Services.ServiceInterfaces;
 
 namespace Teczter.Services;

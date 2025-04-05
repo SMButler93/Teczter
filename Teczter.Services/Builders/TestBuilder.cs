@@ -1,6 +1,6 @@
 ﻿using Teczter.Domain.Entities;
 using Teczter.Domain.Enums;
-using Teczter.Services.DTOs.Request;
+using Teczter.Services.RequestDtos;
 using Teczter.Services.ServiceInterfaces;
 
 namespace Teczter.Services.Builders;
@@ -63,21 +63,26 @@ internal class TestBuilder() : ITestBuilder
         return this;
     }
 
-    public ITestBuilder SetDescription(string description)
+    public ITestBuilder SetDescription(string? description)
     {
-        _test.Description = description;
+        _test.Description = description ?? _test.Description;
         return this;
     }
 
-    public ITestBuilder SetOwningDepartment(Department department)
+    public ITestBuilder SetOwningDepartment(string? department)
     {
-        _test.OwningDepartment = department;
+        if (department == null)
+        {
+            return this;
+        }
+
+        _test.OwningDepartment = Enum.Parse<Department>(department, true);
         return this;
     }
 
-    public ITestBuilder SetTitle(string title)
+    public ITestBuilder SetTitle(string? title)
     {
-        _test.Title = title;
+        _test.Title = title ?? _test.Title;
         return this;
     }
 

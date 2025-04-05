@@ -13,8 +13,8 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
     public DateTime RevisedOn { get; set; } = DateTime.Now;
     public int RevisedById { get; set; }
     public bool IsDeleted { get; set; }
-    public string Title { get; set; } = null!;
-    public string Description { get; set; } = null!;
+    public string Title { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     public List<string> Urls { get; set; } = [];
     public Department OwningDepartment { get; set; }
 
