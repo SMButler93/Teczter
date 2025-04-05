@@ -1,21 +1,23 @@
 ﻿using FluentValidation;
-using Teczter.Services.RequestDtos.Request;
+using Teczter.Adapters.ValidationRepositories.TestValidationRespositories;
+using Teczter.Services.RequestDtos;
 using Teczter.Services.Validation.ValidationRules;
 
 namespace Teczter.WebApi.RequestValidations;
 
 public class UpdateTestRequestValidator : AbstractValidator<UpdateTestRequestDto>
 {
-    public UpdateTestRequestValidator()
+    private readonly ITestValidationRepository _testValidationRepository;
+    public UpdateTestRequestValidator(ITestValidationRepository testValidationRepository)
     {
-        RuleFor(x => x.Title)
-            .NotEmpty().WithMessage("A test must have a title.");
+        _testValidationRepository = testValidationRepository;
 
-        RuleFor(x => x.Description)
-            .NotEmpty().WithMessage("A test must have a description");
+        RuleFor(x => x.Title)
+            .Must(x => x == null || TestValidationRules.BeUniqueTitle(x, _testValidationRepository))
+            .WithMessage("This title is already being used. A test must have a unique title.");
 
         RuleFor(x => x.OwningDepartment)
-            .NotEmpty().WithMessage("A test must have an owning department")
-            .Must(TestValidationRules.BeAValidDepartment).WithMessage("Invalid department. Please provide a valid department.");
+            .Must(x => x == null || TestValidationRules.BeAValidDepartment(x))
+            .WithMessage("Invalid department. Please provide a valid department.");
     }
 }

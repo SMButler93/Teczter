@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Teczter.Adapters.ValidationRepositories.TestValidationRespositories;
-using Teczter.Services.DTOs.Request;
+using Teczter.Services.RequestDtos;
 using Teczter.Services.Validation.ValidationRules;
 
 namespace Teczter.WebApi.RequestValidations;
@@ -10,9 +10,9 @@ public class CreateTestRequestValidator : AbstractValidator<CreateTestRequestDto
     private readonly ITestValidationRepository _testValidationRepository;
     private readonly IValidator<CreateTestStepRequestDto> _testStepValidator;
 
-    public CreateTestRequestValidator(ITestValidationRepository testValidationrespository, IValidator<CreateTestStepRequestDto> testStepValidator)
+    public CreateTestRequestValidator(ITestValidationRepository testValidationRepository, IValidator<CreateTestStepRequestDto> testStepValidator)
     {
-        _testValidationRepository = testValidationrespository;
+        _testValidationRepository = testValidationRepository;
         _testStepValidator = testStepValidator;
 
         RuleFor(x => x.Title)

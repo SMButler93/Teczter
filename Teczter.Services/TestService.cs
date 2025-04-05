@@ -3,11 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Teczter.Adapters.AdapterInterfaces;
 using Teczter.Domain;
 using Teczter.Domain.Entities;
-using Teczter.Domain.Enums;
 using Teczter.Domain.Exceptions;
 using Teczter.Persistence;
-using Teczter.Services.DTOs.Request;
-using Teczter.Services.RequestDtos.Request;
+using Teczter.Services.RequestDtos;
 using Teczter.Services.ServiceInterfaces;
 
 namespace Teczter.Services;
@@ -62,7 +60,7 @@ public class TestService : ITestService
             .NewInstance()
             .SetTitle(request.Title)
             .SetDescription(request.Description)
-            .SetOwningDepartment(Enum.Parse<Department>(request.OwningDepartment))
+            .SetOwningDepartment(request.OwningDepartment)
             .AddLinkUrls(request.LinkUrls ?? [])
             .AddSteps(request.TestSteps)
             .Build();
@@ -135,7 +133,7 @@ public class TestService : ITestService
         _builder.UsingContext(test)
             .SetTitle(testUpdates.Title)
             .SetDescription(testUpdates.Description)
-            .SetOwningDepartment(Enum.Parse<Department>(testUpdates.OwningDepartment, true));
+            .SetOwningDepartment(testUpdates.OwningDepartment);
 
         var result = await ValidateTestState(test);
 

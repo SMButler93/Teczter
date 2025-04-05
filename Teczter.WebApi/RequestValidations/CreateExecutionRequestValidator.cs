@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Teczter.Services.RequestDtos.Request;
+using Teczter.Services.RequestDtos;
 
 namespace Teczter.WebApi.RequestValidations;
 
