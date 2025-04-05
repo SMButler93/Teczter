@@ -83,7 +83,7 @@ public class TestAdapterTests
     }
 
     [Test]
-    public async Task GetBasicTestSearchQuery_WhenExecuted_ShouldReturnAllNonDeletedTests()
+    public async Task GetBasicTestSearchQuery_WhenNoAdditionalFiltersAreApplied_ShouldReturnAllNonDeletedTests()
     {
         //Arrange:
         var preSeededTests = GetMultipleBasicTestInstances();

@@ -22,6 +22,7 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
 
     public void AddTestStep(TestStepEntity step)
     {
+        OrderTestSteps();
         TestSteps.Insert(step.StepPlacement - 1, step);
         SetCorrectStepPlacementValuesOnAdd();
     }
