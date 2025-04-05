@@ -52,9 +52,9 @@ public class TestEntityTests
 
         //Assert:
         _sut.TestSteps.Count.ShouldBe(5);
-        _sut.TestSteps[1].Instructions.ShouldBe("The new step two.");
         _sut.TestSteps[0].StepPlacement.ShouldBe(1);
         _sut.TestSteps[1].StepPlacement.ShouldBe(2);
+        _sut.TestSteps[1].Instructions.ShouldBe("The new step two.");
         _sut.TestSteps[2].StepPlacement.ShouldBe(3);
         _sut.TestSteps[3].StepPlacement.ShouldBe(4);
         _sut.TestSteps[4].StepPlacement.ShouldBe(5);
@@ -85,7 +85,7 @@ public class TestEntityTests
     public void AddLinkUrl_WhenValid_ShouldNotThrow()
     {
         //Arrange:
-        var validUrl = "www.NotInvalid.com";
+        var validUrl = "www.validUrl.com";
 
         //Act&Assert:
         Should.NotThrow(() => _sut.AddLinkUrl(validUrl));

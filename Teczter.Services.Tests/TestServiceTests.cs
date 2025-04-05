@@ -68,7 +68,7 @@ public class TestServiceTests
     }
 
     [Test]
-    public async Task DeleteTest_WhenCalled_ShouldSetIsDeletedToTrue()
+    public async Task DeleteTest_WhenDeleted_ShouldSetIsDeletedToTrue()
     {
         //Arrange:
         var test = GetBasicTestInstance();
@@ -83,7 +83,7 @@ public class TestServiceTests
     }
 
     [Test]
-    public async Task GetTestSearchResults_WhenNoFilters_ShouldGetAllInstances()
+    public async Task GetTestSearchResults_WhenNoFiltersApplied_ShouldGetAllInstances()
     {
         //Arrange:
         var tests = GetMultipleBasicTestInstances();
@@ -98,7 +98,7 @@ public class TestServiceTests
     }
 
     [Test]
-    public async Task GetTestSearchResults_WhenNameFilter_ShouldGetInstancesThatMatch()
+    public async Task GetTestSearchResults_WhenFilteredOnTestName_ShouldGetInstancesThatMatch()
     {
         //Arrange:
         var tests = GetMultipleBasicTestInstances();
@@ -114,7 +114,7 @@ public class TestServiceTests
     }
 
     [Test]
-    public async Task GetTestSearchResults_WhenOwningDepartmentFilter_ShouldGetInstancesThatMatch()
+    public async Task GetTestSearchResults_WhenFilteredOnOwningDepartment_ShouldGetInstancesThatMatch()
     {
         //Arrange:
         var tests = GetMultipleBasicTestInstances();
@@ -130,7 +130,7 @@ public class TestServiceTests
     }
 
     [Test]
-    public async Task GetTestSearchResults_WhenFilterWithNoMatches_ShouldReturnEmptyList()
+    public async Task GetTestSearchResults_WhenFilteredWithNoMatches_ShouldReturnEmptyList()
     {
         //Arrange:
         var tests = GetMultipleBasicTestInstances();
@@ -163,7 +163,7 @@ public class TestServiceTests
     }
 
     [Test]
-    public void RemoveLinkUrl_WhenNotPresent_ShouldThrowTeczterValidationException()
+    public void RemoveLinkUrl_WhenLinkUrlDoesNotExist_ShouldThrowTeczterValidationException()
     {
         //Arrange:
         var test = GetBasicTestInstance();
@@ -174,7 +174,7 @@ public class TestServiceTests
     }
 
     [Test]
-    public async Task RemoveTestStep_WhenPresent_ShouldRemove()
+    public async Task RemoveTestStep_WhenTestStepIsRemovedFromTest_ShouldRemove()
     {
         //Arrange:
         var test = GetBasicTestInstance();
@@ -193,7 +193,7 @@ public class TestServiceTests
     }
 
     [Test]
-    public void RemoveTestStep_WhenNotPresent_ShouldThrowTecztervalidationException()
+    public void RemoveTestStep_WhenTheTestStepDoesNotExist_ShouldThrowTecztervalidationException()
     {
         //Arrange:
         var test = GetBasicTestInstance();
@@ -204,7 +204,7 @@ public class TestServiceTests
     }
 
     [Test]
-    public async Task UpdateTestStep_WhenUpdated_ShouldCorrectlyOrderSteps()
+    public async Task UpdateTestStep_WhenStepPlacementIsUpdated_ShouldCorrectlyOrderSteps()
     {
         //Arrange:
         var test = GetBasicTestInstance();
