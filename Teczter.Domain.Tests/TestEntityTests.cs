@@ -82,6 +82,20 @@ public class TestEntityTests
     }
 
     [Test]
+    public void RemoveLinkUrl_WhenExists_ShouldRemove()
+    {
+        //Arrange:
+        var newUrl = "www.validUrl.com";
+        _sut.AddLinkUrl(newUrl);
+
+        //Act:
+        _sut.RemoveLinkUrl(newUrl);
+
+        //Assert:
+        _sut.Urls.ShouldNotContain(newUrl);
+    }
+
+    [Test]
     public void AddLinkUrl_WhenValid_ShouldNotThrow()
     {
         //Arrange:
@@ -89,6 +103,41 @@ public class TestEntityTests
 
         //Act&Assert:
         Should.NotThrow(() => _sut.AddLinkUrl(validUrl));
+    }
+
+    [Test]
+    public void OrderTestSteps_WhenCalled_ShouldOrderTestStepsByStepPlacement()
+    {
+        //Arrange:
+        var unorderedSteps = GetUnorderedTestStepInstances();
+        _sut.TestSteps = unorderedSteps;
+
+        //Act:
+        _sut.OrderTestSteps();
+
+        //Assert:
+        _sut.TestSteps[0].StepPlacement.ShouldBe(1);
+        _sut.TestSteps[1].StepPlacement.ShouldBe(2);
+        _sut.TestSteps[2].StepPlacement.ShouldBe(3);
+        _sut.TestSteps[3].StepPlacement.ShouldBe(4);
+    }
+
+    [Test]
+    public void SetCorrectStepPlacementValuesOnUpdate_WhenStepUpdated_ShouldEnsureAlltestStepsAreOrderedAccordingly()
+    {
+        //Arrange:
+        var stepToUpdate = _sut.TestSteps.Single(x => x.StepPlacement == 1);
+        stepToUpdate.Update(2, null, []);
+
+        //Act:
+        _sut.SetCorrectStepPlacementValuesOnUpdate();
+
+        //Assert:
+        _sut.TestSteps[0].StepPlacement.ShouldBe(1);
+        _sut.TestSteps[1].StepPlacement.ShouldBe(2);
+        _sut.TestSteps[1].Instructions.ShouldBe(stepToUpdate.Instructions);
+        _sut.TestSteps[2].StepPlacement.ShouldBe(3);
+        _sut.TestSteps[3].StepPlacement.ShouldBe(4);
     }
 
     private static List<TestStepEntity> GetMultipleBasicTestStepInstances(int numberOfInstances)
@@ -107,5 +156,32 @@ public class TestEntityTests
         }
 
         return steps;
+    }
+
+    private static List<TestStepEntity> GetUnorderedTestStepInstances()
+    {
+        return
+        [
+            new TestStepEntity
+            {
+                StepPlacement = 3,
+                Instructions = "Step 3"
+            },
+            new TestStepEntity
+            {
+                StepPlacement = 2,
+                Instructions = "Step 2"
+            },
+            new TestStepEntity
+            {
+                StepPlacement = 4,
+                Instructions = "Step 4"
+            },
+            new TestStepEntity
+            {
+                StepPlacement = 1,
+                Instructions = "Step 1"
+            }
+        ];
     }
 }

@@ -27,16 +27,6 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
         SetCorrectStepPlacementValuesOnAdd();
     }
 
-    public void AddTestSteps(List<TestStepEntity> steps)
-    {
-        foreach(var step in steps)
-        {
-            TestSteps.Add(step);
-        }
-
-        OrderTestSteps();
-    }
-
     public void RemoveTestStep(TestStepEntity step)
     {
         step.IsDeleted = true;
@@ -53,7 +43,7 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
             TestSteps[i].StepPlacement = i + 1;
         }
     }
-    public void SetCorrectStepPlacementValuesOnAdd()
+    private void SetCorrectStepPlacementValuesOnAdd()
     {
         for (int i = 0; i < TestSteps.Count; i++)
         {
@@ -61,7 +51,7 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
         }
     }
 
-    private void OrderTestSteps()
+    public void OrderTestSteps()
     {
         TestSteps = TestSteps
             .OrderBy(x => x.StepPlacement)

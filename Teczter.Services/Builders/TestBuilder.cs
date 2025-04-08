@@ -24,6 +24,8 @@ internal class TestBuilder() : ITestBuilder
             AddStep(step);
         }
 
+        _test.OrderTestSteps();
+
         return this;
     }
 
