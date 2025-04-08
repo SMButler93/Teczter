@@ -18,13 +18,13 @@ public class TestController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetTestSearchResults([FromQuery] string? testName, [FromQuery] string? owningDepartment)
+    public async Task<IActionResult> GetTestSearchResults([FromQuery] int pageNumber, [FromQuery] string? testName, [FromQuery] string? owningDepartment)
     {
-        var tests = await _testService.GetTestSearchResults(testName, owningDepartment);
+        var tests = await _testService.GetTestSearchResults(pageNumber, testName, owningDepartment);
 
         var testDtos = tests.Select(x => new TestDto(x)).ToList();
 
-        return Ok(testDtos.OrderBy(x => x.Department).ThenBy(x => x.Title));
+        return Ok(testDtos);
     }
 
     [HttpGet]
@@ -76,7 +76,7 @@ public class TestController : ControllerBase
         }
         catch(TeczterValidationException ex)
         {
-            return BadRequest(ex);
+            return BadRequest(ex.Message);
         }
     }
 

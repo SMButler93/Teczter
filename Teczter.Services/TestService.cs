@@ -18,6 +18,8 @@ public class TestService : ITestService
     private readonly IUnitOfWork _uow;
     private readonly IValidator<TestEntity> _testValidator;
 
+    private const int testsPerPage = 15;
+
     public TestService(
         ITestAdapter testAdapter,
         IExecutionAdapter executionAdapter,
@@ -91,14 +93,24 @@ public class TestService : ITestService
         return await _testAdapter.GetTestById(id);
     }
 
-    public async Task<List<TestEntity>> GetTestSearchResults(string? testTitle, string? owningDepartment)
+    public async Task<List<TestEntity>> GetTestSearchResults(int pageNumber, string? testTitle, string? owningDepartment)
     {
-        var TestSearchQuery = _testAdapter.GetBasicTestSearchBaseQuery();
-        
-        TestSearchQuery = testTitle == null ? TestSearchQuery : TestSearchQuery.Where(x => x.Title.Contains(testTitle));
-        TestSearchQuery = owningDepartment == null ? TestSearchQuery : TestSearchQuery.Where(x => x.OwningDepartment.ToString() == owningDepartment);
+        var testSearchQuery = _testAdapter.GetBasicTestSearchBaseQuery();
 
-        return await TestSearchQuery.ToListAsync();
+        if (testTitle != null)
+        {
+            testSearchQuery = testSearchQuery.Where(x => x.Title.Contains(testTitle));
+        }
+        
+        if (owningDepartment != null)
+        {
+            testSearchQuery = testSearchQuery.Where(x => x.OwningDepartment.ToString() == owningDepartment);
+        }
+
+        testSearchQuery = testSearchQuery.OrderBy(x => x.Title);
+        testSearchQuery = testSearchQuery.Skip((pageNumber - 1) * testsPerPage).Take(testsPerPage);
+
+        return await testSearchQuery.ToListAsync();
     }
 
     public async Task<TeczterValidationResult<TestEntity>> RemoveLinkUrl(TestEntity test, string url)

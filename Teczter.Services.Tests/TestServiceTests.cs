@@ -86,12 +86,12 @@ public class TestServiceTests
     public async Task GetTestSearchResults_WhenNoFiltersApplied_ShouldGetAllInstances()
     {
         //Arrange:
-        var tests = GetMultipleBasicTestInstances();
+        var tests = GetMultipleBasicTestInstances().OrderBy(x => x.Title);
         var queryable = tests.AsQueryable();
         _testAdapterMock.Setup(x => x.GetBasicTestSearchBaseQuery()).Returns(queryable.BuildMock());
 
         //Act:
-        var results = await _sut.GetTestSearchResults(null, null);
+        var results = await _sut.GetTestSearchResults(1, null, null);
 
         //Assert:
         results.ShouldBe(tests);
@@ -106,7 +106,7 @@ public class TestServiceTests
         _testAdapterMock.Setup(x => x.GetBasicTestSearchBaseQuery()).Returns(queryable.BuildMock());
 
         //Act:
-        var results = await _sut.GetTestSearchResults("One", null);
+        var results = await _sut.GetTestSearchResults(1, "One", null);
 
         //Assert:
         results.Count.ShouldBe(1);
@@ -122,7 +122,7 @@ public class TestServiceTests
         _testAdapterMock.Setup(x => x.GetBasicTestSearchBaseQuery()).Returns(queryable.BuildMock());
 
         //Act:
-        var results = await _sut.GetTestSearchResults(null, Department.Accounting.ToString());
+        var results = await _sut.GetTestSearchResults(1, null, Department.Accounting.ToString());
 
         //Assert:
         results.Count.ShouldBe(1);
@@ -138,7 +138,7 @@ public class TestServiceTests
         _testAdapterMock.Setup(x => x.GetBasicTestSearchBaseQuery()).Returns(queryable.BuildMock());
 
         //Act:
-        var results = await _sut.GetTestSearchResults("ABC", null);
+        var results = await _sut.GetTestSearchResults(1, "ABC", null);
 
         //Assert:
         results.ShouldBeEmpty();
