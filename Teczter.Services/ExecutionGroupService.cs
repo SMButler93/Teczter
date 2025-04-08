@@ -16,6 +16,8 @@ public class ExecutionGroupService : IExecutionGroupService
     private readonly IValidator<ExecutionGroupEntity> _validator;
     private readonly IUnitOfWork _uow;
 
+    private const int pageSize = 15;
+
     public ExecutionGroupService(
         IExecutionGroupAdapter executionGroupAdapter, 
         IExecutionGroupBuilder builder,
@@ -85,12 +87,22 @@ public class ExecutionGroupService : IExecutionGroupService
         return _executionGroupAdapter.GetExecutionGroupById(id);
     }
 
-    public async Task<List<ExecutionGroupEntity>> GetExecutionGroupSearchResults(string? executionGroupName, string? versionNumber)
+    public async Task<List<ExecutionGroupEntity>> GetExecutionGroupSearchResults(int pageNumber, string? executionGroupName, string? versionNumber)
     {
         var executionGroupQuery = _executionGroupAdapter.GetBasicExecutionGroupSearchQuery();
 
-        executionGroupQuery = executionGroupName == null ? executionGroupQuery : executionGroupQuery.Where(x => x.ExecutionGroupName.Contains(executionGroupName));
-        executionGroupQuery = versionNumber == null ? executionGroupQuery : executionGroupQuery.Where(x => x.SoftwareVersionNumber == versionNumber);
+        if (executionGroupName != null)
+        {
+            executionGroupQuery = executionGroupQuery.Where(x => x.ExecutionGroupName.Contains(executionGroupName));
+        }
+
+        if (versionNumber != null)
+        {
+            executionGroupQuery = executionGroupQuery.Where(x => x.SoftwareVersionNumber == versionNumber);
+        }
+
+        executionGroupQuery = executionGroupQuery.OrderByDescending(x => x.SoftwareVersionNumber);
+        executionGroupQuery = executionGroupQuery.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
         return await executionGroupQuery.ToListAsync();
     }

@@ -17,13 +17,13 @@ namespace Teczter.Services.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetExecutionGroupSearchResults([FromQuery] string? executionGroupName, [FromQuery] string? releaseVersion)
+        public async Task<IActionResult> GetExecutionGroupSearchResults([FromQuery] int pageNumber, [FromQuery] string? executionGroupName, [FromQuery] string? releaseVersion)
         {
-            var executionGroups = await _executionGroupService.GetExecutionGroupSearchResults(executionGroupName, releaseVersion);
+            var executionGroups = await _executionGroupService.GetExecutionGroupSearchResults(pageNumber, executionGroupName, releaseVersion);
 
-            var dtos = executionGroups.Select(x => new ExecutionGroupDto(x)).ToList();
+            var executionGroupDtos = executionGroups.Select(x => new ExecutionGroupDto(x)).ToList();
 
-            return Ok(dtos.OrderBy(x => x.CreatedOn).ThenBy(x => x.SoftwareVersionNumber));
+            return Ok(executionGroupDtos);
         }
 
         [HttpGet]
