@@ -7,7 +7,7 @@ namespace Teczter.Services.ServiceInterfaces;
 public interface ITestService
 {
     Task<TeczterValidationResult<TestEntity>> CreateNewTest(CreateTestRequestDto test);
-    Task<List<TestEntity>> GetTestSearchResults(string? testTitle, string? owningDepartment);
+    Task<List<TestEntity>> GetTestSearchResults(int pageNumber, string? testTitle, string? owningDepartment);
     Task<TestEntity?> GetTestById(int id);
     Task DeleteTest(TestEntity test);
     Task<TeczterValidationResult<TestEntity>> UpdateTest(TestEntity test, UpdateTestRequestDto testUpdates);
