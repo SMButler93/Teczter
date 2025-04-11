@@ -25,13 +25,15 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
         OrderTestSteps();
         TestSteps.Insert(step.StepPlacement - 1, step);
         SetCorrectStepPlacementValuesOnAdd();
+        RevisedOn = DateTime.Now;
     }
 
     public void RemoveTestStep(TestStepEntity step)
     {
-        step.IsDeleted = true;
+        step.Delete();
         TestSteps.Remove(step);
         SetCorrectStepPlacementValuesOnUpdate();
+        RevisedOn = DateTime.Now;
     }
 
     public void SetCorrectStepPlacementValuesOnUpdate()
@@ -42,6 +44,8 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
         {
             TestSteps[i].StepPlacement = i + 1;
         }
+
+        RevisedOn = DateTime.Now;
     }
     private void SetCorrectStepPlacementValuesOnAdd()
     {
@@ -67,9 +71,14 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
         }
 
         Urls.Add(url);
+        RevisedOn = DateTime.Now;
     }
 
-    public void RemoveLinkUrl(string url) => Urls.Remove(url);
+    public void RemoveLinkUrl(string url)
+    {
+        Urls.Remove(url);
+        RevisedOn = DateTime.Now;
+    }
 
     public void Delete()
     {
@@ -79,6 +88,7 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
         }
 
         IsDeleted = true;
+        RevisedOn = DateTime.Now;
     }
 
     private static bool IsValidUrl(string url)

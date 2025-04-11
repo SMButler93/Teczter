@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Teczter.Adapters.AdapterInterfaces;
 using Teczter.Domain;
 using Teczter.Domain.Entities;
+using Teczter.Domain.Exceptions;
 using Teczter.Persistence;
 using Teczter.Services.RequestDtos;
 using Teczter.Services.ServiceInterfaces;
@@ -127,6 +128,17 @@ public class ExecutionGroupService : IExecutionGroupService
             _uow.Rollback();
             return;
         }
+
+        await _uow.CommitChanges();
+    }
+
+    public async Task RemoveExecution(ExecutionGroupEntity executionGroup, int executionId)
+    {
+        var execution = executionGroup.Executions.SingleOrDefault(x => x.Id == executionId) ??
+            throw new TeczterValidationException("Cannot remove an execution that does not exist, has already been deleted, " +
+            "or does not belong to this execution group.");
+
+        executionGroup.RemoveExecution(execution);
 
         await _uow.CommitChanges();
     }

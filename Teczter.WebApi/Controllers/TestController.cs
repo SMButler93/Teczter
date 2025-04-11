@@ -4,7 +4,7 @@ using Teczter.Services.RequestDtos;
 using Teczter.Services.ServiceInterfaces;
 using Teczter.WebApi.ResponseDtos;
 
-namespace Teczter.Services.Controllers;
+namespace Teczter.WebApi.Controllers;
 
 [Route("Teczter/[controller]")]
 [ApiController]
@@ -195,7 +195,7 @@ public class TestController : ControllerBase
         }
         catch (TeczterValidationException ex)
         {
-            return BadRequest(ex);
+            return BadRequest(ex.Message);
         }
     }
 
