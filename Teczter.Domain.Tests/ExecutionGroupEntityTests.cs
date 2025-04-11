@@ -36,6 +36,20 @@ public class ExecutionGroupEntityTests
     }
 
     [Test]
+    public void RemoveExecution_WhenRemoved_ShouldMarkExecutionAsDeletedAndRemoveFromExecutionCollection()
+    {
+        //Arrange:
+        var executionToDelete = _sut.Executions.First();
+
+        //Assert:
+        _sut.RemoveExecution(executionToDelete);
+
+        //Assert:
+        executionToDelete.IsDeleted.ShouldBeTrue();
+        _sut.Executions.ShouldNotContain(executionToDelete);
+    }
+
+    [Test]
     public void AddExecution_WhenAdded_ShouldBePresentInCollectionOfExecutions()
     {
         //Arrange:

@@ -49,12 +49,12 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 
     public void Reset()
     {
-        RevisedOn = DateTime.Now;
         IsDeleted = false;
         FailedStep = null;
         FailureReason = null;
         TestedById = null;
         ExecutionState = ExecutionStateType.Untested;
+        RevisedOn = DateTime.Now;
     }
 
     public void Delete()

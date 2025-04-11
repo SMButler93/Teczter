@@ -34,6 +34,13 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         RevisedOn = DateTime.Now;
     }
 
+    public void RemoveExecution(ExecutionEntity execution)
+    {
+        execution.Delete();
+        Executions.Remove(execution);
+        RevisedOn = DateTime.Now;
+    }
+
     public void CloseTestRound() => ClosedDate = DateTime.Now;
 
     public void AddNote(string note)
