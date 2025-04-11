@@ -41,6 +41,20 @@ public class ExecutionGroupController : ControllerBase
         return Ok(new ExecutionGroupDto(executionGroup));
     }
 
+    [HttpGet]
+    [Route("{executionGroupId:int}/Execution/{executionId:int}")]
+    public async Task<IActionResult> GetExecution(int executionGroupId, int executionId)
+    {
+        var execution = await _executionGroupService.GetExecutionByIdAndGroupId(executionGroupId, executionId);
+
+        if (execution == null)
+        {
+            return BadRequest($"Execution {executionId} belonging to execution group {executionGroupId} does not exist");
+        }
+
+        return Ok(new ExecutionDto(execution));
+    } 
+
     [HttpDelete]
     [Route("{id:int}/Delete")]
     public async Task<IActionResult> DeleteExecutionGroup(int id)
@@ -137,7 +151,7 @@ public class ExecutionGroupController : ControllerBase
 
         if (executionGroup == null)
         {
-            return BadRequest($"Execution group {groupId} does not exist.");
+            return NotFound($"Execution group {groupId} does not exist.");
         }
 
         try

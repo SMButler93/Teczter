@@ -142,4 +142,11 @@ public class ExecutionGroupService : IExecutionGroupService
 
         await _uow.CommitChanges();
     }
+
+    public async Task<ExecutionEntity?> GetExecutionByIdAndGroupId(int executionGroupId, int executionId)
+    {
+        var executionGroup = await _executionGroupAdapter.GetExecutionGroupById(executionGroupId);
+
+        return executionGroup?.Executions.SingleOrDefault(x => x.Id == executionId);
+    }
 }

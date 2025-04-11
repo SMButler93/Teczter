@@ -101,7 +101,7 @@ public class TestController : ControllerBase
         return Ok(new TestDto(test));
     }
 
-    [HttpPut]
+    [HttpPost]
     [Route("{id:int}/AddUrlResource")]
     public async Task<IActionResult> AddLinkUrl(int id, [FromBody] string url)
     {
@@ -122,7 +122,7 @@ public class TestController : ControllerBase
         return Ok(new TestDto(test));
     }
 
-    [HttpPut]
+    [HttpDelete]
     [Route("{id:int}/RemoveUrlResource")]
     public async Task<IActionResult> RemoveLinkUrl(int id, [FromBody] string url)
     {
@@ -150,7 +150,7 @@ public class TestController : ControllerBase
         }
     }
 
-    [HttpPut]
+    [HttpPost]
     [Route("{id:int}/AddTestStep")]
     public async Task<IActionResult> AddTestStep(int id, [FromBody] CreateTestStepRequestDto request)
     {
@@ -171,7 +171,7 @@ public class TestController : ControllerBase
         return Ok(new TestDto(test));
     }
 
-    [HttpPut]
+    [HttpDelete]
     [Route("{testId:int}/RemoveTestStep/{testStepId:int}")]
     public async Task<IActionResult> RemoveTestStep(int testId, int testStepId)
     {
@@ -199,7 +199,7 @@ public class TestController : ControllerBase
         }
     }
 
-    [HttpPut]
+    [HttpPatch]
     [Route("{testId:int}/UpdateTestStep/{testStepId:int}")]
     public async Task<IActionResult> UpdateTestStep(int testId, int testStepId, [FromBody] UpdateTestStepRequestDto request)
     {

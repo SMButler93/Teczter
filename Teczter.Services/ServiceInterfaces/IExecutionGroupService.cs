@@ -8,6 +8,7 @@ public interface IExecutionGroupService
 {
     Task<List<ExecutionGroupEntity>> GetExecutionGroupSearchResults(int pageNumber, string? executionGroupName, string? versionNumber);
     Task<ExecutionGroupEntity?> GetExecutionGroupById(int id);
+    Task<ExecutionEntity?> GetExecutionByIdAndGroupId(int executionGroupId, int executionId);
     Task DeleteExecutionGroup(ExecutionGroupEntity executionGroup);
     Task RemoveExecution(ExecutionGroupEntity executionGroup, int executionId);
     Task<TeczterValidationResult<ExecutionGroupEntity>> CloneExecutionGroup(ExecutionGroupEntity executiongroupToClone, string NewExecutionGroupName, string? softwareVersionNumber);

@@ -11,7 +11,6 @@ public static class AdapterLayerDependencyInjection
     public static void RegisterAdapters(this IServiceCollection services)
     {
         services.AddScoped<ITestAdapter, TestAdapter>();
-        services.AddScoped<ITestStepAdapter, TestStepAdapter>();
         services.AddScoped<IExecutionGroupAdapter, ExecutionGroupAdapter>();
         services.AddScoped<IExecutionAdapter, ExecutionAdapter>();
         services.AddScoped<IUserAdapter, UserAdapter>();
