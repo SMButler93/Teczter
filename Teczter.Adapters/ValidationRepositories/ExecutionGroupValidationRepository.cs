@@ -1,4 +1,5 @@
-﻿using Teczter.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Teczter.Data;
 using Teczter.Domain.Entities;
 using Teczter.Services.ValidationRepositoryInterfaces;
 
@@ -10,11 +11,17 @@ public class ExecutionGroupValidationRepository(TeczterDbContext dbContext) : IE
 
     public List<ExecutionGroupEntity> GetExecutionGroupsWithName(string name)
     {
-        return _dbContext.ExecutionGroups.Where(x => x.ExecutionGroupName.ToLower() == name.ToLower()).ToList();
+        return _dbContext.ExecutionGroups
+            .Where(x => x.ExecutionGroupName == name)
+            .AsNoTracking()
+            .ToList();
     }
 
     public List<ExecutionGroupEntity> GetExecutionGroupsWithSoftwareVersionNumber(string versionNumber)
     {
-        return _dbContext.ExecutionGroups.Where(x => x.SoftwareVersionNumber == versionNumber).ToList();
+        return _dbContext.ExecutionGroups
+            .Where(x => x.SoftwareVersionNumber == versionNumber)
+            .AsNoTracking()
+            .ToList();
     }
 }
