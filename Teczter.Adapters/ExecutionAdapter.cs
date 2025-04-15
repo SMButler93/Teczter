@@ -5,14 +5,9 @@ using Teczter.Services.AdapterInterfaces;
 
 namespace Teczter.Adapters;
 
-public class ExecutionAdapter : IExecutionAdapter
+public class ExecutionAdapter(TeczterDbContext dbContext) : IExecutionAdapter
 {
-    private readonly TeczterDbContext _dbContext;
-
-    public ExecutionAdapter(TeczterDbContext dbCobtext)
-    {
-        _dbContext = dbCobtext;
-    }
+    private readonly TeczterDbContext _dbContext = dbContext;
 
     public async Task<List<ExecutionEntity>> GetExecutionsForTest(int testId)
     {

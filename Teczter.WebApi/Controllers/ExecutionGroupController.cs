@@ -154,6 +154,11 @@ public class ExecutionGroupController : ControllerBase
             return NotFound($"Execution group {groupId} does not exist.");
         }
 
+        if (executionGroup.IsComplete)
+        {
+            return BadRequest($"Cannot remove executions from an execution group that has closed.");
+        }
+
         try
         {
             var updatedExecutionGroup = _executionGroupService.RemoveExecution(executionGroup, executionId);

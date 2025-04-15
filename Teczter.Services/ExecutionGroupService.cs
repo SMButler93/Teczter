@@ -134,7 +134,7 @@ public class ExecutionGroupService : IExecutionGroupService
 
     public async Task RemoveExecution(ExecutionGroupEntity executionGroup, int executionId)
     {
-        var execution = executionGroup.Executions.SingleOrDefault(x => x.Id == executionId) ??
+        var execution = executionGroup.Executions.SingleOrDefault(x => x.Id == executionId && !x.IsDeleted) ??
             throw new TeczterValidationException("Cannot remove an execution that does not exist, has already been deleted, " +
             "or does not belong to this execution group.");
 

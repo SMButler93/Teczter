@@ -5,14 +5,9 @@ using Teczter.Services.AdapterInterfaces;
 
 namespace Teczter.Adapters;
 
-public class ExecutionGroupAdapter : IExecutionGroupAdapter
+public class ExecutionGroupAdapter(TeczterDbContext dbContext) : IExecutionGroupAdapter
 {
-    private readonly TeczterDbContext _dbContext;
-
-    public ExecutionGroupAdapter(TeczterDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
+    private readonly TeczterDbContext _dbContext = dbContext;
 
     public async Task CreateNewExecutionGroup(ExecutionGroupEntity executionGroup)
     {
