@@ -16,7 +16,7 @@ public static class AdapterLayerDependencyInjection
         services.AddScoped<IUserAdapter, UserAdapter>();
 
         //Validation repositories
-        services.AddScoped<ITestValidationRepository, TestValidationRespository>();
+        services.AddScoped<ITestValidationRepository, TestValidationRepository>();
         services.AddScoped<IExecutionGroupValidationRepository, ExecutionGroupValidationRepository>();
     }
 }
