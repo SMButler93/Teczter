@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Teczter.Data;
+﻿using Teczter.Data;
 using Teczter.Domain.Entities;
+using Teczter.Services.ValidationRepositoryInterfaces;
 
-namespace Teczter.Adapters.ValidationRepositories.TestValidationRespositories;
+namespace Teczter.Adapters.ValidationRepositories;
 
 public class TestValidationRespository(TeczterDbContext dbContext) : ITestValidationRepository
 {

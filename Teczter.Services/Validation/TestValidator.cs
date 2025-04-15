@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using Teczter.Adapters.ValidationRepositories.TestValidationRespositories;
 using Teczter.Domain.Entities;
 using Teczter.Services.Validation.ValidationRules;
+using Teczter.Services.ValidationRepositoryInterfaces;
 
 namespace Teczter.Services.Validation;
 

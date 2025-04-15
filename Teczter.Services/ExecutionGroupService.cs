@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Teczter.Adapters.AdapterInterfaces;
 using Teczter.Domain;
 using Teczter.Domain.Entities;
 using Teczter.Domain.Exceptions;
 using Teczter.Persistence;
+using Teczter.Services.AdapterInterfaces;
 using Teczter.Services.RequestDtos;
 using Teczter.Services.ServiceInterfaces;
 
@@ -13,7 +13,7 @@ namespace Teczter.Services;
 public class ExecutionGroupService : IExecutionGroupService
 {
     private readonly IExecutionGroupAdapter _executionGroupAdapter;
-    private readonly IExecutionGroupBuilder _builder;
+    private readonly IExecutionGroupComposer _builder;
     private readonly IValidator<ExecutionGroupEntity> _validator;
     private readonly IUnitOfWork _uow;
 
@@ -21,7 +21,7 @@ public class ExecutionGroupService : IExecutionGroupService
 
     public ExecutionGroupService(
         IExecutionGroupAdapter executionGroupAdapter, 
-        IExecutionGroupBuilder builder,
+        IExecutionGroupComposer builder,
         IValidator<ExecutionGroupEntity> validator,
         IUnitOfWork uow)
     {

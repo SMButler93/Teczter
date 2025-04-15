@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Teczter.Adapters.AdapterInterfaces;
 using Teczter.Domain;
 using Teczter.Domain.Entities;
 using Teczter.Domain.Exceptions;
 using Teczter.Persistence;
+using Teczter.Services.AdapterInterfaces;
 using Teczter.Services.RequestDtos;
 using Teczter.Services.ServiceInterfaces;
 
@@ -14,7 +14,7 @@ public class TestService : ITestService
 {
     private readonly ITestAdapter _testAdapter;
     private readonly IExecutionAdapter _executionAdapter;
-    private readonly ITestBuilder _builder;
+    private readonly ITestComposer _builder;
     private readonly IUnitOfWork _uow;
     private readonly IValidator<TestEntity> _testValidator;
 
@@ -23,7 +23,7 @@ public class TestService : ITestService
     public TestService(
         ITestAdapter testAdapter,
         IExecutionAdapter executionAdapter,
-        ITestBuilder builder,
+        ITestComposer builder,
         IUnitOfWork uow,
         IValidator<TestEntity> testValidator)
     {

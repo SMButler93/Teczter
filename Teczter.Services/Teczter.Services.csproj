@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Teczter.Adapters\Teczter.Adapters.csproj" />
     <ProjectReference Include="..\Teczter.Domain\Teczter.Domain.csproj" />
     <ProjectReference Include="..\Teczter.Persistence\Teczter.Persistence.csproj" />
   </ItemGroup>

@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Teczter.Adapters;
-using Teczter.Adapters.AdapterInterfaces;
-using Teczter.Adapters.ValidationRepositories.ExecutionGroupValidationRepositories;
-using Teczter.Adapters.ValidationRepositories.TestValidationRespositories;
+using Teczter.Adapters.ValidationRepositories;
+using Teczter.Services.AdapterInterfaces;
+using Teczter.Services.ValidationRepositoryInterfaces;
 
-namespace Teczter.Services.DependencyInjection;
+namespace Teczter.Adapters.DependencyInjection;
 
 public static class AdapterLayerDependencyInjection
 {

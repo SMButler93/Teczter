@@ -4,10 +4,10 @@ using MockQueryable;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
-using Teczter.Adapters.AdapterInterfaces;
 using Teczter.Domain.Entities;
 using Teczter.Domain.Enums;
 using Teczter.Domain.Exceptions;
+using Teczter.Services.AdapterInterfaces;
 using Teczter.Services.RequestDtos;
 using Teczter.Services.ServiceInterfaces;
 
@@ -18,7 +18,7 @@ public class TestServiceTests
 {
     private readonly Mock<ITestAdapter> _testAdapterMock = new();
     private readonly Mock<IExecutionAdapter> _executionAdapterMock = new();
-    private readonly Mock<ITestBuilder> _testBuilderMock = new();
+    private readonly Mock<ITestComposer> _testBuilderMock = new();
     private readonly UnitOfWorkFake _uow = new();
     private readonly Mock<IValidator<TestEntity>> _testValidatorMock = new();
 

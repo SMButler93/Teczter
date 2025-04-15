@@ -1,7 +1,8 @@
 ﻿using Teczter.Data;
 using Teczter.Domain.Entities;
+using Teczter.Services.ValidationRepositoryInterfaces;
 
-namespace Teczter.Adapters.ValidationRepositories.ExecutionGroupValidationRepositories;
+namespace Teczter.Adapters.ValidationRepositories;
 
 public class ExecutionGroupValidationRepository(TeczterDbContext dbContext) : IExecutionGroupValidationRepository
 {

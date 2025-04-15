@@ -1,6 +1,6 @@
 ﻿using Teczter.Domain.Entities;
 
-namespace Teczter.Adapters.ValidationRepositories.ExecutionGroupValidationRepositories;
+namespace Teczter.Services.ValidationRepositoryInterfaces;
 
 public interface IExecutionGroupValidationRepository
 {
