@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using Teczter.Adapters.ValidationRepositories.TestValidationRespositories;
 using Teczter.Services.RequestDtos;
 using Teczter.Services.Validation.ValidationRules;
+using Teczter.Services.ValidationRepositoryInterfaces;
 
 namespace Teczter.WebApi.RequestValidations;
 

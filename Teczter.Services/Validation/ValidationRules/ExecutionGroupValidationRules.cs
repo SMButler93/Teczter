@@ -1,5 +1,5 @@
-﻿using Teczter.Adapters.ValidationRepositories.ExecutionGroupValidationRepositories;
-using Teczter.Domain.Entities;
+﻿using Teczter.Domain.Entities;
+using Teczter.Services.ValidationRepositoryInterfaces;
 
 namespace Teczter.Services.Validation.ValidationRules;
 

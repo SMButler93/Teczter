@@ -1,6 +1,7 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using Teczter.Adapters.DependencyInjection;
 using Teczter.Data;
 using Teczter.Services.DependencyInjection;
 

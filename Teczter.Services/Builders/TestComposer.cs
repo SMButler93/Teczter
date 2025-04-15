@@ -5,17 +5,17 @@ using Teczter.Services.ServiceInterfaces;
 
 namespace Teczter.Services.Builders;
 
-internal class TestBuilder() : ITestBuilder
+internal class TestComposer() : ITestComposer
 {
     private TestEntity _test = null!;
 
-    public ITestBuilder AddLinkUrl(string linkUrl)
+    public ITestComposer AddLinkUrl(string linkUrl)
     {
         _test.AddLinkUrl(linkUrl);
         return this;
     }
 
-    public ITestBuilder AddSteps(IEnumerable<CreateTestStepRequestDto> steps)
+    public ITestComposer AddSteps(IEnumerable<CreateTestStepRequestDto> steps)
     {
         var testStepEntities = new List<TestStepEntity>();
 
@@ -29,7 +29,7 @@ internal class TestBuilder() : ITestBuilder
         return this;
     }
 
-    public ITestBuilder AddStep(CreateTestStepRequestDto step)
+    public ITestComposer AddStep(CreateTestStepRequestDto step)
     {
         _test.AddTestStep(
            new TestStepEntity
@@ -43,7 +43,7 @@ internal class TestBuilder() : ITestBuilder
         return this;
     }
 
-    public ITestBuilder AddSteps(IEnumerable<TestStepEntity> steps)
+    public ITestComposer AddSteps(IEnumerable<TestStepEntity> steps)
     {
         foreach (var step in steps)
         {
@@ -53,25 +53,25 @@ internal class TestBuilder() : ITestBuilder
         return this;
     }
 
-    public ITestBuilder AddStep(TestStepEntity step)
+    public ITestComposer AddStep(TestStepEntity step)
     {
         _test.AddTestStep(step);
         return this;
     }
 
-    public ITestBuilder NewInstance()
+    public ITestComposer NewInstance()
     {
         _test = new();
         return this;
     }
 
-    public ITestBuilder SetDescription(string? description)
+    public ITestComposer SetDescription(string? description)
     {
         _test.Description = description ?? _test.Description;
         return this;
     }
 
-    public ITestBuilder SetOwningDepartment(string? department)
+    public ITestComposer SetOwningDepartment(string? department)
     {
         if (department == null)
         {
@@ -82,13 +82,13 @@ internal class TestBuilder() : ITestBuilder
         return this;
     }
 
-    public ITestBuilder SetTitle(string? title)
+    public ITestComposer SetTitle(string? title)
     {
         _test.Title = title ?? _test.Title;
         return this;
     }
 
-    public ITestBuilder UsingContext(TestEntity test)
+    public ITestComposer UsingContext(TestEntity test)
     {
         _test = test;
         SetRevisonDetails();
@@ -101,7 +101,7 @@ internal class TestBuilder() : ITestBuilder
         return _test;
     }
 
-    public ITestBuilder AddLinkUrls(IEnumerable<string> links)
+    public ITestComposer AddLinkUrls(IEnumerable<string> links)
     {
         foreach (var link in links)
         {

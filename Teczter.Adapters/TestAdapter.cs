@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Teczter.Adapters.AdapterInterfaces;
 using Teczter.Data;
 using Teczter.Domain.Entities;
+using Teczter.Services.AdapterInterfaces;
 
 namespace Teczter.Adapters;
 

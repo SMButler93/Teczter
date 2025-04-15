@@ -1,6 +1,6 @@
 ﻿using Teczter.Domain.Entities;
 
-namespace Teczter.Adapters.AdapterInterfaces;
+namespace Teczter.Services.AdapterInterfaces;
 
 public interface IUserAdapter
 {
