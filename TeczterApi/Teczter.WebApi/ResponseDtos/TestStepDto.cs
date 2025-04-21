@@ -6,9 +6,9 @@ public class TestStepDto
 {
     public int Id { get; private set; }
     public bool IsDeleted { get; set; }
-    public DateTime CreatedOn { get; } = DateTime.Now;
+    public string CreatedOn { get; }
     public int CreatedById { get; }
-    public DateTime RevisedOn { get; set; } = DateTime.Now;
+    public string RevisedOn { get; set; }
     public int RevisedById { get; set; }
     public int TestId { get; set; }
     public int StepPlacement { get; set; }
@@ -19,9 +19,9 @@ public class TestStepDto
     {
         Id = testStep.Id;
         IsDeleted = testStep.IsDeleted;
-        CreatedOn = testStep.CreatedOn;
+        CreatedOn = testStep.CreatedOn.ToString();
         CreatedById = testStep.CreatedById;
-        RevisedOn = testStep.RevisedOn;
+        RevisedOn = testStep.RevisedOn.ToString();
         RevisedById = testStep.RevisedById;
         TestId = testStep.Id;
         StepPlacement = testStep.StepPlacement;
