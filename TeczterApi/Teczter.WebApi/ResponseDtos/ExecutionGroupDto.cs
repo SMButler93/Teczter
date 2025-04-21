@@ -5,9 +5,9 @@ namespace Teczter.WebApi.ResponseDtos;
 public class ExecutionGroupDto
 {
     public int Id { get; }
-    public DateTime CreatedOn { get; }
+    public string CreatedOn { get; }
     public int CreatedById { get; }
-    public DateTime RevisedOn { get; }
+    public string RevisedOn { get; }
     public int RevisedById { get; }
     public bool IsDeleted { get; }
     public string ExecutionGroupName { get; }
@@ -21,9 +21,9 @@ public class ExecutionGroupDto
     public ExecutionGroupDto(ExecutionGroupEntity entity)
     {
         Id = entity.Id;
-        CreatedOn = entity.CreatedOn;
+        CreatedOn = entity.CreatedOn.ToString();
         CreatedById = entity.CreatedById;
-        RevisedOn = entity.RevisedOn;
+        RevisedOn = entity.RevisedOn.ToString();
         RevisedById = entity.RevisedById;
         IsDeleted = entity.IsDeleted;
         ExecutionGroupName = entity.ExecutionGroupName;

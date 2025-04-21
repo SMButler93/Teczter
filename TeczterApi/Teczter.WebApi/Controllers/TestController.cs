@@ -18,7 +18,7 @@ public class TestController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetTestSearchResults([FromQuery] int pageNumber, [FromQuery] string? testName, [FromQuery] string? owningDepartment)
+    public async Task<IActionResult> GetTestSearchResults([FromQuery] string? testName, [FromQuery] string? owningDepartment, [FromQuery] int pageNumber = 1)
     {
         var tests = await _testService.GetTestSearchResults(pageNumber, testName, owningDepartment);
 

@@ -6,9 +6,9 @@ public class TestDto
 {
     public int Id { get; private set; }
     public bool IsDeleted { get; set; }
-    public DateTime CreatedOn { get; }
+    public string CreatedOn { get; }
     public int CreatedById { get; }
-    public DateTime RevisedOn { get; set; }
+    public string RevisedOn { get; set; }
     public int RevisedById { get; set; }
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
@@ -21,9 +21,9 @@ public class TestDto
     {
         Id = test.Id;
         IsDeleted = test.IsDeleted;
-        CreatedOn = test.CreatedOn;
+        CreatedOn = test.CreatedOn.ToString();
         CreatedById = test.CreatedById;
-        RevisedOn = test.RevisedOn;
+        RevisedOn = test.RevisedOn.ToString();
         RevisedById = test.RevisedById;
         Title = test.Title;
         Description = test.Description;

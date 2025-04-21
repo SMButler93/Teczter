@@ -5,9 +5,9 @@ namespace Teczter.WebApi.ResponseDtos;
 public class ExecutionDto
 {
     public int Id { get; private set; }
-    public DateTime CreatedOn { get; } = DateTime.Now;
+    public string CreatedOn { get; }
     public int CreatedById { get; set; }
-    public DateTime RevisedOn { get; set; } = DateTime.Now;
+    public string RevisedOn { get; set; }
     public int RevisedById { get; set; }
     public bool IsDeleted { get; set; }
     public int ExecutionGroupId { get; init; }
@@ -25,9 +25,9 @@ public class ExecutionDto
     public ExecutionDto(ExecutionEntity entity)
     {
         Id = entity.Id;
-        CreatedOn = entity.CreatedOn;
+        CreatedOn = entity.CreatedOn.ToString();
         CreatedById = entity.CreatedById;
-        RevisedOn = entity.RevisedOn;
+        RevisedOn = entity.RevisedOn.ToString();
         RevisedById = entity.RevisedById;
         IsDeleted = entity.IsDeleted;
         ExecutionGroupId = entity.ExecutionGroupId;
