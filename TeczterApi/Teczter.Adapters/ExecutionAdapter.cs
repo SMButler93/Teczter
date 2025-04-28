@@ -18,6 +18,8 @@ public class ExecutionAdapter(TeczterDbContext dbContext) : IExecutionAdapter
 
     public async Task<List<ExecutionEntity>> GetExecutionsForTest(int testId)
     {
-        return await _dbContext.Executions.Where(x => x.TestId == testId && !x.IsDeleted).ToListAsync();
+        return await _dbContext.Executions
+            .Where(x => x.TestId == testId && !x.IsDeleted)
+            .ToListAsync();
     }
 }

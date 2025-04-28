@@ -16,7 +16,7 @@ namespace Teczter.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("Execution/{id:int}")]
+        [Route("{id:int}")]
         public async Task<IActionResult> GetExecutionById(int id)
         {
             var execution = await _executionService.GetExecutionById(id);

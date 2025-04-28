@@ -41,20 +41,6 @@ public class ExecutionGroupController : ControllerBase
         return Ok(new ExecutionGroupDto(executionGroup));
     }
 
-    [HttpGet]
-    [Route("{executionGroupId:int}/Execution/{executionId:int}")]
-    public async Task<IActionResult> GetExecution(int executionGroupId, int executionId)
-    {
-        var execution = await _executionGroupService.GetExecutionByIdAndGroupId(executionGroupId, executionId);
-
-        if (execution == null)
-        {
-            return BadRequest($"Execution {executionId} belonging to execution group {executionGroupId} does not exist");
-        }
-
-        return Ok(new ExecutionDto(execution));
-    } 
-
     [HttpDelete]
     [Route("{id:int}/Delete")]
     public async Task<IActionResult> DeleteExecutionGroup(int id)
@@ -144,8 +130,8 @@ public class ExecutionGroupController : ControllerBase
     }
 
     [HttpDelete]
-    [Route("{groupId:int}/RemoveExecution/{executionId:int}")]
-    public async Task<IActionResult> RemoveExecution(int groupId, int executionId)
+    [Route("{groupId:int}/DeleteExecution/{executionId:int}")]
+    public async Task<IActionResult> DeleteExecution(int groupId, int executionId)
     {
         var executionGroup = await _executionGroupService.GetExecutionGroupById(groupId);
 
@@ -156,12 +142,12 @@ public class ExecutionGroupController : ControllerBase
 
         if (executionGroup.IsComplete)
         {
-            return BadRequest($"Cannot remove executions from an execution group that has closed.");
+            return BadRequest($"Cannot delete executions from an execution group that has closed.");
         }
 
         try
         {
-            var updatedExecutionGroup = _executionGroupService.RemoveExecution(executionGroup, executionId);
+            var updatedExecutionGroup = _executionGroupService.DeleteExecution(executionGroup, executionId);
 
             return Ok(updatedExecutionGroup);
         }

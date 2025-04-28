@@ -14,7 +14,7 @@ public class TestService : ITestService
 {
     private readonly ITestAdapter _testAdapter;
     private readonly IExecutionAdapter _executionAdapter;
-    private readonly ITestComposer _builder;
+    private readonly ITestComposer _composer;
     private readonly IUnitOfWork _uow;
     private readonly IValidator<TestEntity> _testValidator;
 
@@ -23,20 +23,20 @@ public class TestService : ITestService
     public TestService(
         ITestAdapter testAdapter,
         IExecutionAdapter executionAdapter,
-        ITestComposer builder,
+        ITestComposer composer,
         IUnitOfWork uow,
         IValidator<TestEntity> testValidator)
     {
         _testAdapter = testAdapter;
         _executionAdapter = executionAdapter;
-        _builder = builder;
+        _composer = composer;
         _uow = uow;
         _testValidator = testValidator;
     }
 
     public async Task<TeczterValidationResult<TestEntity>> AddLinkUrl(TestEntity test, string url)
     {
-        _builder.UsingContext(test)
+        _composer.UsingContext(test)
             .AddLinkUrl(url);
 
         var result = await ValidateTestState(test);
@@ -47,7 +47,7 @@ public class TestService : ITestService
 
     public async Task<TeczterValidationResult<TestEntity>> AddTestStep(TestEntity test, CreateTestStepRequestDto testStep)
     {
-        _builder.UsingContext(test)
+        _composer.UsingContext(test)
             .AddStep(testStep);
 
         var result = await ValidateTestState(test);
@@ -58,7 +58,7 @@ public class TestService : ITestService
 
     public async Task<TeczterValidationResult<TestEntity>> CreateNewTest(CreateTestRequestDto request)
     {
-        var test = _builder
+        var test = _composer
             .NewInstance()
             .SetTitle(request.Title)
             .SetDescription(request.Description)
@@ -142,7 +142,7 @@ public class TestService : ITestService
 
     public async Task<TeczterValidationResult<TestEntity>> UpdateTest(TestEntity test, UpdateTestRequestDto testUpdates)
     {
-        _builder.UsingContext(test)
+        _composer.UsingContext(test)
             .SetTitle(testUpdates.Title)
             .SetDescription(testUpdates.Description)
             .SetOwningDepartment(testUpdates.OwningDepartment);
@@ -156,7 +156,8 @@ public class TestService : ITestService
     public async Task<TeczterValidationResult<TestEntity>> UpdateTestStep(TestEntity test, int testStepId, UpdateTestStepRequestDto request)
     {
         var testStep = test.TestSteps.SingleOrDefault(x => x.Id == testStepId && !x.IsDeleted) ??
-            throw new TeczterValidationException("Cannot update a test step that does not exist or has already been deleted");
+            throw new TeczterValidationException("Cannot update a test step that does not exist, has already been deleted " +
+            "or does not belong to this test.");
 
         testStep.Update(request.StepPlacement, request.Instructions, request.Urls);
 

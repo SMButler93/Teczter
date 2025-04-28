@@ -1,9 +1,11 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Teczter.Adapters.DependencyInjection;
 using Teczter.Data;
 using Teczter.Services.DependencyInjection;
+using Teczter.WebApi.CorsConfig;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.RegisterServices();
 builder.Services.RegisterAdapters();
+
+builder.Services.AddOptions<CorsOptions>()
+    .Bind(builder.Configuration.GetSection("CorsOptions"));
 
 builder.Services.AddDbContext<TeczterDbContext>(options =>
 {
@@ -33,6 +38,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+var corsOptions = app.Services.GetRequiredService<IOptions<CorsOptions>>().Value;
+
+app.UseCors(policy =>
+{
+    policy.WithOrigins(corsOptions.AllowedOrigins)
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+});
 
 app.UseHttpsRedirection();
 
