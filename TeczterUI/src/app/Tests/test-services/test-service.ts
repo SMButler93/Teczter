@@ -13,7 +13,7 @@ export class TestService {
     constructor(private http: HttpClient) {}
 
     getTestById(id: number): Observable<ITest> {
-        return this.http.get<ITest>(`${this.baseUrl}/Test/${id}`)
+        return this.http.get<ITest>(`https://localhost:7012/Teczter/Test/${id}`)
     }
 
     getTestSearchResults(pageNumber?: number, testName?: string, owningDepartment? : string) {

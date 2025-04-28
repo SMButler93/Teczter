@@ -1,34 +1,34 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { ITest } from '../Interfaces/test-interface';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { TestService } from '../test-services/test-service';
-import { Subject, takeUntil } from 'rxjs';
+import { map, switchMap, Observable, shareReplay } from 'rxjs';
+import { ITest } from '../Interfaces/test-interface';
+import { ITestStep } from '../Interfaces/test-step-interface';
+import { CommonModule } from '@angular/common';
+import { TestStepComponent } from '../test-step/test-step.component';
 
 @Component({
   selector: 'app-test',
   standalone: true,
-  imports: [],
   templateUrl: './test.component.html',
-  styleUrl: './test.component.css'
+  styleUrl: './test.component.css',
+  imports: [
+    CommonModule,
+    TestStepComponent
+  ]
 })
-export class TestComponent implements OnInit, OnDestroy {
-  
-  @Input({required: true}) id!: number;
-  test!: ITest;
+export class TestComponent implements OnInit {
+  test$?: Observable<ITest>;
 
   constructor(
-    private _testService: TestService
+    private _testService: TestService,
+    private _route: ActivatedRoute
   ) {}
 
-  unsubscribe$ = new Subject<void>;
-
   ngOnInit(): void {
-    this._testService.getTestById(this.id)
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe(test => this.test = test);
-  }
-
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.test$ = this._route.paramMap.pipe(
+      map(params => Number(params.get('testId'))),
+      switchMap(id => this._testService.getTestById(id)),
+    );
   }
 }

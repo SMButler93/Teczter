@@ -1,1 +1,11 @@
-<p>test works!</p>
+<div *ngIf="test$ | async as test">
+    <ng-container>
+        <h1> {{ test.title }} </h1>
+    </ng-container>
+
+    <div>
+        <div *ngFor="let step of test.testSteps">
+            <app-test-step [step]="step"></app-test-step>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,4 @@
 export const environment = {
-    productions: false,
+    productions: true,
     baseUrl: ''
 };

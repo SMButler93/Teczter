@@ -1,1 +1,14 @@
-<p>test-step works!</p>
+<p-card class="p-mb-3">
+    <div class="stepPlacement">
+        {{ step.stepPlacement }}
+    </div>
+
+    <div *ngIf="!isEditMode">
+        <p>{{ step.instructions }}</p>
+        <button pButton label="Edit" icon="pi pi-pencil" (click)="enterEditMode()"></button>
+    </div>
+
+    <div *ngIf="isEditMode">
+        <textarea pInputTextarea [(ngModel)]="step.instructions" rows="5" cols="30"></textarea>
+    </div>
+</p-card>
