@@ -1,5 +1,4 @@
 ﻿using Teczter.Domain.Entities;
-using Teczter.Domain.Enums;
 using Teczter.Services.RequestDtos;
 
 namespace Teczter.Services.ServiceInterfaces;

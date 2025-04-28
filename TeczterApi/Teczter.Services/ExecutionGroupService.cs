@@ -13,7 +13,7 @@ namespace Teczter.Services;
 public class ExecutionGroupService : IExecutionGroupService
 {
     private readonly IExecutionGroupAdapter _executionGroupAdapter;
-    private readonly IExecutionGroupComposer _builder;
+    private readonly IExecutionGroupComposer _composer;
     private readonly IValidator<ExecutionGroupEntity> _validator;
     private readonly IUnitOfWork _uow;
 
@@ -21,12 +21,12 @@ public class ExecutionGroupService : IExecutionGroupService
 
     public ExecutionGroupService(
         IExecutionGroupAdapter executionGroupAdapter, 
-        IExecutionGroupComposer builder,
+        IExecutionGroupComposer composer,
         IValidator<ExecutionGroupEntity> validator,
         IUnitOfWork uow)
     {
         _executionGroupAdapter = executionGroupAdapter;
-        _builder = builder;
+        _composer = composer;
         _validator = validator;
         _uow = uow;
     }
@@ -48,7 +48,7 @@ public class ExecutionGroupService : IExecutionGroupService
 
     public async Task<TeczterValidationResult<ExecutionGroupEntity>> CreateExecution(ExecutionGroupEntity executionGroup, CreateExecutionRequestDto request)
     {
-        var group = _builder
+        var group = _composer
             .UsingContext(executionGroup)
             .AddExecution(request)
             .Build();
@@ -61,7 +61,7 @@ public class ExecutionGroupService : IExecutionGroupService
 
     public async Task<TeczterValidationResult<ExecutionGroupEntity>> CreateNewExecutionGroup(CreateExecutionGroupRequestDto request)
     {
-        var group = _builder
+        var group = _composer
             .NewInstance()
             .SetName(request.ExecutionGroupName)
             .SetSoftwareVersionNumber(request.SoftwareVersionNumber)
@@ -132,7 +132,7 @@ public class ExecutionGroupService : IExecutionGroupService
         await _uow.CommitChanges();
     }
 
-    public async Task RemoveExecution(ExecutionGroupEntity executionGroup, int executionId)
+    public async Task DeleteExecution(ExecutionGroupEntity executionGroup, int executionId)
     {
         var execution = executionGroup.Executions.SingleOrDefault(x => x.Id == executionId && !x.IsDeleted) ??
             throw new TeczterValidationException("Cannot remove an execution that does not exist, has already been deleted, " +
@@ -141,12 +141,5 @@ public class ExecutionGroupService : IExecutionGroupService
         executionGroup.RemoveExecution(execution);
 
         await _uow.CommitChanges();
-    }
-
-    public async Task<ExecutionEntity?> GetExecutionByIdAndGroupId(int executionGroupId, int executionId)
-    {
-        var executionGroup = await _executionGroupAdapter.GetExecutionGroupById(executionGroupId);
-
-        return executionGroup?.Executions.SingleOrDefault(x => x.Id == executionId);
     }
 }
