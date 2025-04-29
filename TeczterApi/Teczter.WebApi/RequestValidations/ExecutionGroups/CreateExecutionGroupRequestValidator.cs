@@ -4,7 +4,7 @@ using Teczter.Services.RequestDtos.Executions;
 using Teczter.Services.Validation.ValidationRules;
 using Teczter.Services.ValidationRepositoryInterfaces;
 
-namespace Teczter.WebApi.RequestValidations;
+namespace Teczter.WebApi.RequestValidations.ExecutionGroups;
 
 public class CreateExecutionGroupRequestValidator : AbstractValidator<CreateExecutionGroupRequestDto>
 {

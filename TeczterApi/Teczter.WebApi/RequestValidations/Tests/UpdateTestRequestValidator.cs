@@ -3,7 +3,7 @@ using Teczter.Services.RequestDtos.TestSteps;
 using Teczter.Services.Validation.ValidationRules;
 using Teczter.Services.ValidationRepositoryInterfaces;
 
-namespace Teczter.WebApi.RequestValidations;
+namespace Teczter.WebApi.RequestValidations.Tests;
 
 public class UpdateTestRequestValidator : AbstractValidator<UpdateTestRequestDto>
 {

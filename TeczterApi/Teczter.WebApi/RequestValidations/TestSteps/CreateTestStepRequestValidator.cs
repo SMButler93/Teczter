@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Teczter.Services.RequestDtos.TestSteps;
 
-namespace Teczter.WebApi.RequestValidations;
+namespace Teczter.WebApi.RequestValidations.TestSteps;
 
 public class CreateTestStepRequestValidator : AbstractValidator<CreateTestStepRequestDto>
 {
