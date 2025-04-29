@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Teczter.Domain.Exceptions;
+using Teczter.Services.RequestDtos.Executions;
 using Teczter.Services.ServiceInterfaces;
 using Teczter.WebApi.ResponseDtos;
 
@@ -27,6 +29,26 @@ namespace Teczter.WebApi.Controllers
             }
 
             return Ok(new ExecutionDto(execution));
+        }
+
+        [HttpPut]
+        [Route("CompleteExecution")]
+        public async Task<IActionResult> CompleteExecution([FromBody] CompleteExecutionRequestDto request)
+        {
+            try
+            {
+                var validatedExecution = await _executionService.CompleteExecution(request);
+
+                if (!validatedExecution.IsValid)
+                {
+                    return BadRequest(validatedExecution.ErrorMessages);
+                }
+
+                return Ok(validatedExecution.Value);
+            } catch (TeczterValidationException ex)
+            {
+                return BadRequest(ex);
+            }
         }
     }
 }

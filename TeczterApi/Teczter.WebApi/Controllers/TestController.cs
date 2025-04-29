@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Teczter.Domain.Exceptions;
-using Teczter.Services.RequestDtos;
+using Teczter.Services.RequestDtos.Tests;
+using Teczter.Services.RequestDtos.TestSteps;
 using Teczter.Services.ServiceInterfaces;
 using Teczter.WebApi.ResponseDtos;
 

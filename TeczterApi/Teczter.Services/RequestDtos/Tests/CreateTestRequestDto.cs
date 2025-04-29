@@ -1,6 +1,7 @@
 ﻿using Teczter.Domain.Enums;
+using Teczter.Services.RequestDtos.TestSteps;
 
-namespace Teczter.Services.RequestDtos;
+namespace Teczter.Services.RequestDtos.Tests;
 
 public class CreateTestRequestDto
 {

@@ -5,7 +5,8 @@ using Teczter.Domain.Entities;
 using Teczter.Domain.Exceptions;
 using Teczter.Persistence;
 using Teczter.Services.AdapterInterfaces;
-using Teczter.Services.RequestDtos;
+using Teczter.Services.RequestDtos.ExecutionGroups;
+using Teczter.Services.RequestDtos.Executions;
 using Teczter.Services.ServiceInterfaces;
 
 namespace Teczter.Services;

@@ -1,4 +1,4 @@
-﻿namespace Teczter.Services.RequestDtos;
+﻿namespace Teczter.Services.RequestDtos.Executions;
 
 public class CreateExecutionRequestDto
 {

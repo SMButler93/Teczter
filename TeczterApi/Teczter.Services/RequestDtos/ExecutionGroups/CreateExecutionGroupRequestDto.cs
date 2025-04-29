@@ -1,4 +1,6 @@
-﻿namespace Teczter.Services.RequestDtos;
+﻿using Teczter.Services.RequestDtos.Executions;
+
+namespace Teczter.Services.RequestDtos.ExecutionGroups;
 
 public class CreateExecutionGroupRequestDto
 {

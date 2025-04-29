@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using Teczter.Services.RequestDtos;
+using Teczter.Services.RequestDtos.Executions;
 
-namespace Teczter.WebApi.RequestValidations;
+namespace Teczter.WebApi.RequestValidations.Executions;
 
 public class CreateExecutionRequestValidator : AbstractValidator<CreateExecutionRequestDto>
 {

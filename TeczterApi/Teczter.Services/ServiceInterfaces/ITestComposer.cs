@@ -1,5 +1,5 @@
 ﻿using Teczter.Domain.Entities;
-using Teczter.Services.RequestDtos;
+using Teczter.Services.RequestDtos.TestSteps;
 
 namespace Teczter.Services.ServiceInterfaces;
 

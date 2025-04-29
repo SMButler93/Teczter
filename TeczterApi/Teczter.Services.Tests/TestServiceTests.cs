@@ -9,6 +9,7 @@ using Teczter.Domain.Enums;
 using Teczter.Domain.Exceptions;
 using Teczter.Services.AdapterInterfaces;
 using Teczter.Services.RequestDtos;
+using Teczter.Services.RequestDtos.TestSteps;
 using Teczter.Services.ServiceInterfaces;
 
 namespace Teczter.Services.Tests;
