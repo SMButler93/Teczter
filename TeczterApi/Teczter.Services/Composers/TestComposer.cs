@@ -1,6 +1,6 @@
 ﻿using Teczter.Domain.Entities;
 using Teczter.Domain.Enums;
-using Teczter.Services.RequestDtos;
+using Teczter.Services.RequestDtos.TestSteps;
 using Teczter.Services.ServiceInterfaces;
 
 namespace Teczter.Services.Builders;

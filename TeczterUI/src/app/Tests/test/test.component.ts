@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TestService } from '../test-services/test-service';
-import { map, switchMap, Observable, shareReplay } from 'rxjs';
+import { map, switchMap, Observable } from 'rxjs';
 import { ITest } from '../Interfaces/test-interface';
-import { ITestStep } from '../Interfaces/test-step-interface';
 import { CommonModule } from '@angular/common';
 import { TestStepComponent } from '../test-step/test-step.component';
 

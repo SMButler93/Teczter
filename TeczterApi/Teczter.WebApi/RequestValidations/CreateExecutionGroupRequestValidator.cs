@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
-using Teczter.Services.RequestDtos;
+using Teczter.Services.RequestDtos.ExecutionGroups;
+using Teczter.Services.RequestDtos.Executions;
 using Teczter.Services.Validation.ValidationRules;
 using Teczter.Services.ValidationRepositoryInterfaces;
 
