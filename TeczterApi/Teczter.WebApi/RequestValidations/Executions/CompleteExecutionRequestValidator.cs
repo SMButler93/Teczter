@@ -14,11 +14,11 @@ public class CompleteExecutionRequestValidator : AbstractValidator<CompleteExecu
             .NotEmpty().WithMessage("A value indicating if the test has passed must be provided.");
 
         RuleFor(x => x)
-            .Must(ProvideFailedStepOnlyWhenFailed).WithMessage("A failed test step must be provided when failing a test.")
-            .Must(ProvideFailureReasonOnlyWhenFailed).WithMessage("A failure reason must be provided when failing a test");
+            .Must(HasFailedStepWhenFailed).WithMessage("A failed test step must be provided when failing a test.")
+            .Must(HasFailureReasonWhenFailed).WithMessage("A failure reason must be provided when failing a test");
     }
 
-    private bool ProvideFailedStepOnlyWhenFailed(CompleteExecutionRequestDto request)
+    private bool HasFailedStepWhenFailed(CompleteExecutionRequestDto request)
     {
         if (!request.HasPassed)
         {
@@ -28,7 +28,7 @@ public class CompleteExecutionRequestValidator : AbstractValidator<CompleteExecu
         return !request.FailedStepId.HasValue;
     }
 
-    private bool ProvideFailureReasonOnlyWhenFailed(CompleteExecutionRequestDto request)
+    private bool HasFailureReasonWhenFailed(CompleteExecutionRequestDto request)
     {
         if (!request.HasPassed)
         {
