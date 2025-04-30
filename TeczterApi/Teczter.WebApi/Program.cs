@@ -5,7 +5,8 @@ using Microsoft.Extensions.Options;
 using Teczter.Adapters.DependencyInjection;
 using Teczter.Data;
 using Teczter.Services.DependencyInjection;
-using Teczter.WebApi.CorsConfig;
+using Teczter.WebApi.Middleware;
+using Teczter.WebApi.MiddlewareAndConfig;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,12 +42,14 @@ if (app.Environment.IsDevelopment())
 
 var corsOptions = app.Services.GetRequiredService<IOptions<CorsOptions>>().Value;
 
-app.UseCors(policy =>
+app.UseCors(builder =>
 {
-    policy.WithOrigins(corsOptions.AllowedOrigins)
+    builder.WithOrigins(corsOptions.AllowedOrigins)
         .AllowAnyHeader()
         .AllowAnyMethod();
 });
+
+app.UseMiddleware<CancellationMiddleware>();
 
 app.UseHttpsRedirection();
 
