@@ -9,14 +9,9 @@ namespace Teczter.WebApi.Controllers;
 
 [Route("Teczter/[controller]")]
 [ApiController]
-public class ExecutionGroupController : ControllerBase
+public class ExecutionGroupController(IExecutionGroupService executionGroupService) : ControllerBase
 {
-    private readonly IExecutionGroupService _executionGroupService;
-
-    public ExecutionGroupController(IExecutionGroupService executionGroupService)
-    {
-        _executionGroupService = executionGroupService;
-    }
+    private readonly IExecutionGroupService _executionGroupService = executionGroupService;
 
     [HttpGet]
     public async Task<IActionResult> GetExecutionGroupSearchResults([FromQuery] int pageNumber, [FromQuery] string? executionGroupName, [FromQuery] string? releaseVersion)
@@ -34,7 +29,7 @@ public class ExecutionGroupController : ControllerBase
     {
         var executionGroup = await _executionGroupService.GetExecutionGroupById(id);
 
-        if (executionGroup == null)
+        if (executionGroup is null)
         {
             return NotFound($"Execution group {id} does not exist");
         }
@@ -48,7 +43,7 @@ public class ExecutionGroupController : ControllerBase
     {
         var executionGroup = await _executionGroupService.GetExecutionGroupById(id);
 
-        if (executionGroup == null)
+        if (executionGroup is null)
         {
             return NotFound($"Execution group {id} does not exist");
         }
@@ -69,7 +64,7 @@ public class ExecutionGroupController : ControllerBase
     {
         var executionGroupToClone = await _executionGroupService.GetExecutionGroupById(id);
 
-        if (executionGroupToClone == null)
+        if (executionGroupToClone is null)
         {
             return NotFound($"Execution group {id} does not exist");
         }
@@ -108,7 +103,7 @@ public class ExecutionGroupController : ControllerBase
     {
         var executionGroup = await _executionGroupService.GetExecutionGroupById(id);
 
-        if (executionGroup == null)
+        if (executionGroup is null)
         {
             return NotFound($"Execution group {id} does not exist");
         }
@@ -136,7 +131,7 @@ public class ExecutionGroupController : ControllerBase
     {
         var executionGroup = await _executionGroupService.GetExecutionGroupById(groupId);
 
-        if (executionGroup == null)
+        if (executionGroup is null)
         {
             return NotFound($"Execution group {groupId} does not exist.");
         }

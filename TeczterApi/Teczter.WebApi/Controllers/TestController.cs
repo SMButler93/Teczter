@@ -9,14 +9,9 @@ namespace Teczter.WebApi.Controllers;
 
 [Route("Teczter/[controller]")]
 [ApiController]
-public class TestController : ControllerBase
+public class TestController(ITestService testService) : ControllerBase
 {
-    private readonly ITestService _testService;
-
-    public TestController(ITestService testService)
-    {
-        _testService = testService;
-    }
+    private readonly ITestService _testService = testService;
 
     [HttpGet]
     public async Task<IActionResult> GetTestSearchResults([FromQuery] string? testName, [FromQuery] string? owningDepartment, [FromQuery] int pageNumber = 1)
@@ -34,7 +29,7 @@ public class TestController : ControllerBase
     {
         var test = await _testService.GetTestById(id);
 
-        if (test == null)
+        if (test is null)
         {
             return NotFound($"Test {id} does not exist");
         }
@@ -48,7 +43,7 @@ public class TestController : ControllerBase
     {
         var test = await _testService.GetTestById(id);
 
-        if (test == null)
+        if (test is null)
         {
             return NotFound($"Test {id} does not exist");
         }
@@ -64,14 +59,14 @@ public class TestController : ControllerBase
     {
         try
         {
-            var validatedtest = await _testService.CreateNewTest(request);
+            var validatedTest = await _testService.CreateNewTest(request);
      
-            if (!validatedtest.IsValid)
+            if (!validatedTest.IsValid)
             {
-                return BadRequest(validatedtest.ErrorMessages);
+                return BadRequest(validatedTest.ErrorMessages);
             }
 
-            var dto = new TestDto(validatedtest.Value!);
+            var dto = new TestDto(validatedTest.Value!);
 
             return CreatedAtAction(nameof(GetTest), new { dto.Id }, dto);
         }
@@ -87,7 +82,7 @@ public class TestController : ControllerBase
     {
         var test = await _testService.GetTestById(id);
 
-        if (test == null)
+        if (test is null)
         {
             return NotFound($"Test {id} does not exist");
         }
@@ -108,7 +103,7 @@ public class TestController : ControllerBase
     {
         var test = await _testService.GetTestById(id);
 
-        if (test == null)
+        if (test is null)
         {
             return NotFound($"Test {id} does not exist");
         }
@@ -129,7 +124,7 @@ public class TestController : ControllerBase
     {
         var test = await _testService.GetTestById(id);
 
-        if (test == null)
+        if (test is null)
         {
             return NotFound($"test {id} does not exist.");
         }
@@ -157,7 +152,7 @@ public class TestController : ControllerBase
     {
         var test = await _testService.GetTestById(id);
 
-        if (test == null)
+        if (test is null)
         {
             return NotFound($"Test {id} does not exist");
         }
@@ -178,7 +173,7 @@ public class TestController : ControllerBase
     {
         var test = await _testService.GetTestById(testId);
 
-        if (test == null)
+        if (test is null)
         {
             return NotFound($"test {testId} does not exist.");
         }
@@ -206,7 +201,7 @@ public class TestController : ControllerBase
     {
         var test = await _testService.GetTestById(testId);
 
-        if (test == null)
+        if (test is null)
         {
             return NotFound($"test {testId} does not exist.");
         }
