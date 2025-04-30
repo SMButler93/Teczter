@@ -8,14 +8,9 @@ namespace Teczter.WebApi.Controllers
 {
     [Route("Teczter/[controller]")]
     [ApiController]
-    public class ExecutionController : ControllerBase
+    public class ExecutionController(IExecutionService executionService) : ControllerBase
     {
-        private readonly IExecutionService _executionService;
-
-        public ExecutionController(IExecutionService executionService)
-        {
-            _executionService = executionService;
-        }
+        private readonly IExecutionService _executionService = executionService;
 
         [HttpGet]
         [Route("{id:int}")]
@@ -23,7 +18,7 @@ namespace Teczter.WebApi.Controllers
         {
             var execution = await _executionService.GetExecutionById(id);
 
-            if (execution == null)
+            if (execution is null)
             {
                 return NotFound($"Execution {id} does not exist.");
             }
