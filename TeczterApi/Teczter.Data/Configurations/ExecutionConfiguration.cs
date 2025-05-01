@@ -4,7 +4,7 @@ using Teczter.Domain.Entities;
 
 namespace Teczter.Data.Configurations;
 
-public class ExecutionConfiguration : IEntityTypeConfiguration<ExecutionEntity>
+internal class ExecutionConfiguration : IEntityTypeConfiguration<ExecutionEntity>
 {
     public void Configure(EntityTypeBuilder<ExecutionEntity> builder)
     {
