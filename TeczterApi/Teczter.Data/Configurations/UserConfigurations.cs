@@ -4,7 +4,7 @@ using Teczter.Domain.Entities;
 
 namespace Teczter.Data.Configurations;
 
-public class UserConfigurations : IEntityTypeConfiguration<UserEntity>
+internal class UserConfigurations : IEntityTypeConfiguration<UserEntity>
 {
     public void Configure(EntityTypeBuilder<UserEntity> builder)
     {

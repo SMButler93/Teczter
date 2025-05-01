@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Teczter.Data;
 
@@ -11,9 +12,11 @@ using Teczter.Data;
 namespace Teczter.Data.Migrations
 {
     [DbContext(typeof(TeczterDbContext))]
-    partial class TeczterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250501203841_ErrorLogging")]
+    partial class ErrorLogging
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,37 +67,6 @@ namespace Teczter.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ErrorLogs");
-                });
-
-            modelBuilder.Entity("Teczter.Data.MiddlewareModels.RequestLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Method")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Path")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Query")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StatusCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("User")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RequestLogs");
                 });
 
             modelBuilder.Entity("Teczter.Domain.Entities.ExecutionEntity", b =>
