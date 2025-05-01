@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using Teczter.Data.MiddlewareModels;
 using Teczter.Domain.Entities;
 
 namespace Teczter.Data;
@@ -11,6 +12,9 @@ public class TeczterDbContext(DbContextOptions<TeczterDbContext> options) : DbCo
     public DbSet<ExecutionGroupEntity> ExecutionGroups { get; set; }
     public DbSet<ExecutionEntity> Executions { get; set; }
     public DbSet<UserEntity> Users { get; set; }
+
+    public DbSet<ErrorLog> ErrorLogs { get; set; }
+    public DbSet<RequestLog> RequestLogs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

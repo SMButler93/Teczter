@@ -14,7 +14,7 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
     private readonly IExecutionGroupService _executionGroupService = executionGroupService;
 
     [HttpGet]
-    public async Task<IActionResult> GetExecutionGroupSearchResults([FromQuery] int pageNumber, [FromQuery] string? executionGroupName, [FromQuery] string? releaseVersion)
+    public async Task<IActionResult> GetExecutionGroupSearchResults([FromQuery] string? executionGroupName, [FromQuery] string? releaseVersion, [FromQuery] int pageNumber = 1)
     {
         var executionGroups = await _executionGroupService.GetExecutionGroupSearchResults(pageNumber, executionGroupName, releaseVersion);
 

@@ -14,6 +14,7 @@ public static class ServiceLayerDependencyInjection
         services.AddScoped<ITestComposer, TestComposer>();
         services.AddScoped<IExecutionGroupService, ExecutionGroupService>();
         services.AddScoped<IExecutionGroupComposer, ExecutionGroupComposer>();
+        services.AddScoped<IExecutionService, ExecutionService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 }
