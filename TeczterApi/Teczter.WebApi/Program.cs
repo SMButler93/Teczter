@@ -49,8 +49,7 @@ app.UseCors(builder =>
         .AllowAnyMethod();
 });
 
-app.UseMiddleware<RequestLogMiddleware>();
-app.UseMiddleware<ErrorLogMiddleware>();
+app.UseTeczterMiddleware();
 
 app.UseHttpsRedirection();
 

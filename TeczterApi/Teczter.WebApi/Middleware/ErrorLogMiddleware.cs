@@ -1,5 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using Teczter.Adapters.MiddlewareRepositories.ErrorLogRepository;
+﻿using Teczter.Adapters.MiddlewareRepositories.ErrorLogRepository;
 using Teczter.Data.MiddlewareModels;
 
 namespace Teczter.WebApi.Middleware;
