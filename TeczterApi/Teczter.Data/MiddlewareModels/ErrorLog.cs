@@ -8,8 +8,7 @@ public class ErrorLog
     public string? StackTrace { get; set; }
     public string? Message { get; set; }
     public string? InnerExceptionMessage { get; set; }
-    public string? Path { get; set; }
-    public string? Method { get; set; }
-    public string? Query { get; set; }
-    public string? StatusCode { get; set; }
+    public int? RequestLogId { get; set; }
+
+    public RequestLog? RequestLog {get; set;}
 }
