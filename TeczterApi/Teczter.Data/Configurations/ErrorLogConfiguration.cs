@@ -13,5 +13,9 @@ internal class ErrorLogConfiguration : IEntityTypeConfiguration<ErrorLog>
 
         builder.Property(x => x.TimeStamp)
             .IsRequired();
+
+        builder.HasOne(x => x.RequestLog)
+            .WithOne()
+            .HasForeignKey<ErrorLog>(x => x.RequestLogId);
     }
 }

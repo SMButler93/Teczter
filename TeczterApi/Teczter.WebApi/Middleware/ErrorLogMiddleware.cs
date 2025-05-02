@@ -17,6 +17,8 @@ internal class ErrorLogMiddleware(RequestDelegate next, IServiceScopeFactory sco
         }
         catch (Exception ex)
         {
+            context.Items.TryGetValue("Request", out var request);
+
             var errorLog = new ErrorLog
             {
                 User = context.User.Identity?.Name,
@@ -24,10 +26,7 @@ internal class ErrorLogMiddleware(RequestDelegate next, IServiceScopeFactory sco
                 StackTrace = ex.StackTrace,
                 Message = ex.Message,
                 InnerExceptionMessage = ex.InnerException?.Message,
-                Path = context.Request.Path,
-                Method = context.Request.Method,
-                Query = context.Request.QueryString.ToString().IsNullOrEmpty() ? null : context.Request.QueryString.ToString(),
-                StatusCode = context.Response.StatusCode.ToString()
+                RequestLog = request is RequestLog r ? r : null
             };
 
             try

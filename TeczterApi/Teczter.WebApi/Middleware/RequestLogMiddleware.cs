@@ -18,9 +18,11 @@ internal class RequestLogMiddleware(RequestDelegate next, IServiceScopeFactory s
             User = context.User.Identity?.Name,
             Path = context.Request.Path,
             Method = context.Request.Method,
-            Query = context.Request.Query.ToString().IsNullOrEmpty() ? null : context.Request.Query.ToString(),
+            Query = context.Request.QueryString.ToString(),
             StatusCode = context.Response.StatusCode.ToString()
         };
+
+        context.Items["Request"] = request;
 
         using var scope = _scopeFactory.CreateScope();
         var requestLogger = scope.ServiceProvider.GetRequiredService<IRequestLogRepository>();
