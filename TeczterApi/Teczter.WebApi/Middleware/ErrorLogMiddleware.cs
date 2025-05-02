@@ -36,7 +36,7 @@ internal class ErrorLogMiddleware(RequestDelegate next, IServiceScopeFactory sco
             }
             catch(Exception logEx)
             {
-                Console.WriteLine($"ERROR LOGGING: {logEx.Message}");
+                Console.WriteLine($"ERROR LOGGING FAILED: {logEx.Message}");
             }
 
             throw;
