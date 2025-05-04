@@ -22,10 +22,10 @@ public class ExecutionAdapterTests
             .EnableSensitiveDataLogging()
             .Options;
 
-        await SubjectUnderTest();
+        await SetupSubjectUnderTest();
     }
 
-    private async Task SubjectUnderTest()
+    private async Task SetupSubjectUnderTest()
     {
         _dbContext = new TeczterDbContext(_dbOptions);
         await _dbContext.Executions.AddRangeAsync(GetMultipleExecutionInstances());
@@ -122,7 +122,6 @@ public class ExecutionAdapterTests
                 Id = 1,
                 CreatedById = 1,
                 RevisedById = 1,
-                IsDeleted = false,
                 ExecutionGroupId = 1,
                 TestId = 1
             },
@@ -131,7 +130,6 @@ public class ExecutionAdapterTests
                 Id = 2,
                 CreatedById = 1,
                 RevisedById = 1,
-                IsDeleted = false,
                 ExecutionGroupId = 1,
                 TestId = 1
             },
@@ -140,7 +138,6 @@ public class ExecutionAdapterTests
                 Id = 3,
                 CreatedById = 1,
                 RevisedById = 1,
-                IsDeleted = false,
                 ExecutionGroupId = 1,
                 TestId = 2
             },
@@ -149,7 +146,6 @@ public class ExecutionAdapterTests
                 Id = 4,
                 CreatedById = 1,
                 RevisedById = 1,
-                IsDeleted = false,
                 ExecutionGroupId = 1,
                 TestId = 2
             }
