@@ -39,18 +39,18 @@ public class TestAdapterTests
     public async Task GetTestById_WhenExists_ShouldReturnTest()
     {
         //Arrange:
-        var testWeAreSearchingFor = GetMultipleBasicTestInstances().First();
+        var testToSearchFor = GetMultipleBasicTestInstances().First();
 
         //Act:
-        var result = await _sut.GetTestById(testWeAreSearchingFor.Id);
+        var result = await _sut.GetTestById(testToSearchFor.Id);
 
         //Assert:
         result.ShouldNotBeNull();
-        result.Id.ShouldBe(testWeAreSearchingFor.Id);
-        result.Title.ShouldBe(testWeAreSearchingFor.Title);
-        result.Description.ShouldBe(testWeAreSearchingFor.Description);
-        result.OwningDepartment.ShouldBe(testWeAreSearchingFor.OwningDepartment);
-        result.TestSteps.Count.ShouldBe(testWeAreSearchingFor.TestSteps.Count);
+        result.Id.ShouldBe(testToSearchFor.Id);
+        result.Title.ShouldBe(testToSearchFor.Title);
+        result.Description.ShouldBe(testToSearchFor.Description);
+        result.OwningDepartment.ShouldBe(testToSearchFor.OwningDepartment);
+        result.TestSteps.Count.ShouldBe(testToSearchFor.TestSteps.Count);
     }
 
     [Test]
@@ -71,23 +71,24 @@ public class TestAdapterTests
     {
         //Arrange:
         var testToAdd = GetSingleBasicTestInstance();
-        var preSeededTests = GetMultipleBasicTestInstances();
+        var preSeededTests = await _dbContext.Tests.ToListAsync();
 
         //Act:
         await _sut.CreateNewTest(testToAdd);
         await _dbContext.SaveChangesAsync();
+        var persistedTests = await _dbContext.Tests.ToListAsync();
 
         //Assert:
-        _dbContext.Tests.Count().ShouldBeGreaterThan(preSeededTests.Count);
-        _dbContext.Tests.SingleOrDefault(x => x.Id == testToAdd.Id).ShouldNotBeNull();
+        persistedTests.Count.ShouldBeGreaterThan(preSeededTests.Count);
+        persistedTests.ShouldContain(x => x.Id == testToAdd.Id);
     }
 
     [Test]
     public async Task GetBasicTestSearchQuery_WhenNoAdditionalFiltersAreApplied_ShouldReturnAllNonDeletedTests()
     {
         //Arrange:
-        var preSeededTests = GetMultipleBasicTestInstances();
-        var testToMarkAsDeleted = await _dbContext.Tests.SingleAsync(x => x.Id == 1);
+        var preSeededTests = await _dbContext.Tests.ToListAsync();
+        var testToMarkAsDeleted = preSeededTests.First();
         testToMarkAsDeleted.Delete();
         await _dbContext.SaveChangesAsync();
 
