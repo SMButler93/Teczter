@@ -3,11 +3,11 @@ using Teczter.Domain.Enums;
 using Teczter.Services.RequestDtos.TestSteps;
 using Teczter.Services.ServiceInterfaces;
 
-namespace Teczter.Services.Builders;
+namespace Teczter.Services.Composers;
 
-internal class TestComposer() : ITestComposer
+public class TestComposer() : ITestComposer
 {
-    private TestEntity _test = null!;
+    private TestEntity _test = new();
 
     public ITestComposer AddLinkUrl(string linkUrl)
     {
@@ -17,8 +17,6 @@ internal class TestComposer() : ITestComposer
 
     public ITestComposer AddSteps(IEnumerable<CreateTestStepRequestDto> steps)
     {
-        var testStepEntities = new List<TestStepEntity>();
-
         foreach (var step in steps)
         {
             AddStep(step);
@@ -59,12 +57,6 @@ internal class TestComposer() : ITestComposer
         return this;
     }
 
-    public ITestComposer NewInstance()
-    {
-        _test = new();
-        return this;
-    }
-
     public ITestComposer SetDescription(string? description)
     {
         _test.Description = description ?? _test.Description;
@@ -91,7 +83,7 @@ internal class TestComposer() : ITestComposer
     public ITestComposer UsingContext(TestEntity test)
     {
         _test = test;
-        SetRevisonDetails();
+        SetRevisionDetails();
 
         return this;
     }
@@ -111,7 +103,7 @@ internal class TestComposer() : ITestComposer
         return this;
     }
 
-    private void SetRevisonDetails()
+    private void SetRevisionDetails()
     {
         _test.RevisedOn = DateTime.Now;
     }

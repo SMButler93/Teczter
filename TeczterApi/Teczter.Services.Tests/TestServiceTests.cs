@@ -19,7 +19,7 @@ public class TestServiceTests
 {
     private readonly Mock<ITestAdapter> _testAdapterMock = new();
     private readonly Mock<IExecutionAdapter> _executionAdapterMock = new();
-    private readonly Mock<ITestComposer> _testBuilderMock = new();
+    private readonly Mock<ITestComposer> _testComposerMock = new();
     private readonly UnitOfWorkFake _uow = new();
     private readonly Mock<IValidator<TestEntity>> _testValidatorMock = new();
 
@@ -31,7 +31,7 @@ public class TestServiceTests
         _sut = new TestService(
             _testAdapterMock.Object,
             _executionAdapterMock.Object,
-            _testBuilderMock.Object,
+            _testComposerMock.Object,
             _uow,
             _testValidatorMock.Object);
     }
@@ -209,10 +209,10 @@ public class TestServiceTests
     {
         //Arrange:
         var test = GetBasicTestInstance();
-        var validationresult = new ValidationResult();
+        var validationResult = new ValidationResult();
         var stepToUpdate = test.TestSteps.Single(x => x.StepPlacement == 1);
         var request = new UpdateTestStepRequestDto { StepPlacement = 4, };
-        _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>())).ReturnsAsync(validationresult);
+        _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
 
         //Act:
         var result = await _sut.UpdateTestStep(test, stepToUpdate.Id, request);
