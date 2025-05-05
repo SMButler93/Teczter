@@ -124,7 +124,7 @@ public class TestComposerTests
         //Act:
         var result = _sut.SetOwningDepartment(department).Build();
 
-        //Arrange:
+        //Assert:
         result.OwningDepartment.ShouldBe(Department.Accounting);
     }
 
