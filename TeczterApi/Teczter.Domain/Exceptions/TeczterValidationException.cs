@@ -2,7 +2,7 @@
 
 public class TeczterValidationException : Exception
 {
-    public TeczterValidationException(): base("A validation error has occured.")
+    public TeczterValidationException() : base("A validation error has occurred.")
     {
     }
 

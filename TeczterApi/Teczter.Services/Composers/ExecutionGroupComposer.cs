@@ -2,9 +2,9 @@
 using Teczter.Services.RequestDtos.Executions;
 using Teczter.Services.ServiceInterfaces;
 
-namespace Teczter.Services.Builders;
+namespace Teczter.Services.Composers;
 
-internal class ExecutionGroupComposer : IExecutionGroupComposer
+public class ExecutionGroupComposer : IExecutionGroupComposer
 {
     private ExecutionGroupEntity _executionGroup = null!;
 

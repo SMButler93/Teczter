@@ -5,7 +5,6 @@ namespace Teczter.Services.ServiceInterfaces;
 
 public interface ITestComposer
 {
-    ITestComposer NewInstance();
     ITestComposer UsingContext(TestEntity test);
     ITestComposer SetTitle(string? title);
     ITestComposer SetDescription(string? description);

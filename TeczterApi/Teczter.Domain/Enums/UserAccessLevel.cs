@@ -1,5 +1,6 @@
 ﻿namespace Teczter.Domain.Enums;
 
+[Flags]
 public enum UserAccessLevel
 {
     Tester = 1,

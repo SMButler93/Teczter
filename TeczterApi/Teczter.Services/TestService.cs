@@ -60,7 +60,6 @@ public class TestService : ITestService
     public async Task<TeczterValidationResult<TestEntity>> CreateNewTest(CreateTestRequestDto request)
     {
         var test = _composer
-            .NewInstance()
             .SetTitle(request.Title)
             .SetDescription(request.Description)
             .SetOwningDepartment(request.OwningDepartment)
