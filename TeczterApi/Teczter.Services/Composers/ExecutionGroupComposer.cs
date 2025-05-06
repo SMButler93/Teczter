@@ -6,7 +6,7 @@ namespace Teczter.Services.Composers;
 
 public class ExecutionGroupComposer : IExecutionGroupComposer
 {
-    private ExecutionGroupEntity _executionGroup = null!;
+    private ExecutionGroupEntity _executionGroup = new();
 
     public IExecutionGroupComposer AddExecution(CreateExecutionRequestDto execution)
     {
@@ -52,12 +52,6 @@ public class ExecutionGroupComposer : IExecutionGroupComposer
         return _executionGroup;
     }
 
-    public IExecutionGroupComposer NewInstance()
-    {
-        _executionGroup = new();
-        return this;
-    }
-
     public IExecutionGroupComposer SetExecutionGroupNotes(List<string>? notes)
     {
         _executionGroup.ExecutionGroupNotes = notes ?? [];
@@ -79,12 +73,12 @@ public class ExecutionGroupComposer : IExecutionGroupComposer
     public IExecutionGroupComposer UsingContext(ExecutionGroupEntity executionGroup)
     {
         _executionGroup = executionGroup;
-        SetRevisonDetails();
+        SetRevisionDetails();
 
         return this;
     }
 
-    private void SetRevisonDetails()
+    private void SetRevisionDetails()
     {
         _executionGroup.RevisedOn = DateTime.Now;
     }

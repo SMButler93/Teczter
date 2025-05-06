@@ -5,7 +5,6 @@ namespace Teczter.Services.ServiceInterfaces;
 
 public interface IExecutionGroupComposer
 {
-    IExecutionGroupComposer NewInstance();
     IExecutionGroupComposer UsingContext(ExecutionGroupEntity executionGroup);
     IExecutionGroupComposer SetName(string name);
     IExecutionGroupComposer SetSoftwareVersionNumber(string? softwareVersionNumber);
