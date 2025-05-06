@@ -56,6 +56,71 @@ public class ExecutionGroupComposerTests
         result.Executions.Single().TestId.ShouldBe(execution.TestId);
     }
 
+    [Test]
+    public void AddExecutions_WhenAddedFromRequestDtos_ShouldExistInProvidedInstance()
+    {
+        //Arrange:
+        var executions = GetSpecifiedNumberOfBasicCreateExecutionRequestDtos(2);
+
+        //Act:
+        var result = _sut.AddExecutions(executions).Build();
+
+        //Assert:
+        result.Executions.Count.ShouldBe(executions.Count);
+        result.Executions.First().TestId.ShouldBe(executions.First().TestId);
+        result.Executions.Last().TestId.ShouldBe(executions.Last().TestId);
+    }
+
+    [Test]
+    public void SetExecutionGroupNotes_WhenReceivesNull_ShouldSetToEmptyCollection()
+    {
+        //Arrange & Act:
+        var result = _sut.SetExecutionGroupNotes(null).Build();
+
+        //Assert:
+        result.ExecutionGroupNotes.ShouldNotBeNull();
+        result.ExecutionGroupNotes.Count.ShouldBe(0);
+    }
+
+    [Test]
+    public void SetExecutionGroupNotes_WhenReceivesValues_ShouldExistInProvidedInstance()
+    {
+        //Arrange:
+        List<string> notes = ["Note 1", "Note 2"];
+
+        //Act:
+        var result = _sut.SetExecutionGroupNotes(notes).Build();
+
+        //Assert:
+        result.ExecutionGroupNotes.ShouldBe(notes);
+    }
+
+    [Test]
+    public void SetName_WhenCalled_ShouldSetNameOnProvidedInstance()
+    {
+        //Arrange:
+        var name = "group 1";
+
+        //Act:
+        var result = _sut.SetName(name).Build();
+
+        //Assert:
+        result.ExecutionGroupName.ShouldBe(name);
+    }
+
+    [Test]
+    public void SetSoftwareVersionNumber_WhenCalled_ShouldSetSoftwareVersionNumberOnProvidedInstance()
+    {
+        //Arrange:
+        var versionNumber = "1.1.1";
+
+        //Act:
+        var result = _sut.SetSoftwareVersionNumber(versionNumber).Build();
+
+        //Assert:
+        result.SoftwareVersionNumber.ShouldBe(versionNumber);
+    }
+
     private static ExecutionGroupEntity GetBasicSingleExecutionGroupInstance()
     {
         return new ExecutionGroupEntity()
