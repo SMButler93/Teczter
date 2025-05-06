@@ -89,7 +89,7 @@ public class TestComposerTests
     public void AddSteps_WhenMultipleStepsAddedFromRequestDtos_ShouldAllExistInTheInstanceProvided()
     {
         //Arrange:
-        var testSteps = GetSpecifiedNumberOfBasicCreateTestStepRequestDtos(4);
+        var testSteps = GetSpecifiedNumberOfBasicCreateTestStepRequestDtos(2);
 
         //Act:
         var result = _sut.AddSteps(testSteps).Build();

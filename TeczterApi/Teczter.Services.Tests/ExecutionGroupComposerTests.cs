@@ -27,16 +27,20 @@ public class ExecutionGroupComposerTests
         var result = _sut.AddExecution(execution).Build();
 
         //Assert:
-        result.Executions.Single().CreatedById.ShouldBe(execution.CreatedById);
-        result.Executions.Single().RevisedById.ShouldBe(execution.RevisedById);
-        result.Executions.Single().Id.ShouldBe(execution.ExecutionGroupId);
-        result.Executions.Single().TestId.ShouldBe(execution.TestId);
+        result.Executions.Single().ShouldBe(execution);
     }
 
     [Test]
     public void AddExecutions_WhenMultipleExecutionsAdded_ShouldAllExistInInstanceProvided()
     {
+        //Arrange:
+        var executions = GetSpecifiedNumberOfBasicExecutionInstances(2);
 
+        //Act:
+        var result = _sut.AddExecutions(executions).Build();
+
+        //Assert:
+        result.Executions.ShouldBe(executions);
     }
 
     [Test]
