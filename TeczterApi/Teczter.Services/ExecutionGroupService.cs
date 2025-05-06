@@ -63,7 +63,6 @@ public class ExecutionGroupService : IExecutionGroupService
     public async Task<TeczterValidationResult<ExecutionGroupEntity>> CreateNewExecutionGroup(CreateExecutionGroupRequestDto request)
     {
         var group = _composer
-            .NewInstance()
             .SetName(request.ExecutionGroupName)
             .SetSoftwareVersionNumber(request.SoftwareVersionNumber)
             .SetExecutionGroupNotes(request.ExecutionGroupNotes)

@@ -8,7 +8,6 @@ using Teczter.Domain.Entities;
 using Teczter.Domain.Enums;
 using Teczter.Domain.Exceptions;
 using Teczter.Services.AdapterInterfaces;
-using Teczter.Services.RequestDtos;
 using Teczter.Services.RequestDtos.TestSteps;
 using Teczter.Services.ServiceInterfaces;
 
@@ -164,14 +163,14 @@ public class TestServiceTests
     }
 
     [Test]
-    public void RemoveLinkUrl_WhenLinkUrlDoesNotExist_ShouldThrowTeczterValidationException()
+    public async Task RemoveLinkUrl_WhenLinkUrlDoesNotExist_ShouldThrowTeczterValidationException()
     {
         //Arrange:
         var test = GetBasicTestInstance();
         var url = "www.url.com";
 
         //Act & Assert:
-        Should.Throw<TeczterValidationException>(() => _sut.RemoveLinkUrl(test, url));
+        await Should.ThrowAsync<TeczterValidationException>(() => _sut.RemoveLinkUrl(test, url));
     }
 
     [Test]
@@ -194,14 +193,14 @@ public class TestServiceTests
     }
 
     [Test]
-    public void RemoveTestStep_WhenTheTestStepDoesNotExist_ShouldThrowTecztervalidationException()
+    public async Task RemoveTestStep_WhenTheTestStepDoesNotExist_ShouldThrowTeczterValidationException()
     {
         //Arrange:
         var test = GetBasicTestInstance();
         var stepToRemoveId = 5;
 
         //Act & Assert:
-        Should.Throw<TeczterValidationException>(() => _sut.RemoveTestStep(test, stepToRemoveId));
+        await Should.ThrowAsync<TeczterValidationException>(() => _sut.RemoveTestStep(test, stepToRemoveId));
     }
 
     [Test]
@@ -224,7 +223,7 @@ public class TestServiceTests
     }
 
     [Test]
-    public void UpdateTestStep_WhenTestStepDoesNotExist_ShouldThrowTeczterValidationresult()
+    public async Task UpdateTestStep_WhenTestStepDoesNotExist_ShouldThrowTeczterValidationResult()
     {
         //Arrange:
         var test = GetBasicTestInstance();
@@ -232,7 +231,7 @@ public class TestServiceTests
         var request = new UpdateTestStepRequestDto { StepPlacement = 4, };
 
         //Act & Assert:
-        Should.Throw<TeczterValidationException>(() => _sut.UpdateTestStep(test, stepToUpdate.Id, request));
+        await Should.ThrowAsync<TeczterValidationException>(() => _sut.UpdateTestStep(test, stepToUpdate.Id, request));
     }
 
     private static TestEntity GetBasicTestInstance()

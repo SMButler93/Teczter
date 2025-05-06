@@ -75,7 +75,7 @@ public class TestComposerTests
     public void AddStep_WhenAddedFromRequestDto_ShouldExistInTheInstanceProvided()
     {
         //Arrange:
-        var testStep = GetSpecifiedNumberOfBasicTestStepsFromRequestDtos(1).Single();
+        var testStep = GetSpecifiedNumberOfBasicCreateTestStepRequestDtos(1).Single();
 
         //Act:
         var result = _sut.AddStep(testStep).Build();
@@ -89,7 +89,7 @@ public class TestComposerTests
     public void AddSteps_WhenMultipleStepsAddedFromRequestDtos_ShouldAllExistInTheInstanceProvided()
     {
         //Arrange:
-        var testSteps = GetSpecifiedNumberOfBasicTestStepsFromRequestDtos(4);
+        var testSteps = GetSpecifiedNumberOfBasicCreateTestStepRequestDtos(4);
 
         //Act:
         var result = _sut.AddSteps(testSteps).Build();
@@ -172,7 +172,7 @@ public class TestComposerTests
         return steps;
     }
 
-    private static List<CreateTestStepRequestDto> GetSpecifiedNumberOfBasicTestStepsFromRequestDtos(int numberOfInstances)
+    private static List<CreateTestStepRequestDto> GetSpecifiedNumberOfBasicCreateTestStepRequestDtos(int numberOfInstances)
     {
         List<CreateTestStepRequestDto> steps = [];
 
