@@ -1,5 +1,6 @@
 ﻿using Teczter.Domain.Entities.interfaces;
 using Teczter.Domain.Enums;
+using Teczter.Domain.Exceptions;
 
 namespace Teczter.Domain.Entities;
 
@@ -25,6 +26,12 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 
     public void Delete()
     {
+        if (IsClosed)
+        {
+            throw new TeczterValidationException("Cannot delete an execution group that " +
+                "has been closed.");
+        }
+
         foreach(var execution in Executions)
         {
             execution.Delete();
@@ -68,9 +75,9 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 
     private int PassRate()
     {
-        var numberOftests = Executions.Count;
+        var numberOfTests = Executions.Count;
         var passedTests = Executions.Where(x => x.HasPassed).ToList().Count;
 
-        return (100 / numberOftests) * passedTests;
+        return (100 / numberOfTests) * passedTests;
     } 
 }

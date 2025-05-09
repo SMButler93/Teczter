@@ -48,7 +48,7 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
             return NotFound($"Execution group {id} does not exist");
         }
 
-        if (executionGroup.IsComplete)
+        if (executionGroup.IsClosed)
         {
             return BadRequest("Cannot delete an execution group that has been closed.");
         }

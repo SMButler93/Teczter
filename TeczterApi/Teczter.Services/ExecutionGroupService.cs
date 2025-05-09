@@ -33,11 +33,11 @@ public class ExecutionGroupService : IExecutionGroupService
     }
 
     public async Task<TeczterValidationResult<ExecutionGroupEntity>> CloneExecutionGroup(
-        ExecutionGroupEntity executiongroupToClone, 
+        ExecutionGroupEntity executionGroupToClone, 
         string newExecutionGroupName, string? 
         softwareVersionNumber)
     {
-        var newExecutionGroup = executiongroupToClone.CloneExecutionGroup(newExecutionGroupName, softwareVersionNumber);
+        var newExecutionGroup = executionGroupToClone.CloneExecutionGroup(newExecutionGroupName, softwareVersionNumber);
 
         await _executionGroupAdapter.CreateNewExecutionGroup(newExecutionGroup);
 
@@ -108,9 +108,9 @@ public class ExecutionGroupService : IExecutionGroupService
         return await executionGroupQuery.ToListAsync();
     }
 
-    public async Task<TeczterValidationResult<ExecutionGroupEntity>> ValidateExecutionGroup(ExecutionGroupEntity executiongroup)
+    public async Task<TeczterValidationResult<ExecutionGroupEntity>> ValidateExecutionGroup(ExecutionGroupEntity executionGroup)
     {
-        var result = await _validator.ValidateAsync(executiongroup);
+        var result = await _validator.ValidateAsync(executionGroup);
 
         if (!result.IsValid)
         {
@@ -118,7 +118,7 @@ public class ExecutionGroupService : IExecutionGroupService
             return TeczterValidationResult<ExecutionGroupEntity>.Fail(result.Errors.Select(x => x.ErrorMessage).ToArray());
         }
 
-        return TeczterValidationResult<ExecutionGroupEntity>.Succeed(executiongroup);
+        return TeczterValidationResult<ExecutionGroupEntity>.Succeed(executionGroup);
     }
 
     private async Task EvaluateValidationResultAndPersist(TeczterValidationResult<ExecutionGroupEntity> result)
