@@ -1,5 +1,6 @@
 ﻿using Teczter.Domain.Entities.interfaces;
 using Teczter.Domain.Enums;
+using Teczter.Domain.Exceptions;
 
 namespace Teczter.Domain.Entities;
 
@@ -20,7 +21,7 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
     public int? TestedById { get; private set; }
     public List<string> Notes { get; private set; } = [];
     public ExecutionStateType ExecutionState { get; set; } = ExecutionStateType.Untested;
-    public ExecutionGroupEntity ExecutionGroup { get; } = null!;
+    public ExecutionGroupEntity ExecutionGroup { get; set; } = null!;
     public TestEntity Test { get; set; } = null!;
     public TestStepEntity? FailedStep { get; set; }
     public UserEntity? AssignedUser { get; set; }
@@ -59,6 +60,12 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 
     public void Delete()
     {
+        if (ExecutionGroup.IsClosed)
+        {
+            throw new TeczterValidationException("Cannot delete an execution that is part " +
+                "of a completed execution group");
+        }
+
         IsDeleted = true;
         RevisedOn = DateTime.Now;
     }

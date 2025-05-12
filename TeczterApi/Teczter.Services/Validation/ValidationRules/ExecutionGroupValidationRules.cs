@@ -19,7 +19,7 @@ public static class ExecutionGroupValidationRules
 
     public static bool BeUniqueSoftwareVersionNumberOrNull(string? versionNumber, IExecutionGroupValidationRepository repo)
     {
-        if (versionNumber == null)
+        if (versionNumber is null)
         {
             return true;
         }
@@ -30,7 +30,7 @@ public static class ExecutionGroupValidationRules
 
     public static bool BeUniqueSoftwareVersionNumberOrNull(ExecutionGroupEntity executionGroup, IExecutionGroupValidationRepository repo)
     {
-        if (executionGroup.SoftwareVersionNumber == null)
+        if (executionGroup.SoftwareVersionNumber is null)
         {
             return true;
         }

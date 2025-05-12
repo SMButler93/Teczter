@@ -67,7 +67,7 @@ public class TestService : ITestService
             .AddSteps(request.TestSteps)
             .Build();
 
-        await _testAdapter.CreateNewTest(test);
+        await _testAdapter.AddNewTest(test);
 
         var result = await ValidateTestState(test);
 

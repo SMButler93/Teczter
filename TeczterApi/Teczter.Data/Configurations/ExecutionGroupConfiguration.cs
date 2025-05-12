@@ -38,6 +38,9 @@ internal class ExecutionGroupConfiguration : IEntityTypeConfiguration<ExecutionG
         builder.HasIndex(x => x.ExecutionGroupName)
             .IsUnique();
 
+        builder.Property(x => x.SoftwareVersionNumber)
+            .IsRequired();
+
         builder.HasMany(x => x.Executions)
             .WithOne(y => y.ExecutionGroup)
             .HasForeignKey(y => y.ExecutionGroupId)

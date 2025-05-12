@@ -87,14 +87,21 @@ public class TestController(ITestService testService) : ControllerBase
             return NotFound($"Test {id} does not exist");
         }
 
-        var validatedTest = await _testService.UpdateTest(test, request);
-
-        if (!validatedTest.IsValid)
+        try
         {
-            return BadRequest(validatedTest.ErrorMessages);
-        }
+            var validatedTest = await _testService.UpdateTest(test, request);
 
-        return Ok(new TestDto(test));
+            if (!validatedTest.IsValid)
+            {
+                return BadRequest(validatedTest.ErrorMessages);
+            }
+
+            return Ok(new TestDto(test));
+        }
+        catch(TeczterValidationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpPost]
@@ -108,14 +115,21 @@ public class TestController(ITestService testService) : ControllerBase
             return NotFound($"Test {id} does not exist");
         }
 
-        var validatedTest = await _testService.AddLinkUrl(test, url);
-
-        if (!validatedTest.IsValid)
+        try
         {
-            return BadRequest(validatedTest.ErrorMessages);
-        }
+            var validatedTest = await _testService.AddLinkUrl(test, url);
 
-        return Ok(new TestDto(test));
+            if (!validatedTest.IsValid)
+            {
+                return BadRequest(validatedTest.ErrorMessages);
+            }
+
+            return Ok(new TestDto(test));
+        }
+        catch (TeczterValidationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpDelete]

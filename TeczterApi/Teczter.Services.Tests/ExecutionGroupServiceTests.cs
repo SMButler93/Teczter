@@ -99,14 +99,16 @@ public class ExecutionGroupServiceTests
                 Id = 1,
                 CreatedById = 1,
                 RevisedById = 1,
-                TestId = 1
+                TestId = 1,
+                ExecutionGroup = new()
             },
             new ExecutionEntity()
             {
                 Id = 2,
                 CreatedById = 1,
                 RevisedById = 1,
-                TestId = 2
+                TestId = 2,
+                ExecutionGroup = new()
             }
         ];
     }

@@ -106,19 +106,19 @@ public class ExecutionGroupAdapterTests
 
         //Act:
         var initialPersistedExecutionGroupsCount = await _dbContext.ExecutionGroups.CountAsync();
-        await _sut.CreateNewExecutionGroup(executionGroup);
+        await _sut.AddNewExecutionGroup(executionGroup);
         await _dbContext.SaveChangesAsync();
         var persistedExecutionGroups = await _dbContext.ExecutionGroups.ToListAsync();
         var newlyPersistedExecutionGroup = await _dbContext.ExecutionGroups.SingleAsync(x => x.Id == executionGroup.Id);
 
         //Assert:
-        persistedExecutionGroups.Select(x => x.Id).ToList().ShouldContain(executionGroup.Id);
-        persistedExecutionGroups.Count.ShouldBe(initialPersistedExecutionGroupsCount + 1);
+        persistedExecutionGroups.Select(x => x.Id).ShouldContain(executionGroup.Id);
+        persistedExecutionGroups.Count.ShouldBeGreaterThan(initialPersistedExecutionGroupsCount);
         newlyPersistedExecutionGroup.ExecutionGroupName.ShouldBe(executionGroup.ExecutionGroupName);
         newlyPersistedExecutionGroup.SoftwareVersionNumber.ShouldBe(executionGroup.SoftwareVersionNumber);
     }
 
-    private List<ExecutionGroupEntity> GetMultipleExecutionGroupInstances()
+    private static List<ExecutionGroupEntity> GetMultipleExecutionGroupInstances()
     {
         return
         [

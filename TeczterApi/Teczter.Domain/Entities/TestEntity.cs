@@ -91,6 +91,18 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
         RevisedOn = DateTime.Now;
     }
 
+    public void SetOwningDepartment(string department)
+    {
+        var isValidDepartment = Enum.TryParse<Department>(department, true, out var validDepartment);
+
+        if (!isValidDepartment)
+        {
+            throw new TeczterValidationException($"{department} is an invalid department.");
+        }
+
+        OwningDepartment = validDepartment;
+    }
+
     private static bool IsValidUrl(string url)
     {
         var pattern = @"^(https?:\/\/www\.|www\.)[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.(com|co\.uk|org)$";

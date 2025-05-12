@@ -82,7 +82,7 @@ public class ExecutionAdapterTests
     }
 
     [Test]
-    public async Task GetExecutionsForTest_WhenExists_ShouldGetAllInstances()
+    public async Task GetExecutionsForTest_WhenExists_ShouldGetAllInstancesForThatTest()
     {
         //Arrange:
         var testId = GetMultipleExecutionInstances().First().TestId;
@@ -123,7 +123,12 @@ public class ExecutionAdapterTests
                 CreatedById = 1,
                 RevisedById = 1,
                 ExecutionGroupId = 1,
-                TestId = 1
+                TestId = 1,
+                ExecutionGroup = new ExecutionGroupEntity
+                {
+                    ExecutionGroupName = "Group 1",
+                    SoftwareVersionNumber = "1.1.1"
+                }
             },
             new ExecutionEntity()
             {
@@ -131,7 +136,12 @@ public class ExecutionAdapterTests
                 CreatedById = 1,
                 RevisedById = 1,
                 ExecutionGroupId = 1,
-                TestId = 1
+                TestId = 1,
+                ExecutionGroup = new ExecutionGroupEntity
+                {
+                    ExecutionGroupName = "Group 2",
+                    SoftwareVersionNumber = "1.1.2"
+                }
             },
             new ExecutionEntity()
             {
@@ -139,7 +149,12 @@ public class ExecutionAdapterTests
                 CreatedById = 1,
                 RevisedById = 1,
                 ExecutionGroupId = 1,
-                TestId = 2
+                TestId = 2,
+                ExecutionGroup = new ExecutionGroupEntity
+                {
+                    ExecutionGroupName = "Group 3",
+                    SoftwareVersionNumber = "1.1.3"
+                }
             },
             new ExecutionEntity()
             {
@@ -147,7 +162,12 @@ public class ExecutionAdapterTests
                 CreatedById = 1,
                 RevisedById = 1,
                 ExecutionGroupId = 1,
-                TestId = 2
+                TestId = 2,
+                ExecutionGroup = new ExecutionGroupEntity
+                {
+                    ExecutionGroupName = "Group 4",
+                    SoftwareVersionNumber = "1.1.4"
+                }
             }
         ];
     }

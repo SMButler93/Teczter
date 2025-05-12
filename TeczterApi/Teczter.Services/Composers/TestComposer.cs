@@ -1,5 +1,4 @@
 ﻿using Teczter.Domain.Entities;
-using Teczter.Domain.Enums;
 using Teczter.Services.RequestDtos.TestSteps;
 using Teczter.Services.ServiceInterfaces;
 
@@ -65,12 +64,13 @@ public class TestComposer() : ITestComposer
 
     public ITestComposer SetOwningDepartment(string? department)
     {
-        if (department == null)
+        if (department is null)
         {
             return this;
         }
 
-        _test.OwningDepartment = Enum.Parse<Department>(department, true);
+        _test.SetOwningDepartment(department);
+
         return this;
     }
 

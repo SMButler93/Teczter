@@ -9,7 +9,7 @@ public class ExecutionGroupAdapter(TeczterDbContext dbContext) : IExecutionGroup
 {
     private readonly TeczterDbContext _dbContext = dbContext;
 
-    public async Task CreateNewExecutionGroup(ExecutionGroupEntity executionGroup)
+    public async Task AddNewExecutionGroup(ExecutionGroupEntity executionGroup)
     {
         await _dbContext.ExecutionGroups.AddAsync(executionGroup);
     }
@@ -17,6 +17,7 @@ public class ExecutionGroupAdapter(TeczterDbContext dbContext) : IExecutionGroup
     public IQueryable<ExecutionGroupEntity> GetBasicExecutionGroupSearchQuery()
     {
         return _dbContext.ExecutionGroups
+            .AsNoTracking()
             .Include(x => x.Executions)
             .Where(x => !x.IsDeleted);
     }
