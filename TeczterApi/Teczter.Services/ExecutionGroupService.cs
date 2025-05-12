@@ -39,7 +39,7 @@ public class ExecutionGroupService : IExecutionGroupService
     {
         var newExecutionGroup = executionGroupToClone.CloneExecutionGroup(newExecutionGroupName, softwareVersionNumber);
 
-        await _executionGroupAdapter.CreateNewExecutionGroup(newExecutionGroup);
+        await _executionGroupAdapter.AddNewExecutionGroup(newExecutionGroup);
 
         var result = await ValidateExecutionGroup(newExecutionGroup);
 
@@ -69,7 +69,7 @@ public class ExecutionGroupService : IExecutionGroupService
             .AddExecutions(request.Executions)
             .Build();
 
-        await _executionGroupAdapter.CreateNewExecutionGroup(group);
+        await _executionGroupAdapter.AddNewExecutionGroup(group);
 
         var result = await ValidateExecutionGroup(group);
 
@@ -135,10 +135,10 @@ public class ExecutionGroupService : IExecutionGroupService
     public async Task DeleteExecution(ExecutionGroupEntity executionGroup, int executionId)
     {
         var execution = executionGroup.Executions.SingleOrDefault(x => x.Id == executionId && !x.IsDeleted) ??
-            throw new TeczterValidationException("Cannot remove an execution that does not exist, has already been deleted, " +
+            throw new TeczterValidationException("Cannot delete an execution that does not exist, has already been deleted, " +
             "or does not belong to this execution group.");
 
-        executionGroup.RemoveExecution(execution);
+        executionGroup.DeleteExecution(execution);
 
         await _uow.CommitChanges();
     }

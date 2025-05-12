@@ -42,7 +42,7 @@ namespace Teczter.WebApi.Controllers
                 return Ok(validatedExecution.Value);
             } catch (TeczterValidationException ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
     }

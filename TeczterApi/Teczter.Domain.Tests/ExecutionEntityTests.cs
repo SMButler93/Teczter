@@ -18,7 +18,8 @@ public class ExecutionEntityTests
             CreatedById = 1,
             RevisedById = 1,
             IsDeleted = false,
-            TestId = 999
+            TestId = 999,
+            ExecutionGroup = new()
         };
     }
 

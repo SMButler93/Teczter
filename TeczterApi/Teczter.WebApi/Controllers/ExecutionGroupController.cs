@@ -53,9 +53,16 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
             return BadRequest("Cannot delete an execution group that has been closed.");
         }
 
-        await _executionGroupService.DeleteExecutionGroup(executionGroup);
+        try
+        {
+            await _executionGroupService.DeleteExecutionGroup(executionGroup);
 
-        return NoContent();
+            return NoContent();
+        }
+        catch (TeczterValidationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpPost]
@@ -108,7 +115,7 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
             return NotFound($"Execution group {id} does not exist");
         }
 
-        if (executionGroup.IsComplete)
+        if (executionGroup.IsClosed)
         {
             return BadRequest("Cannot add new executions to an execution group that has closed.");
         }
@@ -136,9 +143,9 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
             return NotFound($"Execution group {groupId} does not exist.");
         }
 
-        if (executionGroup.IsComplete)
+        if (executionGroup.IsClosed)
         {
-            return BadRequest($"Cannot delete executions from an execution group that has closed.");
+            return BadRequest($"Cannot delete executions from an execution group that has been closed.");
         }
 
         try

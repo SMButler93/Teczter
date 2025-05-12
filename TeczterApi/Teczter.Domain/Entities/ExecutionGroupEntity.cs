@@ -41,7 +41,7 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         RevisedOn = DateTime.Now;
     }
 
-    public void RemoveExecution(ExecutionEntity execution)
+    public void DeleteExecution(ExecutionEntity execution)
     {
         execution.Delete();
         Executions.Remove(execution);

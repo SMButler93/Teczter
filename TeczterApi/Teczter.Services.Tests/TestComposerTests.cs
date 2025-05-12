@@ -1,7 +1,9 @@
-﻿using NUnit.Framework;
+﻿using Moq;
+using NUnit.Framework;
 using Shouldly;
 using Teczter.Domain.Entities;
 using Teczter.Domain.Enums;
+using Teczter.Domain.Exceptions;
 using Teczter.Services.Composers;
 using Teczter.Services.RequestDtos.TestSteps;
 
@@ -126,6 +128,16 @@ public class TestComposerTests
 
         //Assert:
         result.OwningDepartment.ShouldBe(Department.Accounting);
+    }
+
+    [Test]
+    public void SetOwningDepartment_WhenInvalidDepartment_ShouldThrowException()
+    {
+        //Arrange:
+        var department = "Invalid dept";
+
+        //Act & Assert:
+        Should.Throw<TeczterValidationException>(() => _sut.SetOwningDepartment(department));
     }
 
     [Test]

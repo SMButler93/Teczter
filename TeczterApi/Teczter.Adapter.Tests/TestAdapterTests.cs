@@ -71,16 +71,16 @@ public class TestAdapterTests
     {
         //Arrange:
         var testToAdd = GetSingleBasicTestInstance();
-        var preSeededTests = await _dbContext.Tests.ToListAsync();
+        var initialPersistedTestsCount = await _dbContext.Tests.CountAsync();
 
         //Act:
-        await _sut.CreateNewTest(testToAdd);
+        await _sut.AddNewTest(testToAdd);
         await _dbContext.SaveChangesAsync();
-        var persistedTests = await _dbContext.Tests.ToListAsync();
+        var persistedTestsWithNewEntry = await _dbContext.Tests.ToListAsync();
 
         //Assert:
-        persistedTests.Count.ShouldBeGreaterThan(preSeededTests.Count);
-        persistedTests.ShouldContain(x => x.Id == testToAdd.Id);
+        persistedTestsWithNewEntry.Count.ShouldBeGreaterThan(initialPersistedTestsCount);
+        persistedTestsWithNewEntry.Select(x => x.Id).ShouldContain(testToAdd.Id);
     }
 
     [Test]

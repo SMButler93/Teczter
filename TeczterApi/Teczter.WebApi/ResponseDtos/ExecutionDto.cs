@@ -40,6 +40,6 @@ public class ExecutionDto
         Notes = entity.Notes;
         ExecutionState = entity.ExecutionState.ToString();
         Test = new TestDto(entity.Test);
-        FailedStep = entity?.FailedStep == null ? null : new TestStepDto(entity.FailedStep);
+        FailedStep = entity?.FailedStep is null ? null : new TestStepDto(entity.FailedStep);
     }
 }

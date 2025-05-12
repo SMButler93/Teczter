@@ -9,7 +9,7 @@ public class TestAdapter(TeczterDbContext dbContext) : ITestAdapter
 {
     private readonly TeczterDbContext _dbContext = dbContext;
 
-    public async Task CreateNewTest(TestEntity test)
+    public async Task AddNewTest(TestEntity test)
     {
         await _dbContext.Tests.AddAsync(test);
     }
@@ -24,6 +24,7 @@ public class TestAdapter(TeczterDbContext dbContext) : ITestAdapter
     public IQueryable<TestEntity> GetBasicTestSearchBaseQuery()
     {
         return _dbContext.Tests
+            .AsNoTracking()
             .Include(x => x.TestSteps)
             .Where(x => !x.IsDeleted);
     }

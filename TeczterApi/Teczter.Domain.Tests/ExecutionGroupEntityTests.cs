@@ -42,7 +42,7 @@ public class ExecutionGroupEntityTests
         var executionToDelete = _sut.Executions.First();
 
         //Assert:
-        _sut.RemoveExecution(executionToDelete);
+        _sut.DeleteExecution(executionToDelete);
 
         //Assert:
         executionToDelete.IsDeleted.ShouldBeTrue();
@@ -58,7 +58,8 @@ public class ExecutionGroupEntityTests
             CreatedById = 1,
             RevisedById = 1,
             IsDeleted = false,
-            TestId = 999
+            TestId = 999,
+            ExecutionGroup = new()
         };
 
         //Act:
@@ -126,6 +127,7 @@ public class ExecutionGroupEntityTests
                 RevisedById = 1,
                 IsDeleted = false,
                 TestId = i,
+                ExecutionGroup = new()
             };
 
             executions.Add(execution);
