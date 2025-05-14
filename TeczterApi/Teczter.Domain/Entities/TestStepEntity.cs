@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using Teczter.Domain.Entities.interfaces;
 using Teczter.Domain.Exceptions;
 
@@ -28,9 +29,14 @@ public class TestStepEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         RevisedOn = DateTime.Now;
     }
 
-    public void RemoveLinkUrl(string linkUrl)
+    public void RemoveLinkUrl(string url)
     {
-        Urls.Remove(linkUrl);
+        if (!Urls.Contains(url, StringComparer.OrdinalIgnoreCase))
+        {
+            throw new TeczterValidationException("Cannot remove a link that does not belong to this test step");
+        }
+
+        Urls.Remove(url);
         RevisedOn = DateTime.Now;
     }
 

@@ -115,10 +115,7 @@ public class TestService : ITestService
 
     public async Task<TeczterValidationResult<TestEntity>> RemoveLinkUrl(TestEntity test, string url)
     {
-        var existingUrl = test.Urls.SingleOrDefault(x => x.Equals(x, StringComparison.OrdinalIgnoreCase)) ?? 
-            throw new TeczterValidationException("Cannot remove a link that does not belong to this test");
-
-        test.RemoveLinkUrl(existingUrl);
+        test.RemoveLinkUrl(url);
 
         var result = await ValidateTestState(test);
 
@@ -128,11 +125,7 @@ public class TestService : ITestService
 
     public async Task<TeczterValidationResult<TestEntity>> RemoveTestStep(TestEntity test, int testStepId)
     {
-        var testStep = test.TestSteps.SingleOrDefault(x => x.Id == testStepId && !x.IsDeleted) ?? 
-            throw new TeczterValidationException("Cannot remove a test step that does not exist, has already been deleted, " +
-            "or does not belong to this test.");
-
-        test.RemoveTestStep(testStep);
+        test.RemoveTestStep(testStepId);
 
         var result = await ValidateTestState(test);
 

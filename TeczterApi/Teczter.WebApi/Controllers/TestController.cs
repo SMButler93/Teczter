@@ -156,7 +156,7 @@ public class TestController(ITestService testService) : ControllerBase
         }
         catch(TeczterValidationException ex)
         {
-            return BadRequest(ex);
+            return BadRequest(ex.Message);
         }
     }
 

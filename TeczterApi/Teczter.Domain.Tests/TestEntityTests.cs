@@ -28,7 +28,7 @@ public class TestEntityTests
     public void RemoveTestStep_WhenRemovedFromBeginning_ShouldOrderRemainingStepsCorrectly()
     {
         //Act:
-        _sut.RemoveTestStep(_sut.TestSteps[0]);
+        _sut.RemoveTestStep(_sut.TestSteps[0].Id);
 
         //Assert:
         _sut.TestSteps.Count.ShouldBe(3);
@@ -82,6 +82,27 @@ public class TestEntityTests
     }
 
     [Test]
+    public void AddLinkUrl_WhenValid_ShouldNotThrow()
+    {
+        //Arrange:
+        var validUrl = "www.validUrl.com";
+
+        //Act&Assert:
+        Should.NotThrow(() => _sut.AddLinkUrl(validUrl));
+    }
+
+    [Test]
+    public void AddLinkUrl_WhenAlreadyExists_ShouldThrowAnException()
+    {
+        //Arrange:
+        var urlToAdd = "www.newUrl.com";
+        _sut.Urls.Add(urlToAdd);
+
+        //Act & Assert:
+        Should.Throw<TeczterValidationException>(() => _sut.AddLinkUrl(urlToAdd));
+    }
+
+    [Test]
     public void RemoveLinkUrl_WhenExists_ShouldRemove()
     {
         //Arrange:
@@ -96,13 +117,13 @@ public class TestEntityTests
     }
 
     [Test]
-    public void AddLinkUrl_WhenValid_ShouldNotThrow()
+    public void RemoveLinkUrl_WhenDoesNotExist_ShouldThrow()
     {
         //Arrange:
-        var validUrl = "www.validUrl.com";
+        var nonExistentUrl = "www.SomeUrl.com";
 
-        //Act&Assert:
-        Should.NotThrow(() => _sut.AddLinkUrl(validUrl));
+        //Act & Assert:
+        Should.Throw<TeczterValidationException>(() => _sut.RemoveLinkUrl(nonExistentUrl));
     }
 
     [Test]
@@ -148,6 +169,7 @@ public class TestEntityTests
         {
             var step = new TestStepEntity
             {
+                Id = i,
                 StepPlacement = i,
                 Instructions = "Step" + i.ToString()
             };
