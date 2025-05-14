@@ -28,10 +28,14 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
         RevisedOn = DateTime.Now;
     }
 
-    public void RemoveTestStep(TestStepEntity step)
+    public void RemoveTestStep(int testStepId)
     {
-        step.Delete();
-        TestSteps.Remove(step);
+        var testStep = TestSteps.SingleOrDefault(x => x.Id == testStepId && !x.IsDeleted) ??
+            throw new TeczterValidationException("Cannot remove a test step that does not exist, has already been deleted, " +
+            "or does not belong to this test.");
+
+        testStep.Delete();
+        TestSteps.Remove(testStep);
         SetCorrectStepPlacementValuesOnUpdate();
         RevisedOn = DateTime.Now;
     }
@@ -70,12 +74,22 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
             throw new TeczterValidationException($"{url} is an invalid URL.");
         }
 
+        if (Urls.Contains(url, StringComparer.OrdinalIgnoreCase))
+        {
+            throw new TeczterValidationException($"{url} already exists as a link for this test.");
+        }
+
         Urls.Add(url);
         RevisedOn = DateTime.Now;
     }
 
     public void RemoveLinkUrl(string url)
     {
+        if (!Urls.Contains(url, StringComparer.OrdinalIgnoreCase))
+        {
+            throw new TeczterValidationException("Cannot remove a link that does not belong to this test");
+        }
+
         Urls.Remove(url);
         RevisedOn = DateTime.Now;
     }
