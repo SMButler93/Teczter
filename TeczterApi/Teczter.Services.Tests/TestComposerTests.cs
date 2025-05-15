@@ -118,6 +118,21 @@ public class TestComposerTests
     }
 
     [Test]
+    public void SetDescription_WhenNullValue_ShouldLeaveAsPreviouslySetValue()
+    {
+        //Arrange:
+        var originaltest = GetBasicSingleTestInstance();
+        var currentDescription = originaltest.Description;
+
+        //Act:
+        var result = _sut.SetDescription(null).Build();
+
+        //Assert:
+        result.Description.ShouldNotBeNull();
+        result.Description.ShouldBe(currentDescription);
+    }
+
+    [Test]
     public void SetOwningDepartment_WhenInvoked_ShouldSetOwningDepartmentAppropriately()
     {
         //Arrange:
@@ -141,6 +156,20 @@ public class TestComposerTests
     }
 
     [Test]
+    public void SetOwningDepartment_WhenNullValue_ShouldLeaveAsPreviouslySetValue()
+    {
+        //Arrange:
+        var originalTest = GetBasicSingleTestInstance();
+        var currentDepartment = originalTest.OwningDepartment;
+
+        //Act:
+        var result = _sut.SetOwningDepartment(null).Build();
+
+        //Assert:
+        result.OwningDepartment.ShouldBe(currentDepartment);
+    }
+
+    [Test]
     public void SetTitle_WhenInvoked_ShouldSetTitleAppropriately()
     {
         //Arrange:
@@ -151,6 +180,21 @@ public class TestComposerTests
 
         //Assert:
         result.Title.ShouldBe(title);
+    }
+
+    [Test]
+    public void SetTitle_WhenNullValue_ShouldLeaveAsPreviouslySetValue()
+    {
+        //Arrange:
+        var originalTest = GetBasicSingleTestInstance();
+        var currentTitle = originalTest.Title;
+
+        //Act:
+        var result = _sut.SetTitle(null).Build();
+
+        //Assert:
+        result.Title.ShouldNotBeNull();
+        result.Title.ShouldBe(currentTitle);
     }
 
     private static TestEntity GetBasicSingleTestInstance()

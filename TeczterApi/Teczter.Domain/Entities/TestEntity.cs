@@ -87,7 +87,7 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
     {
         if (!Urls.Contains(url, StringComparer.OrdinalIgnoreCase))
         {
-            throw new TeczterValidationException("Cannot remove a link that does not belong to this test");
+            throw new TeczterValidationException($"{url} does not belong to this test");
         }
 
         Urls.Remove(url);
