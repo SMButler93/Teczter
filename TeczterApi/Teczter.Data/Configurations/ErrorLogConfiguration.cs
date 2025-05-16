@@ -8,12 +8,6 @@ internal class ErrorLogConfiguration : IEntityTypeConfiguration<ErrorLog>
 {
     public void Configure(EntityTypeBuilder<ErrorLog> builder)
     {
-        builder.Property(x => x.Id)
-            .ValueGeneratedOnAdd();
-
-        builder.Property(x => x.TimeStamp)
-            .IsRequired();
-
         builder.HasOne(x => x.RequestLog)
             .WithOne()
             .HasForeignKey<ErrorLog>(x => x.RequestLogId);
