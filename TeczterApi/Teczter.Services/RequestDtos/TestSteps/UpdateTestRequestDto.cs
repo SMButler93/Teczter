@@ -1,6 +1,4 @@
-﻿using Teczter.Domain.Enums;
-
-namespace Teczter.Services.RequestDtos.TestSteps;
+﻿namespace Teczter.Services.RequestDtos.TestSteps;
 
 public class UpdateTestRequestDto
 {

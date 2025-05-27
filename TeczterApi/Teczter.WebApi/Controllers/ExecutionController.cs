@@ -26,7 +26,7 @@ namespace Teczter.WebApi.Controllers
             return Ok(new ExecutionDto(execution));
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Route("CompleteExecution")]
         public async Task<IActionResult> CompleteExecution([FromBody] CompleteExecutionRequestDto request)
         {
