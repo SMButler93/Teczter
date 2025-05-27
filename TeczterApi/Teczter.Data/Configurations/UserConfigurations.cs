@@ -8,6 +8,9 @@ internal class UserConfigurations : IEntityTypeConfiguration<UserEntity>
 {
     public void Configure(EntityTypeBuilder<UserEntity> builder)
     {
+        builder.Property(x => x.RowVersion)
+            .IsRowVersion();
+
         builder.HasMany(x => x.AssignedExcutions)
             .WithOne(y => y.AssignedUser)
             .HasForeignKey(y => y.AssignedUserId)

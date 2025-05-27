@@ -7,7 +7,7 @@ namespace Teczter.Domain.Entities;
 public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 {
     public int Id { get; set; }
-    public DateTime CreatedOn { get; } = DateTime.Now;
+    public DateTime CreatedOn { get; private set; } = DateTime.Now;
     public int CreatedById { get; set; }
     public DateTime RevisedOn { get; set; } = DateTime.Now;
     public int RevisedById { get; set; }
@@ -25,6 +25,7 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
     public TestEntity Test { get; set; } = null!;
     public TestStepEntity? FailedStep { get; set; }
     public UserEntity? AssignedUser { get; set; }
+    public byte[] RowVersion { get; set; } = [];
 
     public void Pass(int userId)
     {

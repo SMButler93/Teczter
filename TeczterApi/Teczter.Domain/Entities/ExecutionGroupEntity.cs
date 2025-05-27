@@ -7,7 +7,7 @@ namespace Teczter.Domain.Entities;
 public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 {
     public int Id { get; set; }
-    public DateTime CreatedOn { get; } = DateTime.Now;
+    public DateTime CreatedOn { get; private set; } = DateTime.Now;
     public int CreatedById { get; set; }
     public DateTime RevisedOn { get; set; } = DateTime.Now;
     public int RevisedById { get; set; }
@@ -19,6 +19,7 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
     public bool IsClosed => ClosedDate.HasValue;
     public List<string> ExecutionGroupNotes { get; set; } = [];
     public int PassedTestPercentage => PassRate();
+    public byte[] RowVersion { get; set; } = [];
 
     public List<ExecutionEntity> Executions { get; set; } = [];
 

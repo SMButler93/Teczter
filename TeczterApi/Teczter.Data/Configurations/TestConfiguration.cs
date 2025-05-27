@@ -8,8 +8,8 @@ internal class TestConfiguration : IEntityTypeConfiguration<TestEntity>
 {
     public void Configure(EntityTypeBuilder<TestEntity> builder)
     {
-        builder.Property(x => x.RevisedOn)
-            .IsConcurrencyToken();
+        builder.Property(x => x.RowVersion)
+            .IsRowVersion();
 
         builder.Property(x => x.OwningDepartment)
             .HasConversion<string>();

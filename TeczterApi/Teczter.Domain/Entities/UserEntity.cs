@@ -12,6 +12,7 @@ public class UserEntity : IHasGuidid, ISoftDeleteable
     public string Password { get; set; } = null!;
     public Department Department { get; set; }
     public UserAccessLevel AccessLevel { get; set; }
+    public byte[] RowVersion { get; set; } = [];
 
     public List<ExecutionEntity> AssignedExcutions = [];
 }

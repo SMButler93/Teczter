@@ -8,7 +8,7 @@ namespace Teczter.Domain.Entities;
 public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
 {
     public int Id { get; set; }
-    public DateTime CreatedOn { get; } = DateTime.Now;
+    public DateTime CreatedOn { get; private set; } = DateTime.Now;
     public int CreatedById { get; set; }
     public DateTime RevisedOn { get; set; } = DateTime.Now;
     public int RevisedById { get; set; }
@@ -17,6 +17,7 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
     public string Description { get; set; } = string.Empty;
     public List<string> Urls { get; set; } = [];
     public Department OwningDepartment { get; set; }
+    public byte[] RowVersion { get; set; } = [];
 
     public List<TestStepEntity> TestSteps { get; set; } = [];
 
