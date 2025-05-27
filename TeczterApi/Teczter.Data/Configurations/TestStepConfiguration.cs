@@ -8,7 +8,7 @@ internal class TestStepConfiguration : IEntityTypeConfiguration<TestStepEntity>
 {
     public void Configure(EntityTypeBuilder<TestStepEntity> builder)
     {
-        builder.Property(x => x.RevisedOn)
-            .IsConcurrencyToken();
+        builder.Property(x => x.RowVersion)
+            .IsRowVersion();
     }
 }

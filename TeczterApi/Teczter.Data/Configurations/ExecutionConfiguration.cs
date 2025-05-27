@@ -8,7 +8,7 @@ internal class ExecutionConfiguration : IEntityTypeConfiguration<ExecutionEntity
 {
     public void Configure(EntityTypeBuilder<ExecutionEntity> builder)
     {
-        builder.Property(x => x.RevisedOn)
-            .IsConcurrencyToken();
+        builder.Property(x => x.RowVersion)
+            .IsRowVersion();
     }
 }

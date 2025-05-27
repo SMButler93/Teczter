@@ -8,8 +8,8 @@ internal class ExecutionGroupConfiguration : IEntityTypeConfiguration<ExecutionG
 {
     public void Configure(EntityTypeBuilder<ExecutionGroupEntity> builder)
     {
-        builder.Property(x => x.RevisedOn)
-            .IsConcurrencyToken();
+        builder.Property(x => x.RowVersion)
+            .IsRowVersion();
 
         builder.HasMany(x => x.Executions)
             .WithOne(y => y.ExecutionGroup)
