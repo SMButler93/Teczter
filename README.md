@@ -4,7 +4,7 @@ This is a manual regression testing tool. Users can create tests, execute tests,
 
 ## Overview:
 
-Here are the models that exist within the system:
+Here are the basic models that need to be understood in order to understand the overall structure and functionality of the application:
 
 ### Test:
 A test is a set of test steps which specify a set of instructions in a specific order. Each test has a title, a description and a department in which the test is owned by/related to. A test can have URL's assigned. These could be used to provide the starting point of the test etc. Tests are not actually executed. Instead we have executions (see below) which tale that test and allow it to be executed. This allows for tests to be reused and updated in a single place reducing the amount of data stored. Only users with admin lecel permissions can make alterations to a test.
