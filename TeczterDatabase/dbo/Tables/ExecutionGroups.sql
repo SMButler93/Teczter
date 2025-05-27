@@ -9,6 +9,7 @@
     [ClosedDate]            DATETIME2 (7)  NULL,
     [ExecutionGroupNotes]   NVARCHAR (MAX) NOT NULL,
     [SoftwareVersionNumber] NVARCHAR (MAX) NULL,
+    [RowVersion]            ROWVERSION     NOT NULL,
     CONSTRAINT [PK_ExecutionGroups] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

@@ -6,6 +6,7 @@
     [Password]    NVARCHAR (25)    NOT NULL,
     [Department]  INT              NOT NULL,
     [AccessLevel] INT              NOT NULL,
+    [RowVersion] ROWVERSION        NOT NULL,
     CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

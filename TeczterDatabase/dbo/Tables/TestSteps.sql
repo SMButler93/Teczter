@@ -9,6 +9,7 @@
     [StepPlacement] INT            NOT NULL,
     [Instructions]  NVARCHAR (750) NOT NULL,
     [Urls]          NVARCHAR (MAX) DEFAULT (N'[]') NOT NULL,
+    [RowVersion] ROWVERSION        NOT NULL,
     CONSTRAINT [PK_TestSteps] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_TestSteps_Tests_TestId] FOREIGN KEY ([TestId]) REFERENCES [dbo].[Tests] ([Id]) ON DELETE CASCADE
 );

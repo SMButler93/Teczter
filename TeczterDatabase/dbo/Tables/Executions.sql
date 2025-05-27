@@ -13,6 +13,7 @@
     [TestedById]       INT              NULL,
     [Notes]            NVARCHAR (MAX)   DEFAULT (N'[]') NOT NULL,
     [ExecutionState]   INT              NOT NULL,
+    [RowVersion]       ROWVERSION       NOT NULL,
     CONSTRAINT [PK_Executions] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Executions_ExecutionGroups_ExecutionGroupId] FOREIGN KEY ([ExecutionGroupId]) REFERENCES [dbo].[ExecutionGroups] ([Id]) ON DELETE CASCADE,
     CONSTRAINT [FK_Executions_Tests_TestId] FOREIGN KEY ([TestId]) REFERENCES [dbo].[Tests] ([Id]) ON DELETE CASCADE,

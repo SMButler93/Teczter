@@ -9,6 +9,7 @@
     [Description]      NVARCHAR (750) NOT NULL,
     [OwningDepartment] NVARCHAR (MAX) NOT NULL,
     [Urls]             NVARCHAR (MAX) DEFAULT (N'[]') NOT NULL,
+    [RowVersion]       ROWVERSION     NOT NULL,
     CONSTRAINT [PK_Tests] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
