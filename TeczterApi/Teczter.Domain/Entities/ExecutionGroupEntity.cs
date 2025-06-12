@@ -21,7 +21,7 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
     public int PassedTestPercentage => PassRate();
     public byte[] RowVersion { get; set; } = [];
 
-    public List<ExecutionEntity> Executions { get; set; } = [];
+    public virtual List<ExecutionEntity> Executions { get; set; } = [];
 
     public void AddExecution(ExecutionEntity execution) => Executions.Add(execution);
 

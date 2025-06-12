@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Teczter.Adapters.MiddlewareRepositories.ErrorLogRepository;
-using Teczter.Adapters.MiddlewareRepositories.RequestLogRepository;
 using Teczter.Adapters.ValidationRepositories;
 using Teczter.Services.AdapterInterfaces;
 using Teczter.Services.ValidationRepositoryInterfaces;
@@ -19,9 +17,5 @@ public static class AdapterLayerDependencyInjection
         //Validation repositories
         services.AddScoped<ITestValidationRepository, TestValidationRepository>();
         services.AddScoped<IExecutionGroupValidationRepository, ExecutionGroupValidationRepository>();
-
-        //MiddlewareRepositories
-        services.AddScoped<IErrorLogRepository, ErrorLogRepository>();
-        services.AddScoped<IRequestLogRepository, RequestLogRepository>();
     }
 }

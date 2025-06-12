@@ -21,10 +21,10 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
     public int? TestedById { get; private set; }
     public List<string> Notes { get; private set; } = [];
     public ExecutionStateType ExecutionState { get; set; } = ExecutionStateType.Untested;
-    public ExecutionGroupEntity ExecutionGroup { get; set; } = null!;
-    public TestEntity Test { get; set; } = null!;
-    public TestStepEntity? FailedStep { get; set; }
-    public UserEntity? AssignedUser { get; set; }
+    public virtual ExecutionGroupEntity ExecutionGroup { get; set; } = null!;
+    public virtual TestEntity Test { get; set; } = null!;
+    public virtual TestStepEntity? FailedStep { get; set; }
+    public virtual UserEntity? AssignedUser { get; set; }
     public byte[] RowVersion { get; set; } = [];
 
     public void Pass(int userId)

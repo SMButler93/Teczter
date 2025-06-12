@@ -14,5 +14,5 @@ public class UserEntity : IHasGuidid, ISoftDeleteable
     public UserAccessLevel AccessLevel { get; set; }
     public byte[] RowVersion { get; set; } = [];
 
-    public List<ExecutionEntity> AssignedExcutions = [];
+    public virtual List<ExecutionEntity> AssignedExcutions { get; set; } = [];
 }
