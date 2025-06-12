@@ -2,6 +2,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Serilog;
 using Teczter.Adapters.DependencyInjection;
 using Teczter.Data;
 using Teczter.Services.DependencyInjection;
@@ -9,6 +10,12 @@ using Teczter.WebApi.Middleware;
 using Teczter.WebApi.MiddlewareAndConfig;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, services, config) =>
+{
+    config.ReadFrom.Configuration(context.Configuration)
+    .Enrich.FromLogContext();
+});
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -27,8 +34,12 @@ builder.Services.AddOptions<CorsOptions>()
 builder.Services.AddDbContext<TeczterDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("TeczterDb"));
-    options.EnableSensitiveDataLogging();
     options.LogTo(Console.WriteLine);
+
+    if (builder.Environment.IsDevelopment())
+    {
+        options.EnableSensitiveDataLogging();
+    }
 });
 
 var app = builder.Build();
