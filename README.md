@@ -32,7 +32,6 @@ Angular is used for the frontend. PrimeNg is used for various components within 
 Moving forward with this project, there is still currently a lot to do. Below is a list of upcoming tasks. This is by no means an exhaustive list. This list will change as and when new work is identified and tasks are completed.
 
 * Implement authentication and authroisation
-* Implement logging and improved middleware
 * Build MVP UI
 * Implement notification emails
 * Use domain events and CQRS where appropriate to reduce coupling and improve scalability
