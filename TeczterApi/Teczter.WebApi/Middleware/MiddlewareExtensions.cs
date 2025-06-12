@@ -2,9 +2,8 @@
 
 internal static class MiddlewareExtensions
 {
-    public static void UseTeczterMiddleware(this IApplicationBuilder builder)
+    public static void UseTeczterMiddleware(this IApplicationBuilder app)
     {
-        builder.UseMiddleware<RequestLogMiddleware>();
-        builder.UseMiddleware<ErrorLogMiddleware>();
+        app.UseMiddleware<LogMiddleware>();
     }
 }
