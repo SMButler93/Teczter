@@ -33,8 +33,9 @@ builder.Services.AddOptions<CorsOptions>()
 
 builder.Services.AddDbContext<TeczterDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("TeczterDb"));
-    options.LogTo(Console.WriteLine);
+    options.UseSqlServer(builder.Configuration.GetConnectionString("TeczterDb"))
+    .LogTo(Console.WriteLine)
+    .UseLazyLoadingProxies();
 
     if (builder.Environment.IsDevelopment())
     {

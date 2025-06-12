@@ -19,7 +19,7 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
     public Department OwningDepartment { get; set; }
     public byte[] RowVersion { get; set; } = [];
 
-    public List<TestStepEntity> TestSteps { get; set; } = [];
+    public virtual List<TestStepEntity> TestSteps { get; set; } = [];
 
     public void AddTestStep(TestStepEntity step)
     {
