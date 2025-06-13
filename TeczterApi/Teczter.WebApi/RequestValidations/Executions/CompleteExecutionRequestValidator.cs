@@ -7,9 +7,6 @@ public class CompleteExecutionRequestValidator : AbstractValidator<CompleteExecu
 {
     public CompleteExecutionRequestValidator()
     {
-        RuleFor(x => x.ExecutionId)
-            .NotEmpty().WithMessage("An Execution Id must provided when completing an execution");
-
         RuleFor(x => x.HasPassed)
             .NotEmpty().WithMessage("A value indicating if the test has passed must be provided.");
 

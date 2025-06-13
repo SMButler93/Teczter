@@ -23,8 +23,7 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
         return Ok(executionGroupDtos);
     }
 
-    [HttpGet]
-    [Route("{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<IActionResult> GetExecutionGroup(int id)
     {
         var executionGroup = await _executionGroupService.GetExecutionGroupById(id);
@@ -37,8 +36,7 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
         return Ok(new ExecutionGroupDto(executionGroup));
     }
 
-    [HttpDelete]
-    [Route("{id:int}/Delete")]
+    [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteExecutionGroup(int id)
     {
         var executionGroup = await _executionGroupService.GetExecutionGroupById(id);
@@ -65,8 +63,7 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
         }
     }
 
-    [HttpPost]
-    [Route("{id:int}/Clone")]
+    [HttpPost("{id:int}/clones")]
     public async Task<IActionResult> CloneExecutionGroup(int id, [FromQuery] string newExecutionGroupname, [FromQuery] string? softwareVersionNumber)
     {
         var executionGroupToClone = await _executionGroupService.GetExecutionGroupById(id);
@@ -76,20 +73,19 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
             return NotFound($"Execution group {id} does not exist");
         }
 
-        var ValidatedExecutionGroup = await _executionGroupService.CloneExecutionGroup(executionGroupToClone, newExecutionGroupname, softwareVersionNumber);
+        var result = await _executionGroupService.CloneExecutionGroup(executionGroupToClone, newExecutionGroupname, softwareVersionNumber);
 
-        if (!ValidatedExecutionGroup.IsValid)
+        if (!result.IsValid)
         {
-            return BadRequest(ValidatedExecutionGroup.ErrorMessages);
+            return BadRequest(result.ErrorMessages);
         }
 
-        var dto = new ExecutionGroupDto(ValidatedExecutionGroup.Value!);
+        var dto = new ExecutionGroupDto(result.Value!);
 
         return CreatedAtAction(nameof(GetExecutionGroup), new { dto.Id }, dto);
     }
 
     [HttpPost]
-    [Route("Create")]
     public async Task<IActionResult> CreateExecutionGroup([FromBody] CreateExecutionGroupRequestDto request)
     {
         var validatedExecutionGroup = await _executionGroupService.CreateNewExecutionGroup(request);
@@ -104,8 +100,7 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
         return CreatedAtAction(nameof(GetExecutionGroup), new { dto.Id }, dto);
     }
 
-    [HttpPost]
-    [Route("{id:int}/CreateExecution")]
+    [HttpPost("/Executions")]
     public async Task<IActionResult> CreateExecution(int id, [FromBody] CreateExecutionRequestDto request)
     {
         var executionGroup = await _executionGroupService.GetExecutionGroupById(id);
@@ -132,8 +127,7 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
         return CreatedAtAction(nameof(GetExecutionGroup), new { dto.Id }, dto);
     }
 
-    [HttpDelete]
-    [Route("{groupId:int}/DeleteExecution/{executionId:int}")]
+    [HttpDelete("{groupId:int}/Executions/{executionId:int}")]
     public async Task<IActionResult> DeleteExecution(int groupId, int executionId)
     {
         var executionGroup = await _executionGroupService.GetExecutionGroupById(groupId);
