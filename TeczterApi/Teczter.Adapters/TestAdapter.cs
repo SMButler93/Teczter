@@ -22,7 +22,7 @@ public class TestAdapter(TeczterDbContext dbContext) : ITestAdapter
     }
 
     public IQueryable<TestEntity> GetBasicTestSearchBaseQuery()
-    {
+     {
         return _dbContext.Tests
             .AsNoTracking()
             .Include(x => x.TestSteps)

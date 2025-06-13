@@ -30,28 +30,18 @@ public class ExecutionServiceTests
     }
 
     [Test]
-    public async Task CompleteExecution_WhenNullReturned_ShouldThrowTeczterValidationException()
-    {
-        //Arrange:
-        var request = GetCompletionRequest();
-        _executionAdapterMock.Setup(x => x.GetExecutionById(It.IsAny<int>())).ReturnsAsync((ExecutionEntity?)null);
-
-        //Act & Assert:
-        await Should.ThrowAsync<TeczterValidationException>(() => _sut.CompleteExecution(request));
-    }
-
-    [Test]
     public async Task CompleteExecution_WhenExecutionReturnedAndRequestIsAPass_ShouldPassExecution()
     {
         //Arrange:
         var request = GetCompletionRequest();
+        var executionId = 1;
         var execution = GetExecutionInstance();
         var validationResult = new ValidationResult();
-        _executionAdapterMock.Setup(x => x.GetExecutionById(request.ExecutionId)).ReturnsAsync(execution);
+        _executionAdapterMock.Setup(x => x.GetExecutionById(executionId)).ReturnsAsync(execution);
         _executionValidatorMock.Setup(x => x.ValidateAsync(execution, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
 
         //Act:
-        var result = await _sut.CompleteExecution(request);
+        var result = await _sut.CompleteExecution(execution, request);
 
         //Assert:
         result.IsValid.ShouldBeTrue();
@@ -63,7 +53,6 @@ public class ExecutionServiceTests
     {
         return new CompleteExecutionRequestDto()
         {
-            ExecutionId = 1,
             HasPassed = true
         };
     }

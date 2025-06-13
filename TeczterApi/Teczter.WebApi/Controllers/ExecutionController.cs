@@ -12,8 +12,7 @@ namespace Teczter.WebApi.Controllers
     {
         private readonly IExecutionService _executionService = executionService;
 
-        [HttpGet]
-        [Route("{id:int}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetExecutionById(int id)
         {
             var execution = await _executionService.GetExecutionById(id);
@@ -26,13 +25,19 @@ namespace Teczter.WebApi.Controllers
             return Ok(new ExecutionDto(execution));
         }
 
-        [HttpPatch]
-        [Route("CompleteExecution")]
-        public async Task<IActionResult> CompleteExecution([FromBody] CompleteExecutionRequestDto request)
+        [HttpPatch("{id:int}")]
+        public async Task<IActionResult> CompleteExecution(int id, [FromBody] CompleteExecutionRequestDto request)
         {
             try
             {
-                var validatedExecution = await _executionService.CompleteExecution(request);
+                var execution = await _executionService.GetExecutionById(id);
+
+                if (execution is null)
+                {
+                    return NotFound($"Execution {id} does not exist.");
+                }
+
+                var validatedExecution = await _executionService.CompleteExecution(execution, request);
 
                 if (!validatedExecution.IsValid)
                 {

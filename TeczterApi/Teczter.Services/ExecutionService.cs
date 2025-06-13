@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using Teczter.Domain;
 using Teczter.Domain.Entities;
-using Teczter.Domain.Exceptions;
 using Teczter.Persistence;
 using Teczter.Services.AdapterInterfaces;
 using Teczter.Services.RequestDtos.Executions;
@@ -22,11 +21,8 @@ public class ExecutionService : IExecutionService
         _validator = validator;
     }
 
-    public async Task<TeczterValidationResult<ExecutionEntity>> CompleteExecution(CompleteExecutionRequestDto request)
+    public async Task<TeczterValidationResult<ExecutionEntity>> CompleteExecution(ExecutionEntity execution, CompleteExecutionRequestDto request)
     {
-        var execution = await GetExecutionById(request.ExecutionId) ?? throw new TeczterValidationException("Cannot pass an execution " +
-            "that does not exist.");
-
         if (request.HasPassed)
         {
             execution.Pass(default);
