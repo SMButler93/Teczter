@@ -28,6 +28,13 @@ The database is managed via an SSDT project. Initially, the project was built us
 
 Angular is used for the frontend. PrimeNg is used for various components within the frontend.
 
+other packages used:
+FluentValidations,
+Moq,
+Nunit,
+Serilog,
+Shoudly
+
 ## Planned work:
 Moving forward with this project, there is still currently a lot to do. Below is a list of upcoming tasks. This is by no means an exhaustive list. This list will change as and when new work is identified and tasks are completed.
 
