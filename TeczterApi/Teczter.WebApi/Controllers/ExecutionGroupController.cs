@@ -14,7 +14,7 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
     private readonly IExecutionGroupService _executionGroupService = executionGroupService;
 
     [HttpGet]
-    public async Task<IActionResult> GetExecutionGroupSearchResults([FromQuery] string? executionGroupName, [FromQuery] string? releaseVersion, [FromQuery] int pageNumber = 1)
+    public async Task<ActionResult<ExecutionGroupDto>> GetExecutionGroupSearchResults([FromQuery] string? executionGroupName, [FromQuery] string? releaseVersion, [FromQuery] int pageNumber = 1)
     {
         var executionGroups = await _executionGroupService.GetExecutionGroupSearchResults(pageNumber, executionGroupName, releaseVersion);
 
@@ -24,7 +24,7 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
     }
 
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetExecutionGroup(int id)
+    public async Task<ActionResult<ExecutionGroupDto>> GetExecutionGroup(int id)
     {
         var executionGroup = await _executionGroupService.GetExecutionGroupById(id);
 
@@ -64,7 +64,7 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
     }
 
     [HttpPost("{id:int}/clones")]
-    public async Task<IActionResult> CloneExecutionGroup(int id, [FromQuery] string newExecutionGroupname, [FromQuery] string? softwareVersionNumber)
+    public async Task<ActionResult<ExecutionGroupDto>> CloneExecutionGroup(int id, [FromQuery] string newExecutionGroupname, [FromQuery] string? softwareVersionNumber)
     {
         var executionGroupToClone = await _executionGroupService.GetExecutionGroupById(id);
 
@@ -86,7 +86,7 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateExecutionGroup([FromBody] CreateExecutionGroupRequestDto request)
+    public async Task<ActionResult<ExecutionGroupDto>> CreateExecutionGroup([FromBody] CreateExecutionGroupRequestDto request)
     {
         var validatedExecutionGroup = await _executionGroupService.CreateNewExecutionGroup(request);
 
@@ -100,8 +100,8 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
         return CreatedAtAction(nameof(GetExecutionGroup), new { dto.Id }, dto);
     }
 
-    [HttpPost("/Executions")]
-    public async Task<IActionResult> CreateExecution(int id, [FromBody] CreateExecutionRequestDto request)
+    [HttpPost("Executions")]
+    public async Task<ActionResult<ExecutionGroupDto>> CreateExecution(int id, [FromBody] CreateExecutionRequestDto request)
     {
         var executionGroup = await _executionGroupService.GetExecutionGroupById(id);
 

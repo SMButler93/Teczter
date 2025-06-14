@@ -13,7 +13,7 @@ namespace Teczter.WebApi.Controllers
         private readonly IExecutionService _executionService = executionService;
 
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetExecutionById(int id)
+        public async Task<ActionResult<ExecutionDto>> GetExecutionById(int id)
         {
             var execution = await _executionService.GetExecutionById(id);
 
@@ -26,7 +26,7 @@ namespace Teczter.WebApi.Controllers
         }
 
         [HttpPatch("{id:int}")]
-        public async Task<IActionResult> CompleteExecution(int id, [FromBody] CompleteExecutionRequestDto request)
+        public async Task<ActionResult<ExecutionDto>> CompleteExecution(int id, [FromBody] CompleteExecutionRequestDto request)
         {
             try
             {
@@ -44,8 +44,9 @@ namespace Teczter.WebApi.Controllers
                     return BadRequest(validatedExecution.ErrorMessages);
                 }
 
-                return Ok(validatedExecution.Value);
-            } catch (TeczterValidationException ex)
+                return Ok(new ExecutionDto(validatedExecution.Value!));
+            } 
+            catch (TeczterValidationException ex)
             {
                 return BadRequest(ex.Message);
             }
