@@ -14,7 +14,7 @@ public class TestController(ITestService testService) : ControllerBase
     private readonly ITestService _testService = testService;
 
     [HttpGet]
-    public async Task<IActionResult> GetTestSearchResults([FromQuery] string? testName, [FromQuery] string? owningDepartment, [FromQuery] int pageNumber = 1)
+    public async Task<ActionResult<List<TestDto>>> GetTestSearchResults([FromQuery] string? testName, [FromQuery] string? owningDepartment, [FromQuery] int pageNumber = 1)
     {
         var tests = await _testService.GetTestSearchResults(pageNumber, testName, owningDepartment);
 
@@ -24,7 +24,7 @@ public class TestController(ITestService testService) : ControllerBase
     }
 
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetTest(int id)
+    public async Task<ActionResult<TestDto>> GetTest(int id)
     {
         var test = await _testService.GetTestById(id);
 
@@ -52,7 +52,7 @@ public class TestController(ITestService testService) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateTest([FromBody] CreateTestRequestDto request)
+    public async Task<ActionResult<TestDto>> CreateTest([FromBody] CreateTestRequestDto request)
     {
         try
         {
@@ -74,7 +74,7 @@ public class TestController(ITestService testService) : ControllerBase
     }
 
     [HttpPatch("{id:int}")]
-    public async Task<IActionResult> UpdateTest(int id, [FromBody] UpdateTestRequestDto request)
+    public async Task<ActionResult<TestDto>> UpdateTest(int id, [FromBody] UpdateTestRequestDto request)
     {
         var test = await _testService.GetTestById(id);
 
@@ -101,7 +101,7 @@ public class TestController(ITestService testService) : ControllerBase
     }
 
     [HttpPost("{id:int}/links")]
-    public async Task<IActionResult> AddLinkUrl(int id, [FromBody] string url)
+    public async Task<ActionResult<TestDto>> AddLinkUrl(int id, [FromBody] string url)
     {
         var test = await _testService.GetTestById(id);
 
@@ -128,7 +128,7 @@ public class TestController(ITestService testService) : ControllerBase
     }
 
     [HttpDelete("{id:int}/links")]
-    public async Task<IActionResult> RemoveLinkUrl(int id, [FromBody] string url)
+    public async Task<ActionResult<TestDto>> RemoveLinkUrl(int id, [FromBody] string url)
     {
         var test = await _testService.GetTestById(id);
 
@@ -155,7 +155,7 @@ public class TestController(ITestService testService) : ControllerBase
     }
 
     [HttpPost("{id:int}/Steps")]
-    public async Task<IActionResult> AddTestStep(int id, [FromBody] CreateTestStepRequestDto request)
+    public async Task<ActionResult<TestDto>> AddTestStep(int id, [FromBody] CreateTestStepRequestDto request)
     {
         var test = await _testService.GetTestById(id);
 
@@ -175,7 +175,7 @@ public class TestController(ITestService testService) : ControllerBase
     }
 
     [HttpDelete("{testId:int}/Steps/{testStepId:int}")]
-    public async Task<IActionResult> RemoveTestStep(int testId, int testStepId)
+    public async Task<ActionResult<TestDto>> RemoveTestStep(int testId, int testStepId)
     {
         var test = await _testService.GetTestById(testId);
 
@@ -202,7 +202,7 @@ public class TestController(ITestService testService) : ControllerBase
     }
 
     [HttpPatch("{testId:int}/Steps/{testStepId:int}")]
-    public async Task<IActionResult> UpdateTestStep(int testId, int testStepId, [FromBody] UpdateTestStepRequestDto request)
+    public async Task<ActionResult<TestDto>> UpdateTestStep(int testId, int testStepId, [FromBody] UpdateTestStepRequestDto request)
     {
         var test = await _testService.GetTestById(testId);
 
