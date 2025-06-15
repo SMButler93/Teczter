@@ -100,7 +100,7 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
         return CreatedAtAction(nameof(GetExecutionGroup), new { dto.Id }, dto);
     }
 
-    [HttpPost("Executions")]
+    [HttpPost("{id:int}/Executions")]
     public async Task<ActionResult<ExecutionGroupDto>> CreateExecution(int id, [FromBody] CreateExecutionRequestDto request)
     {
         var executionGroup = await _executionGroupService.GetExecutionGroupById(id);
