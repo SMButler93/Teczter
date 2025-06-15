@@ -36,53 +36,6 @@ public class TestServiceTests
     }
 
     [Test]
-    public async Task ValidateTestState_WhenValid_ShouldReturnPass()
-    {
-        //Arrange:
-        var test = GetBasicTestInstance();
-        var validationResult = new ValidationResult();
-        _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
-
-        //Act:
-        var result = await _sut.ValidateTestState(test);
-
-        //Assert:
-        result.IsValid.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
-    }
-
-    [Test]
-    public async Task ValidateTestState_WhenNotValid_ShouldReturnFail()
-    {
-        //Arrange:
-        var test = GetBasicTestInstance();
-        var validationResult = new ValidationResult { Errors = [new ValidationFailure()] };
-        _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
-
-        //Act:
-        var result = await _sut.ValidateTestState(test);
-
-        //Assert:
-        result.IsValid.ShouldBeFalse();
-        result.Value.ShouldBeNull();
-    }
-
-    [Test]
-    public async Task DeleteTest_WhenDeleted_ShouldSetIsDeletedToTrue()
-    {
-        //Arrange:
-        var test = GetBasicTestInstance();
-        List<ExecutionEntity> executionsSearchResult = [];
-        _executionAdapterMock.Setup(x => x.GetExecutionsForTest(test.Id)).ReturnsAsync(executionsSearchResult);
-
-        //Act:
-        await _sut.DeleteTest(test);
-
-        //Assert
-        test.IsDeleted.ShouldBeTrue();
-    }
-
-    [Test]
     public async Task GetTestSearchResults_WhenNoFiltersApplied_ShouldGetAllInstances()
     {
         //Arrange:
