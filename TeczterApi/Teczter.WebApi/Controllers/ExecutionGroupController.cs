@@ -115,14 +115,14 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
             return BadRequest("Cannot add new executions to an execution group that has closed.");
         }
 
-        var validatedExecutionGroup = await _executionGroupService.CreateExecution(executionGroup, request);
+        var result = await _executionGroupService.CreateExecution(executionGroup, request);
 
-        if (!validatedExecutionGroup.IsValid)
+        if (!result.IsValid)
         {
-            return BadRequest(validatedExecutionGroup.ErrorMessages);
+            return BadRequest(result.ErrorMessages);
         }
 
-        var dto = new ExecutionGroupDto(validatedExecutionGroup.Value!);
+        var dto = new ExecutionGroupDto(result.Value!);
 
         return CreatedAtAction(nameof(GetExecutionGroup), new { dto.Id }, dto);
     }

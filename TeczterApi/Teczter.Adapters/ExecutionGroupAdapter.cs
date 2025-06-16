@@ -26,6 +26,8 @@ public class ExecutionGroupAdapter(TeczterDbContext dbContext) : IExecutionGroup
     {
         return await _dbContext.ExecutionGroups
             .Include(x => x.Executions)
+            .ThenInclude(y => y.Test)
+            .ThenInclude(z => z.TestSteps)
             .SingleOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
     }
 }
