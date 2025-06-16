@@ -128,7 +128,7 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
     }
 
     [HttpDelete("{groupId:int}/Executions/{executionId:int}")]
-    public async Task<IActionResult> DeleteExecution(int groupId, int executionId)
+    public async Task<ActionResult<ExecutionGroupDto>> DeleteExecution(int groupId, int executionId)
     {
         var executionGroup = await _executionGroupService.GetExecutionGroupById(groupId);
 
@@ -144,9 +144,9 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
 
         try
         {
-            var updatedExecutionGroup = _executionGroupService.DeleteExecution(executionGroup, executionId);
+            await _executionGroupService.DeleteExecution(executionGroup, executionId);
 
-            return Ok(updatedExecutionGroup);
+            return Ok(new ExecutionGroupDto(executionGroup));
         }
         catch (TeczterValidationException ex)
         {
