@@ -38,11 +38,6 @@ public class ExecutionService : IExecutionService
         return result;
     }
 
-    public async Task<ExecutionEntity?> GetExecutionById(int id)
-    {
-        return await _executionAdapter.GetExecutionById(id);
-    }
-
     public async Task<TeczterValidationResult<ExecutionEntity>> ValidateExecutionState(ExecutionEntity execution)
     {
         var result = await _validator.ValidateAsync(execution);

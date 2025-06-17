@@ -9,7 +9,7 @@ namespace Teczter.WebApi.Controllers;
 
 [Route("Teczter/[controller]")]
 [ApiController]
-public class TestController(ITestService testService) : ControllerBase
+public class TestsController(ITestService testService) : ControllerBase
 {
     private readonly ITestService _testService = testService;
 

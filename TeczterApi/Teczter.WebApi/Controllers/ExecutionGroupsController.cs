@@ -9,9 +9,10 @@ namespace Teczter.WebApi.Controllers;
 
 [Route("Teczter/[controller]")]
 [ApiController]
-public class ExecutionGroupController(IExecutionGroupService executionGroupService) : ControllerBase
+public class ExecutionGroupsController(IExecutionGroupService executionGroupService, IExecutionService executionService) : ControllerBase
 {
     private readonly IExecutionGroupService _executionGroupService = executionGroupService;
+    private readonly IExecutionService _exececutionService = executionService;
 
     [HttpGet]
     public async Task<ActionResult<ExecutionGroupDto>> GetExecutionGroupSearchResults([FromQuery] string? executionGroupName, [FromQuery] string? releaseVersion, [FromQuery] int pageNumber = 1)
@@ -147,6 +148,60 @@ public class ExecutionGroupController(IExecutionGroupService executionGroupServi
             await _executionGroupService.DeleteExecution(executionGroup, executionId);
 
             return Ok(new ExecutionGroupDto(executionGroup));
+        }
+        catch (TeczterValidationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("{groupId:int}/Executions/{executionId:int}")]
+    public async Task<ActionResult<ExecutionDto>> GetExecutionById(int groupId, int executionId)
+    {
+        var executionGroup = await _executionGroupService.GetExecutionGroupById(groupId);
+
+        if (executionGroup is null)
+        {
+            return BadRequest($"Execution group {groupId} does not exist.");
+        }
+
+        var execution = executionGroup.Executions.SingleOrDefault(x => x.Id == executionId);
+
+        if (execution is null)
+        {
+            return BadRequest($"Execution {executionId} does not exist in execution group {groupId}");
+        }
+
+        return Ok(new ExecutionDto(execution));
+    }
+
+    [HttpPatch("{groupId: int})/Executions/{executionId:int}")]
+    public async Task<ActionResult<ExecutionDto>> CompleteExecution(int groupId, int executionId, [FromBody] CompleteExecutionRequestDto request)
+    {
+        try
+        {
+            var executionGroup = await _executionGroupService.GetExecutionGroupById(groupId);
+
+            if (executionGroup is null)
+            {
+                return BadRequest($"Execution group {groupId} does not exist.");
+            }
+
+            var execution = executionGroup.Executions.SingleOrDefault(x => x.Id == executionId);
+
+            if (execution is null)
+            {
+                return BadRequest($"Execution {executionId} does not exist in execution group {groupId}");
+            }
+
+            var result = await _exececutionService.CompleteExecution(execution, request);
+
+            if (!result.IsValid)
+            {
+                return BadRequest(result.ErrorMessages);
+            }
+
+            return Ok(new ExecutionDto(result.Value!));
         }
         catch (TeczterValidationException ex)
         {
