@@ -32,6 +32,7 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         TestedById = userId;
         ExecutionState = ExecutionStateType.Pass;
         RevisedOn = DateTime.Now;
+        //RevisedBy?
     }
 
     public void Fail(int userId, int testStepId, string failureReason)
@@ -41,12 +42,14 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         FailureReason = failureReason;
         ExecutionState = ExecutionStateType.Fail;
         RevisedOn = DateTime.Now;
+        //RevisedBy?
     }
 
     public void AddNotes(string note)
     {
         Notes.Add(note);
         RevisedOn = DateTime.Now;
+        //RevisedBy?
     }
 
     public void Reset()
@@ -57,6 +60,7 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         TestedById = null;
         ExecutionState = ExecutionStateType.Untested;
         RevisedOn = DateTime.Now;
+        //RevisedBy?
     }
 
     public void Delete()
@@ -69,6 +73,7 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 
         IsDeleted = true;
         RevisedOn = DateTime.Now;
+        //RevisedBy?
     }
 
     public ExecutionEntity CloneExecution()
@@ -80,6 +85,7 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
             AssignedUserId = this.AssignedUserId,
             Notes = this.Notes,
             ExecutionState = ExecutionStateType.Untested
+            //CreatedBy?
         };
     }
 }

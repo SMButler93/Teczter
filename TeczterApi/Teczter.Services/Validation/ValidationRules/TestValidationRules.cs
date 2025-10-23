@@ -6,15 +6,15 @@ namespace Teczter.Services.Validation.ValidationRules;
 
 public static class TestValidationRules
 {
-    public static bool BeUniqueTitle(string title, ITestValidationRepository repo)
+    public static async Task<bool> BeUniqueTitle(string title, ITestValidationRepository repo)
     {
-        var existingTests = repo.GetTestEntitiesWithTitle(title);
+        var existingTests = await repo.GetTestEntitiesWithTitle(title);
         return existingTests.Count == 0;
     }
 
-    public static bool BeUniqueTitle(TestEntity test, ITestValidationRepository repo)
+    public static async Task<bool> BeUniqueTitle(TestEntity test, ITestValidationRepository repo)
     {
-        var existingTests = repo.GetTestEntitiesWithTitle(test.Title);
+        var existingTests = await repo.GetTestEntitiesWithTitle(test.Title);
         return existingTests.Count == 0 || (existingTests.Count == 1 && existingTests.First().Id == test.Id);
     }
 

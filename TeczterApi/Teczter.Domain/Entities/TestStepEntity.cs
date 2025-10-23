@@ -28,6 +28,7 @@ public class TestStepEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 
         Urls.Add(url);
         RevisedOn = DateTime.Now;
+        //RevisedBy
     }
 
     public void RemoveLinkUrl(string url)
@@ -39,10 +40,12 @@ public class TestStepEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 
         Urls.Remove(url);
         RevisedOn = DateTime.Now;
+        //RevisedById?
     }
 
     public void Delete()
     {
+        //Set revisedBy User Id
         IsDeleted = true;
         RevisedOn = DateTime.Now;
     }
@@ -53,6 +56,7 @@ public class TestStepEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         Instructions = instructions  ?? Instructions;
         Urls.AddRange(urls);
         RevisedOn = DateTime.Now;
+        //RevisedBy? 
     }
 
     private static bool IsValidUrl(string url)

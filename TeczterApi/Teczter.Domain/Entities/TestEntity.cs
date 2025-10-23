@@ -1,7 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using Teczter.Domain.Entities.interfaces;
 using Teczter.Domain.Enums;
-using Teczter.Domain.Exceptions;
 
 namespace Teczter.Domain.Entities;
 
@@ -15,9 +14,11 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
     public bool IsDeleted { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public List<string> Urls { get; set; } = [];
     public Department OwningDepartment { get; set; }
     public byte[] RowVersion { get; set; } = [];
+    public IReadOnlyList<string> Urls => _urls.AsReadOnly();
+
+    private List<string> _urls = [];
 
     public virtual List<TestStepEntity> TestSteps { get; set; } = [];
 
@@ -29,16 +30,21 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
         RevisedOn = DateTime.Now;
     }
 
-    public void RemoveTestStep(int testStepId)
+    public TeczterValidationResult<TestEntity> RemoveTestStep(int testStepId)
     {
-        var testStep = TestSteps.SingleOrDefault(x => x.Id == testStepId && !x.IsDeleted) ??
-            throw new TeczterValidationException("Cannot remove a test step that does not exist, has already been deleted, " +
-            "or does not belong to this test.");
+        var testStep = TestSteps.SingleOrDefault(x => x.Id == testStepId && !x.IsDeleted);
+
+        if (testStep is null)
+        {
+            return TeczterValidationResult<TestEntity>.Fail("Cannot remove a test step that does not exist, has already been deleted, or does not belong to this test.");
+        }
 
         testStep.Delete();
         TestSteps.Remove(testStep);
         SetCorrectStepPlacementValuesOnUpdate();
         RevisedOn = DateTime.Now;
+
+        return TeczterValidationResult<TestEntity>.Succeed(this);
     }
 
     public void SetCorrectStepPlacementValuesOnUpdate()
@@ -68,31 +74,35 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
             .ToList();
     }
 
-    public void AddLinkUrl(string url)
+    public TeczterValidationResult<TestEntity> AddLinkUrl(string url)
     {
         if (!IsValidUrl(url))
         {
-            throw new TeczterValidationException($"{url} is an invalid URL.");
+            return TeczterValidationResult<TestEntity>.Fail($"{url} is an invalid URL.");
         }
 
         if (Urls.Contains(url, StringComparer.OrdinalIgnoreCase))
         {
-            throw new TeczterValidationException($"{url} already exists as a link for this test.");
+            return TeczterValidationResult<TestEntity>.Fail($"{url} already exists as a link for this test.");
         }
 
-        Urls.Add(url);
+        _urls.Add(url);
         RevisedOn = DateTime.Now;
+
+        return TeczterValidationResult<TestEntity>.Succeed(this);
     }
 
-    public void RemoveLinkUrl(string url)
+    public TeczterValidationResult<TestEntity> RemoveLinkUrl(string url)
     {
         if (!Urls.Contains(url, StringComparer.OrdinalIgnoreCase))
         {
-            throw new TeczterValidationException($"{url} does not belong to this test");
+            return TeczterValidationResult<TestEntity>.Fail($"{url} does not belong to this test");
         }
 
-        Urls.Remove(url);
+        _urls.Remove(url);
         RevisedOn = DateTime.Now;
+
+        return TeczterValidationResult<TestEntity>.Succeed(this);
     }
 
     public void Delete()
@@ -101,21 +111,23 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
         {
             step.Delete();
         }
-
+        //Set revised by user ID.
         IsDeleted = true;
         RevisedOn = DateTime.Now;
     }
 
-    public void SetOwningDepartment(string department)
+    public TeczterValidationResult<TestEntity> SetOwningDepartment(string department)
     {
         var isValidDepartment = Enum.TryParse<Department>(department, true, out var validDepartment);
 
         if (!isValidDepartment)
         {
-            throw new TeczterValidationException($"{department} is an invalid department.");
+            return TeczterValidationResult<TestEntity>.Fail($"{department} is an invalid department.");
         }
 
         OwningDepartment = validDepartment;
+
+        return TeczterValidationResult<TestEntity>.Succeed(this);
     }
 
     private static bool IsValidUrl(string url)

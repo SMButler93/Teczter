@@ -40,6 +40,7 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 
         IsDeleted = true;
         RevisedOn = DateTime.Now;
+        //RevisedBy?
     }
 
     public void DeleteExecution(ExecutionEntity execution)
@@ -47,14 +48,16 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         execution.Delete();
         Executions.Remove(execution);
         RevisedOn = DateTime.Now;
+        //RevisedBy?
     }
 
-    public void CloseTestRound() => ClosedDate = DateTime.Now;
+    public void CloseTestRound() => ClosedDate = DateTime.Now; //RevisedBy?
 
     public void AddNote(string note)
     {
         ExecutionGroupNotes.Add(note);
         RevisedOn = DateTime.Now;
+        //RevisedById?
     }
 
     public ExecutionGroupEntity CloneExecutionGroup(string newGroupName, string? versionNumber)
@@ -63,7 +66,8 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         {
             ExecutionGroupName = newGroupName,
             SoftwareVersionNumber = versionNumber,
-            ExecutionGroupNotes = this.ExecutionGroupNotes,
+            ExecutionGroupNotes = this.ExecutionGroupNotes
+            //CreatedBy?
         };
 
         foreach (var execution in this.Executions)

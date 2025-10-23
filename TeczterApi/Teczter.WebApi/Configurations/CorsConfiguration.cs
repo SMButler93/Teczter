@@ -1,4 +1,4 @@
-﻿namespace Teczter.WebApi.MiddlewareAndConfig;
+﻿namespace Teczter.WebApi.Configurations;
 
 internal class CorsOptions
 {

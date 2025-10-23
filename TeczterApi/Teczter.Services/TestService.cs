@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Teczter.Domain;
 using Teczter.Domain.Entities;
-using Teczter.Domain.Exceptions;
 using Teczter.Persistence;
 using Teczter.Services.AdapterInterfaces;
 using Teczter.Services.RequestDtos.Tests;
@@ -11,55 +10,60 @@ using Teczter.Services.ServiceInterfaces;
 
 namespace Teczter.Services;
 
-public class TestService : ITestService
+public class TestService(ITestAdapter _testAdapter,
+        IExecutionAdapter _executionAdapter,
+        ITestComposer _composer,
+        IUnitOfWork _uow,
+        IValidator<TestEntity> _testValidator) : ITestService
 {
-    private readonly ITestAdapter _testAdapter;
-    private readonly IExecutionAdapter _executionAdapter;
-    private readonly ITestComposer _composer;
-    private readonly IUnitOfWork _uow;
-    private readonly IValidator<TestEntity> _testValidator;
-
     private const int testsPerPage = 15;
-
-    public TestService(
-        ITestAdapter testAdapter,
-        IExecutionAdapter executionAdapter,
-        ITestComposer composer,
-        IUnitOfWork uow,
-        IValidator<TestEntity> testValidator)
-    {
-        _testAdapter = testAdapter;
-        _executionAdapter = executionAdapter;
-        _composer = composer;
-        _uow = uow;
-        _testValidator = testValidator;
-    }
 
     public async Task<TeczterValidationResult<TestEntity>> AddLinkUrl(TestEntity test, string url)
     {
-        _composer.UsingContext(test)
-            .AddLinkUrl(url);
+        var testResult = _composer.UsingContext(test)
+            .AddLinkUrl(url)
+            .ValidateInvariants();
 
-        var result = await ValidateTestState(test);
+        if (testResult.IsValid)
+        {
+            var result = await ValidateTestState(test);
 
-        await EvaluateValidationResultAndPersist(result);
-        return result;
+            if (result.IsValid)
+            {
+                await _uow.CommitChanges();
+            }
+
+            return result;
+        }
+
+        return testResult;
     }
 
     public async Task<TeczterValidationResult<TestEntity>> AddTestStep(TestEntity test, CreateTestStepRequestDto testStep)
     {
-        _composer.UsingContext(test)
-            .AddStep(testStep);
+        var testResult = _composer.UsingContext(test)
+            .AddStep(testStep)
+            .ValidateInvariants();
 
-        var result = await ValidateTestState(test);
+        if (testResult.IsValid)
+        {
+            var result = await ValidateTestState(test);
 
-        await EvaluateValidationResultAndPersist(result);
-        return result;
+            if (result.IsValid)
+            {
+                await _uow.CommitChanges();
+            }
+
+            return result;
+        }
+
+        return testResult;
     }
 
     public async Task<TeczterValidationResult<TestEntity>> CreateNewTest(CreateTestRequestDto request)
     {
-        var test = _composer
+        //Set created by user ID when users implemented.
+        var testResult = _composer
             .SetTitle(request.Title)
             .SetDescription(request.Description)
             .SetOwningDepartment(request.OwningDepartment)
@@ -67,12 +71,21 @@ public class TestService : ITestService
             .AddSteps(request.TestSteps)
             .Build();
 
-        await _testAdapter.AddNewTest(test);
+        if (testResult.IsValid)
+        {
+            await _testAdapter.AddNewTest(testResult.Value!);
 
-        var result = await ValidateTestState(test);
+            var result = await ValidateTestState(testResult.Value!);
 
-        await EvaluateValidationResultAndPersist(result);
-        return result;
+            if (result.IsValid)
+            {
+                await _uow.CommitChanges();
+            }
+
+            return result;
+        }
+
+        return testResult;
     }
 
     public async Task DeleteTest(TestEntity test)
@@ -95,14 +108,14 @@ public class TestService : ITestService
 
     public async Task<List<TestEntity>> GetTestSearchResults(int pageNumber, string? testTitle, string? owningDepartment)
     {
-        var testSearchQuery = _testAdapter.GetBasicTestSearchBaseQuery();
+        var testSearchQuery = _testAdapter.GetTestSearchBaseQuery();
 
-        if (testTitle != null)
+        if (testTitle is not null)
         {
             testSearchQuery = testSearchQuery.Where(x => x.Title.Contains(testTitle));
         }
         
-        if (owningDepartment != null)
+        if (owningDepartment is not null)
         {
             testSearchQuery = testSearchQuery.Where(x => x.OwningDepartment.ToString() == owningDepartment);
         }
@@ -115,42 +128,68 @@ public class TestService : ITestService
 
     public async Task<TeczterValidationResult<TestEntity>> RemoveLinkUrl(TestEntity test, string url)
     {
-        test.RemoveLinkUrl(url);
+        var testResult = test.RemoveLinkUrl(url);
 
-        var result = await ValidateTestState(test);
+        if (testResult.IsValid)
+        {
+            var result = await ValidateTestState(test);
 
-        await EvaluateValidationResultAndPersist(result);
-        return result;
+            if (result.IsValid)
+            {
+                await _uow.CommitChanges();
+            }
+
+            return result; 
+        }
+
+        return testResult;
     }
 
     public async Task<TeczterValidationResult<TestEntity>> RemoveTestStep(TestEntity test, int testStepId)
     {
-        test.RemoveTestStep(testStepId);
+        var testResult = test.RemoveTestStep(testStepId);
 
-        var result = await ValidateTestState(test);
+        if (testResult.IsValid)
+        {
+            var result = await ValidateTestState(test);
 
-        await EvaluateValidationResultAndPersist(result);
-        return result;
+            if (result.IsValid)
+            {
+                await _uow.CommitChanges();
+            }
+
+            return result; 
+        }
+
+        return testResult;
     }
 
     public async Task<TeczterValidationResult<TestEntity>> UpdateTest(TestEntity test, UpdateTestRequestDto testUpdates)
     {
-        _composer.UsingContext(test)
+        var testResult = _composer.UsingContext(test)
             .SetTitle(testUpdates.Title)
             .SetDescription(testUpdates.Description)
-            .SetOwningDepartment(testUpdates.OwningDepartment);
+            .SetOwningDepartment(testUpdates.OwningDepartment)
+            .ValidateInvariants();
 
-        var result = await ValidateTestState(test);
+        if (testResult.IsValid)
+        {
+            var result = await ValidateTestState(test);
 
-        await EvaluateValidationResultAndPersist(result);
-        return result;
+            if (result.IsValid)
+            {
+                await _uow.CommitChanges();
+            }
+
+            return result; 
+        }
+
+        return testResult; ;
     }
 
     public async Task<TeczterValidationResult<TestEntity>> UpdateTestStep(TestEntity test, int testStepId, UpdateTestStepRequestDto request)
     {
-        var testStep = test.TestSteps.SingleOrDefault(x => x.Id == testStepId && !x.IsDeleted) ??
-            throw new TeczterValidationException("Cannot update a test step that does not exist, has already been deleted " +
-            "or does not belong to this test.");
+        var testStep = test.TestSteps.Single(x => x.Id == testStepId && !x.IsDeleted);
 
         testStep.Update(request.StepPlacement, request.Instructions, request.Urls);
 
@@ -158,7 +197,11 @@ public class TestService : ITestService
 
         var result = await ValidateTestState(test);
 
-        await EvaluateValidationResultAndPersist(result);
+        if (result.IsValid)
+        {
+            await _uow.CommitChanges();
+        }
+
         return result;
     }
 
@@ -172,16 +215,5 @@ public class TestService : ITestService
         }
 
         return TeczterValidationResult<TestEntity>.Succeed(test);
-    }
-
-    private async Task EvaluateValidationResultAndPersist(TeczterValidationResult<TestEntity> result)
-    {
-        if (!result.IsValid)
-        {
-            _uow.Rollback();
-            return;
-        }
-
-        await _uow.CommitChanges();
     }
 }

@@ -1,4 +1,5 @@
-﻿using Teczter.Domain.Entities;
+﻿using Teczter.Domain;
+using Teczter.Domain.Entities;
 using Teczter.Services.RequestDtos.TestSteps;
 using Teczter.Services.ServiceInterfaces;
 
@@ -7,10 +8,17 @@ namespace Teczter.Services.Composers;
 public class TestComposer() : ITestComposer
 {
     private TestEntity _test = new();
+    private List<string> Errors = [];
 
     public ITestComposer AddLinkUrl(string linkUrl)
     {
-        _test.AddLinkUrl(linkUrl);
+        var result = _test.AddLinkUrl(linkUrl);
+
+        if (!result.IsValid)
+        {
+            Errors.AddRange(result.ErrorMessages!);
+        }
+
         return this;
     }
 
@@ -69,7 +77,12 @@ public class TestComposer() : ITestComposer
             return this;
         }
 
-        _test.SetOwningDepartment(department);
+        var result = _test.SetOwningDepartment(department);
+
+        if (!result.IsValid)
+        {
+            Errors.AddRange(result.ErrorMessages);
+        }
 
         return this;
     }
@@ -88,10 +101,17 @@ public class TestComposer() : ITestComposer
         return this;
     }
 
-    public TestEntity Build()
+    public TeczterValidationResult<TestEntity> Build()
     {
-        return _test;
+        if (Errors.Any())
+        {
+            return TeczterValidationResult<TestEntity>.Fail(Errors.ToArray());
+        }
+
+        return TeczterValidationResult<TestEntity>.Succeed(_test);
     }
+
+    public TeczterValidationResult<TestEntity> ValidateInvariants() => Build();
 
     public ITestComposer AddLinkUrls(IEnumerable<string> links)
     {

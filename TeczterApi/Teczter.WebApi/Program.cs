@@ -6,8 +6,8 @@ using Serilog;
 using Teczter.Adapters.DependencyInjection;
 using Teczter.Data;
 using Teczter.Services.DependencyInjection;
+using Teczter.WebApi.Configurations;
 using Teczter.WebApi.Middleware;
-using Teczter.WebApi.MiddlewareAndConfig;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,17 +29,18 @@ builder.Services.RegisterServices();
 builder.Services.RegisterAdapters();
 
 builder.Services.AddOptions<CorsOptions>()
-    .Bind(builder.Configuration.GetSection("CorsOptions"));
+    .Bind(builder.Configuration.GetSection("CorsOptions"))
+    .Validate(x => x.AllowedOrigins.Length > 0);
 
 builder.Services.AddDbContext<TeczterDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("TeczterDb"))
-    .LogTo(Console.WriteLine)
     .UseLazyLoadingProxies();
 
     if (builder.Environment.IsDevelopment())
     {
-        options.EnableSensitiveDataLogging();
+        options.EnableSensitiveDataLogging()
+        .LogTo(Console.WriteLine);
     }
 });
 
