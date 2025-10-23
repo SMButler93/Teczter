@@ -1,4 +1,5 @@
-﻿using Teczter.Domain.Entities;
+﻿using Teczter.Domain;
+using Teczter.Domain.Entities;
 using Teczter.Services.RequestDtos.TestSteps;
 
 namespace Teczter.Services.ServiceInterfaces;
@@ -15,5 +16,6 @@ public interface ITestComposer
     ITestComposer AddStep(TestStepEntity setp);
     ITestComposer AddLinkUrls(IEnumerable<string> links);
     ITestComposer AddLinkUrl(string linkUrl);
-    TestEntity Build();
+    TeczterValidationResult<TestEntity> Build();
+    TeczterValidationResult<TestEntity> ValidateInvariants();
 }

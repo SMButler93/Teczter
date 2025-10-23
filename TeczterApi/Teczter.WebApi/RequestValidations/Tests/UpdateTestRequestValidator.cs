@@ -13,8 +13,12 @@ public class UpdateTestRequestValidator : AbstractValidator<UpdateTestRequestDto
         _testValidationRepository = testValidationRepository;
 
         RuleFor(x => x.Title)
-            .Must(x => x is null || TestValidationRules.BeUniqueTitle(x, _testValidationRepository))
+            .MustAsync((x, _) => TestValidationRules.BeUniqueTitle(x, _testValidationRepository))
             .WithMessage("This title is already being used. A test must have a unique title.");
+
+        RuleFor(x => x.Title)
+            .NotEmpty()
+            .WithMessage("A title must be provided.");
 
         RuleFor(x => x.OwningDepartment)
             .Must(x => x is null || TestValidationRules.BeAValidDepartment(x))

@@ -25,4 +25,14 @@ public record TeczterValidationResult<T>
             Value = default
         };
     }
+
+    public static TeczterValidationResult<T> Fail(string errorMessage)
+    {
+        return new TeczterValidationResult<T>
+        {
+            IsValid = false,
+            ErrorMessages = [errorMessage],
+            Value = default
+        };
+    }
 }

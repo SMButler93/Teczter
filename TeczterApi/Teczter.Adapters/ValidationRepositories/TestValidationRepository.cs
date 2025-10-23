@@ -9,11 +9,11 @@ public class TestValidationRepository(TeczterDbContext dbContext) : ITestValidat
 {
     private readonly TeczterDbContext _dbContext = dbContext;
 
-    public List<TestEntity> GetTestEntitiesWithTitle(string title)
+    public async Task<List<TestEntity>> GetTestEntitiesWithTitle(string title)
     {
-        return _dbContext.Tests
+        return await _dbContext.Tests
             .Where(x => x.Title == title && !x.IsDeleted)
             .AsNoTracking()
-            .ToList();
+            .ToListAsync();
     }
 }

@@ -93,7 +93,7 @@ public class TestAdapterTests
         await _dbContext.SaveChangesAsync();
 
         //Act:
-        var query = _sut.GetBasicTestSearchBaseQuery();
+        var query = _sut.GetTestSearchBaseQuery();
         var results = await query.ToListAsync();
 
         //Assert:

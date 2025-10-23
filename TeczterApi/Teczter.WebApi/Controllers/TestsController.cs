@@ -54,23 +54,14 @@ public class TestsController(ITestService testService) : ControllerBase
     [HttpPost]
     public async Task<ActionResult<TestDto>> CreateTest([FromBody] CreateTestRequestDto request)
     {
-        try
-        {
-            var validatedTest = await _testService.CreateNewTest(request);
-     
-            if (!validatedTest.IsValid)
-            {
-                return BadRequest(validatedTest.ErrorMessages);
-            }
+        var result = await _testService.CreateNewTest(request);
 
-            var dto = new TestDto(validatedTest.Value!);
-
-            return CreatedAtAction(nameof(GetTest), new { dto.Id }, dto);
-        }
-        catch(TeczterValidationException ex)
+        if (!result.IsValid)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(result.ErrorMessages);
         }
+
+        return Ok(new TestDto(result.Value!));
     }
 
     [HttpPatch("{id:int}")]
@@ -83,21 +74,14 @@ public class TestsController(ITestService testService) : ControllerBase
             return NotFound($"Test {id} does not exist");
         }
 
-        try
-        {
-            var validatedTest = await _testService.UpdateTest(test, request);
+        var result = await _testService.UpdateTest(test, request);
 
-            if (!validatedTest.IsValid)
-            {
-                return BadRequest(validatedTest.ErrorMessages);
-            }
-
-            return Ok(new TestDto(test));
-        }
-        catch(TeczterValidationException ex)
+        if (!result.IsValid)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(result.ErrorMessages);
         }
+
+        return Ok(new TestDto(test));
     }
 
     [HttpPost("{id:int}/links")]
@@ -110,21 +94,14 @@ public class TestsController(ITestService testService) : ControllerBase
             return NotFound($"Test {id} does not exist");
         }
 
-        try
-        {
-            var validatedTest = await _testService.AddLinkUrl(test, url);
+        var result = await _testService.AddLinkUrl(test, url);
 
-            if (!validatedTest.IsValid)
-            {
-                return BadRequest(validatedTest.ErrorMessages);
-            }
-
-            return Ok(new TestDto(test));
-        }
-        catch (TeczterValidationException ex)
+        if (!result.IsValid)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(result.ErrorMessages);
         }
+
+        return Ok(new TestDto(test));
     }
 
     [HttpDelete("{id:int}/links")]
@@ -137,21 +114,14 @@ public class TestsController(ITestService testService) : ControllerBase
             return NotFound($"test {id} does not exist.");
         }
 
-        try
-        {
-            var validatedTest = await _testService.RemoveLinkUrl(test, url);
+        var result = await _testService.RemoveLinkUrl(test, url);
 
-            if (!validatedTest.IsValid)
-            {
-                return BadRequest(validatedTest.ErrorMessages);
-            }
-
-            return Ok(new TestDto(test));
-        }
-        catch(TeczterValidationException ex)
+        if (!result.IsValid)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(result.ErrorMessages);
         }
+
+        return Ok(new TestDto(test));
     }
 
     [HttpPost("{id:int}/Steps")]
@@ -164,11 +134,11 @@ public class TestsController(ITestService testService) : ControllerBase
             return NotFound($"Test {id} does not exist");
         }
 
-        var validatedTest = await _testService.AddTestStep(test, request);
+        var result = await _testService.AddTestStep(test, request);
 
-        if (!validatedTest.IsValid)
+        if (!result.IsValid)
         {
-            return BadRequest(validatedTest.ErrorMessages);
+            return BadRequest(result.ErrorMessages);
         }
 
         return Ok(new TestDto(test));
@@ -184,21 +154,14 @@ public class TestsController(ITestService testService) : ControllerBase
             return NotFound($"test {testId} does not exist.");
         }
 
-        try
-        {
-            var validatedTest = await _testService.RemoveTestStep(test, testStepId);
+        var result = await _testService.RemoveTestStep(test, testStepId);
 
-            if (!validatedTest.IsValid)
-            {
-                return BadRequest(validatedTest.ErrorMessages);
-            }
-
-            return Ok(new TestDto(test));
-        }
-        catch (TeczterValidationException ex)
+        if (!result.IsValid)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(result.ErrorMessages);
         }
+
+        return Ok(new TestDto(test));
     }
 
     [HttpPatch("{testId:int}/Steps/{testStepId:int}")]
@@ -211,20 +174,13 @@ public class TestsController(ITestService testService) : ControllerBase
             return NotFound($"test {testId} does not exist.");
         }
 
-        try
-        {
-            var validatedTest = await _testService.UpdateTestStep(test, testStepId, request);
+        var result = await _testService.UpdateTestStep(test, testStepId, request);
 
-            if (!validatedTest.IsValid)
-            {
-                return BadRequest(validatedTest.ErrorMessages);
-            }
-
-            return Ok(new TestDto(test));
-        }
-        catch (TeczterValidationException ex)
+        if (!result.IsValid)
         {
-            return BadRequest(ex);
+            return BadRequest(result.ErrorMessages);
         }
+
+        return Ok(new TestDto(test));
     }
 }

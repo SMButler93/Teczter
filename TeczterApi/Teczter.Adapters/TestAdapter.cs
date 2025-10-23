@@ -21,7 +21,7 @@ public class TestAdapter(TeczterDbContext dbContext) : ITestAdapter
             .SingleOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
     }
 
-    public IQueryable<TestEntity> GetBasicTestSearchBaseQuery()
+    public IQueryable<TestEntity> GetTestSearchBaseQuery()
      {
         return _dbContext.Tests
             .AsNoTracking()

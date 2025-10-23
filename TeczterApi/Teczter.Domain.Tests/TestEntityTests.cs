@@ -2,7 +2,6 @@
 using Shouldly;
 using Teczter.Domain.Entities;
 using Teczter.Domain.Enums;
-using Teczter.Domain.Exceptions;
 
 namespace Teczter.Domain.Tests;
 
@@ -72,34 +71,47 @@ public class TestEntityTests
     }
 
     [Test]
-    public void AddLinkUrl_WhenInvalid_ShouldThrow()
+    public void AddLinkUrl_WhenInvalid_ShouldFail()
     {
         //Arrange:
         var invalidUrl = "Invalid";
 
-        //Act&Assert:
-        Should.Throw<TeczterValidationException>(() => _sut.AddLinkUrl(invalidUrl));
+        //Act:
+        var result = _sut.AddLinkUrl(invalidUrl);
+
+        //Assert:
+        result.IsValid.ShouldBeFalse();
+        result.Value.ShouldBeNull();
+        result.ErrorMessages.ShouldNotBeEmpty();
     }
 
     [Test]
-    public void AddLinkUrl_WhenValid_ShouldNotThrow()
+    public void AddLinkUrl_WhenValid_ShouldPass()
     {
         //Arrange:
         var validUrl = "www.validUrl.com";
 
-        //Act&Assert:
-        Should.NotThrow(() => _sut.AddLinkUrl(validUrl));
+        //Act:
+        var result = _sut.AddLinkUrl(validUrl);
+
+        //Assert:
+        result.IsValid.ShouldBeTrue();
+        result.ErrorMessages.ShouldBeEmpty();
     }
 
     [Test]
-    public void AddLinkUrl_WhenAlreadyExists_ShouldThrowAnException()
+    public void AddLinkUrl_WhenAlreadyExists_ShouldFail()
     {
         //Arrange:
         var urlToAdd = "www.newUrl.com";
-        _sut.Urls.Add(urlToAdd);
+        _sut.AddLinkUrl(urlToAdd);
 
-        //Act & Assert:
-        Should.Throw<TeczterValidationException>(() => _sut.AddLinkUrl(urlToAdd));
+        //Act:
+        var result = _sut.AddLinkUrl(urlToAdd);
+
+        //Assert:
+        result.IsValid.ShouldBeFalse();
+        result.ErrorMessages.ShouldNotBeEmpty();
     }
 
     [Test]
@@ -110,20 +122,26 @@ public class TestEntityTests
         _sut.AddLinkUrl(newUrl);
 
         //Act:
-        _sut.RemoveLinkUrl(newUrl);
+        var result = _sut.RemoveLinkUrl(newUrl);
 
         //Assert:
+        result.IsValid.ShouldBeTrue();
+        result.ErrorMessages.ShouldBeEmpty();
         _sut.Urls.ShouldNotContain(newUrl);
     }
 
     [Test]
-    public void RemoveLinkUrl_WhenDoesNotExist_ShouldThrow()
+    public void RemoveLinkUrl_WhenDoesNotExist_ShouldFail()
     {
         //Arrange:
         var nonExistentUrl = "www.SomeUrl.com";
 
-        //Act & Assert:
-        Should.Throw<TeczterValidationException>(() => _sut.RemoveLinkUrl(nonExistentUrl));
+        //Act:
+        var result = _sut.RemoveLinkUrl(nonExistentUrl);
+
+        //Assert:
+        result.IsValid.ShouldBeFalse();
+        result.ErrorMessages.ShouldNotBeEmpty();
     }
 
     [Test]

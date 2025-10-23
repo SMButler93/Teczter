@@ -89,14 +89,14 @@ public class ExecutionGroupsController(IExecutionGroupService executionGroupServ
     [HttpPost]
     public async Task<ActionResult<ExecutionGroupDto>> CreateExecutionGroup([FromBody] CreateExecutionGroupRequestDto request)
     {
-        var validatedExecutionGroup = await _executionGroupService.CreateNewExecutionGroup(request);
+        var result = await _executionGroupService.CreateNewExecutionGroup(request);
 
-        if (!validatedExecutionGroup.IsValid)
+        if (!result.IsValid)
         {
-            return BadRequest(validatedExecutionGroup.ErrorMessages);
+            return BadRequest(result.ErrorMessages);
         }
 
-        var dto = new ExecutionGroupDto(validatedExecutionGroup.Value!);
+        var dto = new ExecutionGroupDto(result.Value!);
 
         return CreatedAtAction(nameof(GetExecutionGroup), new { dto.Id }, dto);
     }

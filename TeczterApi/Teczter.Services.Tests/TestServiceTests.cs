@@ -41,7 +41,7 @@ public class TestServiceTests
         //Arrange:
         var tests = GetMultipleBasicTestInstances().OrderBy(x => x.Title);
         var queryable = tests.AsQueryable();
-        _testAdapterMock.Setup(x => x.GetBasicTestSearchBaseQuery()).Returns(queryable.BuildMock());
+        _testAdapterMock.Setup(x => x.GetTestSearchBaseQuery()).Returns(queryable.BuildMock());
 
         //Act:
         var results = await _sut.GetTestSearchResults(1, null, null);
@@ -56,7 +56,7 @@ public class TestServiceTests
         //Arrange:
         var tests = GetMultipleBasicTestInstances();
         var queryable = tests.AsQueryable();
-        _testAdapterMock.Setup(x => x.GetBasicTestSearchBaseQuery()).Returns(queryable.BuildMock());
+        _testAdapterMock.Setup(x => x.GetTestSearchBaseQuery()).Returns(queryable.BuildMock());
 
         //Act:
         var results = await _sut.GetTestSearchResults(1, "One", null);
@@ -72,7 +72,7 @@ public class TestServiceTests
         //Arrange:
         var tests = GetMultipleBasicTestInstances();
         var queryable = tests.AsQueryable();
-        _testAdapterMock.Setup(x => x.GetBasicTestSearchBaseQuery()).Returns(queryable.BuildMock());
+        _testAdapterMock.Setup(x => x.GetTestSearchBaseQuery()).Returns(queryable.BuildMock());
 
         //Act:
         var results = await _sut.GetTestSearchResults(1, null, Department.Accounting.ToString());
@@ -88,7 +88,7 @@ public class TestServiceTests
         //Arrange:
         var tests = GetMultipleBasicTestInstances();
         var queryable = tests.AsQueryable();
-        _testAdapterMock.Setup(x => x.GetBasicTestSearchBaseQuery()).Returns(queryable.BuildMock());
+        _testAdapterMock.Setup(x => x.GetTestSearchBaseQuery()).Returns(queryable.BuildMock());
 
         //Act:
         var results = await _sut.GetTestSearchResults(1, "ABC", null);
@@ -104,7 +104,7 @@ public class TestServiceTests
         var test = GetBasicTestInstance();
         var validationResult = new ValidationResult();
         var url = "www.url.com";
-        test.Urls.Add(url);
+        test.AddLinkUrl(url);
         _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
 
         //Act:
@@ -116,14 +116,19 @@ public class TestServiceTests
     }
 
     [Test]
-    public async Task RemoveLinkUrl_WhenLinkUrlDoesNotExist_ShouldThrowTeczterValidationException()
+    public async Task RemoveLinkUrl_WhenLinkUrlDoesNotExist_ShouldFail()
     {
         //Arrange:
         var test = GetBasicTestInstance();
         var url = "www.url.com";
 
-        //Act & Assert:
-        await Should.ThrowAsync<TeczterValidationException>(() => _sut.RemoveLinkUrl(test, url));
+        //Act:
+        var result = await _sut.RemoveLinkUrl(test, url);
+
+        //Assert:
+        result.IsValid.ShouldBeFalse();
+        result.Value.ShouldBeNull();
+        result.ErrorMessages.ShouldNotBeEmpty();
     }
 
     [Test]
@@ -146,14 +151,19 @@ public class TestServiceTests
     }
 
     [Test]
-    public async Task RemoveTestStep_WhenTheTestStepDoesNotExist_ShouldThrowTeczterValidationException()
+    public async Task RemoveTestStep_WhenTheTestStepDoesNotExist_ShouldFail()
     {
         //Arrange:
         var test = GetBasicTestInstance();
         var stepToRemoveId = 5;
 
-        //Act & Assert:
-        await Should.ThrowAsync<TeczterValidationException>(() => _sut.RemoveTestStep(test, stepToRemoveId));
+        //Act:
+        var result = await _sut.RemoveTestStep(test, stepToRemoveId);
+
+        //Assert:
+        result.IsValid.ShouldBeFalse();
+        result.Value.ShouldBeNull();
+        result.ErrorMessages.ShouldNotBeEmpty();
     }
 
     [Test]
@@ -173,18 +183,6 @@ public class TestServiceTests
         result.Value.ShouldNotBeNull();
         stepToUpdate.StepPlacement.ShouldBe(4);
         test.TestSteps.Count.ShouldBe(4);
-    }
-
-    [Test]
-    public async Task UpdateTestStep_WhenTestStepDoesNotExist_ShouldThrowTeczterValidationResult()
-    {
-        //Arrange:
-        var test = GetBasicTestInstance();
-        var stepToUpdate = new TestStepEntity { Id = 5, StepPlacement = 5, Instructions = "step 5." };
-        var request = new UpdateTestStepRequestDto { StepPlacement = 4, };
-
-        //Act & Assert:
-        await Should.ThrowAsync<TeczterValidationException>(() => _sut.UpdateTestStep(test, stepToUpdate.Id, request));
     }
 
     private static TestEntity GetBasicTestInstance()

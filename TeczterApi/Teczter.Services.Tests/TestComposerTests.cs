@@ -22,141 +22,164 @@ public class TestComposerTests
     }
 
     [Test]
-    public void AddLinkUrl_WhenValidAndAdded_ShouldExistInTheInstanceProvided()
+    public void AddLinkUrl_ValidateInvariants_WhenValidAndAdded_ShouldSucceed_And_ExistInTheInstanceProvided()
     {
         //Arrange:
         var linkUrl = "www.ValidUrl.com";
 
         //Act:
-        var result = _sut.AddLinkUrl(linkUrl).Build();
+        var result = _sut.AddLinkUrl(linkUrl).ValidateInvariants();
 
         //Assert:
-        result.Urls.ShouldContain(linkUrl);
+        result.Value.ShouldNotBeNull();
+        result.IsValid.ShouldBeTrue();
+        result.Value.Urls.ShouldContain(linkUrl);
     }
 
     [Test]
-    public void AddMultipleLinkUrls_WhenValidAndAdded_ShouldExistInTheInstanceProvided()
+    public void AddMultipleLinkUrls_ValidateINvariants_WhenValidAndAdded_ShouldSuccesed_And_ExistInTheInstanceProvided()
     {
         //Arrange:
         List<string> linkUrl = ["www.ValidUrl.com", "www.ValidUrl2.com"];
 
         //Act:
-        var result = _sut.AddLinkUrls(linkUrl).Build();
+        var result = _sut.AddLinkUrls(linkUrl).ValidateInvariants();
 
         //Assert:
-        result.Urls.ShouldBe(linkUrl);
+        result.Value.ShouldNotBeNull();
+        result.IsValid.ShouldBeTrue();
+        result.Value.Urls.ShouldBe(linkUrl);
     }
 
     [Test]
-    public void AddStep_WhenAdded_ShouldExistInTheInstanceProvided()
+    public void AddStep_ValidateInvariants_WhenAdded_ShouldSucceeed_And_ExistInTheInstanceProvided()
     {
         //Arrange:
         var testStep = GetSpecifiedNumberOfBasicTestSteps(1).Single();
 
         //Act:
-        var result = _sut.AddStep(testStep).Build();
+        var result = _sut.AddStep(testStep).ValidateInvariants();
 
         //Assert:
-        result.TestSteps.ShouldContain(testStep);
+        result.Value.ShouldNotBeNull();
+        result.IsValid.ShouldBeTrue();
+        result.Value.TestSteps.ShouldContain(testStep);
     }
 
     [Test]
-    public void AddSteps_WhenMultipleStepsAdded_ShouldAllExistInTheInstanceProvided()
+    public void AddSteps_ValidateInvariants__WhenMultipleStepsAdded_ShouldSucceed_And_AllExistInTheInstanceProvided()
     {
         //Arrange:
         var testSteps = GetSpecifiedNumberOfBasicTestSteps(4);
 
         //Act:
-        var result = _sut.AddSteps(testSteps).Build();
+        var result = _sut.AddSteps(testSteps).ValidateInvariants();
 
         //Assert:
-        result.TestSteps.ShouldBe(testSteps);
+        result.Value.ShouldNotBeNull();
+        result.IsValid.ShouldBeTrue();
+        result.Value.TestSteps.ShouldBe(testSteps);
     }
 
     [Test]
-    public void AddStep_WhenAddedFromRequestDto_ShouldExistInTheInstanceProvided()
+    public void AddStep_ValidateINvariants_WhenAddedFromRequestDto_ShouldSucceed_And_ExistInTheInstanceProvided()
     {
         //Arrange:
         var testStep = GetSpecifiedNumberOfBasicCreateTestStepRequestDtos(1).Single();
 
         //Act:
-        var result = _sut.AddStep(testStep).Build();
+        var result = _sut.AddStep(testStep).ValidateInvariants();
 
         //Assert:
-        result.TestSteps.Single().StepPlacement.ShouldBe(testStep.StepPlacement);
-        result.TestSteps.Single().Instructions.ShouldBe(testStep.Instructions);
+        result.Value.ShouldNotBeNull();
+        result.IsValid.ShouldBeTrue();
+        result.Value.TestSteps.Single().StepPlacement.ShouldBe(testStep.StepPlacement);
+        result.Value.TestSteps.Single().Instructions.ShouldBe(testStep.Instructions);
     }
 
     [Test]
-    public void AddSteps_WhenMultipleStepsAddedFromRequestDtos_ShouldAllExistInTheInstanceProvided()
+    public void AddSteps_ValidateINvariants_WhenMultipleStepsAddedFromRequestDtos_ShouldSucceed_And_AllExistInTheInstanceProvided()
     {
         //Arrange:
         var testSteps = GetSpecifiedNumberOfBasicCreateTestStepRequestDtos(2);
 
         //Act:
-        var result = _sut.AddSteps(testSteps).Build();
+        var result = _sut.AddSteps(testSteps).ValidateInvariants();
 
         //Assert:
-        result.TestSteps.Count.ShouldBe(testSteps.Count);
-        result.TestSteps.First().StepPlacement.ShouldBe(testSteps.First().StepPlacement);
-        result.TestSteps.First().Instructions.ShouldBe(testSteps.First().Instructions);
-        result.TestSteps.Last().StepPlacement.ShouldBe(testSteps.Last().StepPlacement);
-        result.TestSteps.Last().Instructions.ShouldBe(testSteps.Last().Instructions);
+        result.Value.ShouldNotBeNull();
+        result.IsValid.ShouldBeTrue();
+        result.Value.TestSteps.Count.ShouldBe(testSteps.Count);
+        result.Value.TestSteps.First().StepPlacement.ShouldBe(testSteps.First().StepPlacement);
+        result.Value.TestSteps.First().Instructions.ShouldBe(testSteps.First().Instructions);
+        result.Value.TestSteps.Last().StepPlacement.ShouldBe(testSteps.Last().StepPlacement);
+        result.Value.TestSteps.Last().Instructions.ShouldBe(testSteps.Last().Instructions);
     }
 
     [Test]
-    public void SetDescription_WhenInvoked_ShouldSetDescriptionAppropriately()
+    public void SetDescription_ValidateInvariants_WhenInvoked_ShouldSucceed_And_SetDescriptionAppropriately()
     {
         //Arrange:
         var description = "New description for test";
 
         //Act:
-        var result = _sut.SetDescription(description).Build();
+        var result = _sut.SetDescription(description).ValidateInvariants();
 
         //Assert:
-        result.Description.ShouldBe(description);
+        result.Value.ShouldNotBeNull();
+        result.IsValid.ShouldBeTrue();
+        result.Value.Description.ShouldBe(description);
     }
 
     [Test]
-    public void SetDescription_WhenNullValue_ShouldLeaveAsPreviouslySetValue()
+    public void SetDescription_ValidateINvariants_WhenNullValue_ShouldSucceed_And_LeaveAsPreviouslySetValue()
     {
         //Arrange:
         var originaltest = GetBasicSingleTestInstance();
         var currentDescription = originaltest.Description;
 
         //Act:
-        var result = _sut.SetDescription(null).Build();
+        var result = _sut.SetDescription(null).ValidateInvariants();
 
         //Assert:
-        result.Description.ShouldNotBeNull();
-        result.Description.ShouldBe(currentDescription);
+        result.Value.ShouldNotBeNull();
+        result.IsValid.ShouldBeTrue();
+        result.Value.Description.ShouldNotBeNull();
+        result.Value.Description.ShouldBe(currentDescription);
     }
 
     [Test]
-    public void SetOwningDepartment_WhenInvoked_ShouldSetOwningDepartmentAppropriately()
+    public void SetOwningDepartment_ValidateINvariants_WhenInvoked_ShouldSucceed_And_SetOwningDepartmentAppropriately()
     {
         //Arrange:
         var department = "Accounting";
 
         //Act:
-        var result = _sut.SetOwningDepartment(department).Build();
+        var result = _sut.SetOwningDepartment(department).ValidateInvariants();
 
         //Assert:
-        result.OwningDepartment.ShouldBe(Department.Accounting);
+        result.Value.ShouldNotBeNull();
+        result.IsValid.ShouldBeTrue();
+        result.Value.OwningDepartment.ShouldBe(Department.Accounting);
     }
 
     [Test]
-    public void SetOwningDepartment_WhenInvalidDepartment_ShouldThrowException()
+    public void SetOwningDepartment_ValidateInvariants_WhenInvalidDepartment_ShouldFail()
     {
         //Arrange:
         var department = "Invalid dept";
 
-        //Act & Assert:
-        Should.Throw<TeczterValidationException>(() => _sut.SetOwningDepartment(department));
+        //Act:
+        var result = _sut.SetOwningDepartment(department).ValidateInvariants();
+
+        //Assert:
+        result.Value.ShouldBeNull();
+        result.IsValid.ShouldBeFalse();
+        result.ErrorMessages.ShouldNotBeEmpty();
     }
 
     [Test]
-    public void SetOwningDepartment_WhenNullValue_ShouldLeaveAsPreviouslySetValue()
+    public void SetOwningDepartment_InvalidateINvariants_WhenNullValue_ShouldSucceed_And_LeaveAsPreviouslySetValue()
     {
         //Arrange:
         var originalTest = GetBasicSingleTestInstance();
@@ -166,24 +189,28 @@ public class TestComposerTests
         var result = _sut.SetOwningDepartment(null).Build();
 
         //Assert:
-        result.OwningDepartment.ShouldBe(currentDepartment);
+        result.Value.ShouldNotBeNull();
+        result.IsValid.ShouldBeTrue();
+        result.Value.OwningDepartment.ShouldBe(currentDepartment);
     }
 
     [Test]
-    public void SetTitle_WhenInvoked_ShouldSetTitleAppropriately()
+    public void SetTitle_ValidateInvariants_WhenInvoked_ShouldSucceed_And_SetTitleAppropriately()
     {
         //Arrange:
         var title = "New Title";
 
         //Act:
-        var result = _sut.SetTitle(title).Build();
+        var result = _sut.SetTitle(title).ValidateInvariants();
 
         //Assert:
-        result.Title.ShouldBe(title);
+        result.Value.ShouldNotBeNull();
+        result.IsValid.ShouldBeTrue();
+        result.Value.Title.ShouldBe(title);
     }
 
     [Test]
-    public void SetTitle_WhenNullValue_ShouldLeaveAsPreviouslySetValue()
+    public void SetTitle_ValidateInvariants_WhenNullValue_ShouldSucceed_LeaveAsPreviouslySetValue()
     {
         //Arrange:
         var originalTest = GetBasicSingleTestInstance();
@@ -193,8 +220,10 @@ public class TestComposerTests
         var result = _sut.SetTitle(null).Build();
 
         //Assert:
-        result.Title.ShouldNotBeNull();
-        result.Title.ShouldBe(currentTitle);
+        result.Value.ShouldNotBeNull();
+        result.IsValid.ShouldBeTrue();
+        result.Value.Title.ShouldNotBeNull();
+        result.Value.Title.ShouldBe(currentTitle);
     }
 
     private static TestEntity GetBasicSingleTestInstance()

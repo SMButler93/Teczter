@@ -5,6 +5,6 @@ namespace Teczter.Services.AdapterInterfaces;
 public interface ITestAdapter
 {
     Task AddNewTest(TestEntity test);
-    IQueryable<TestEntity> GetBasicTestSearchBaseQuery();
+    IQueryable<TestEntity> GetTestSearchBaseQuery();
     Task<TestEntity?> GetTestById(int id);
 }

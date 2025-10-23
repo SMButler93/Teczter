@@ -25,6 +25,7 @@ public class ExecutionService : IExecutionService
     {
         if (request.HasPassed)
         {
+            //Must pass in userId when setup.
             execution.Pass(default);
         } else
         {
