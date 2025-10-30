@@ -15,10 +15,8 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public Department OwningDepartment { get; set; }
+    public List<string> Urls { get; set; } = [];
     public byte[] RowVersion { get; set; } = [];
-    public IReadOnlyList<string> Urls => _urls.AsReadOnly();
-
-    private List<string> _urls = [];
 
     public virtual List<TestStepEntity> TestSteps { get; set; } = [];
 
@@ -27,6 +25,7 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
         OrderTestSteps();
         TestSteps.Insert(step.StepPlacement - 1, step);
         SetCorrectStepPlacementValuesOnAdd();
+        OrderTestSteps();
         RevisedOn = DateTime.Now;
     }
 
@@ -86,7 +85,7 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
             return TeczterValidationResult<TestEntity>.Fail($"{url} already exists as a link for this test.");
         }
 
-        _urls.Add(url);
+        Urls.Add(url);
         RevisedOn = DateTime.Now;
 
         return TeczterValidationResult<TestEntity>.Succeed(this);
@@ -99,7 +98,7 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
             return TeczterValidationResult<TestEntity>.Fail($"{url} does not belong to this test");
         }
 
-        _urls.Remove(url);
+        Urls.Remove(url);
         RevisedOn = DateTime.Now;
 
         return TeczterValidationResult<TestEntity>.Succeed(this);

@@ -3,7 +3,7 @@ using Teczter.Domain.Entities;
 using Teczter.Services.RequestDtos.TestSteps;
 using Teczter.Services.ServiceInterfaces;
 
-namespace Teczter.Services.Composers;
+namespace Teczter.Services.ComposersAndBuilders;
 
 public class TestComposer() : ITestComposer
 {
@@ -28,8 +28,6 @@ public class TestComposer() : ITestComposer
         {
             AddStep(step);
         }
-
-        _test.OrderTestSteps();
 
         return this;
     }
@@ -67,6 +65,12 @@ public class TestComposer() : ITestComposer
     public ITestComposer SetDescription(string? description)
     {
         _test.Description = description ?? _test.Description;
+
+        if (_test.Description is null)
+        {
+            Errors.Add("A test must have a description.");
+        }
+
         return this;
     }
 
@@ -81,7 +85,7 @@ public class TestComposer() : ITestComposer
 
         if (!result.IsValid)
         {
-            Errors.AddRange(result.ErrorMessages);
+            Errors.AddRange(result.ErrorMessages!);
         }
 
         return this;
@@ -90,6 +94,12 @@ public class TestComposer() : ITestComposer
     public ITestComposer SetTitle(string? title)
     {
         _test.Title = title ?? _test.Title;
+
+        if (string.IsNullOrWhiteSpace(_test.Title))
+        {
+            Errors.Add("A test must have a title.");
+        }
+
         return this;
     }
 
@@ -111,13 +121,16 @@ public class TestComposer() : ITestComposer
         return TeczterValidationResult<TestEntity>.Succeed(_test);
     }
 
-    public TeczterValidationResult<TestEntity> ValidateInvariants() => Build();
-
     public ITestComposer AddLinkUrls(IEnumerable<string> links)
     {
         foreach (var link in links)
         {
-            _test.AddLinkUrl(link);
+            var result = _test.AddLinkUrl(link);
+
+            if (!result.IsValid)
+            {
+                Errors.AddRange(result.ErrorMessages!);
+            }
         }
 
         return this;

@@ -11,7 +11,7 @@ public class UnitOfWork : IUnitOfWork
         _dbContext = dbContext;
     }
 
-    public async Task CommitChanges()
+    public async Task SaveChanges()
     {
         await _dbContext.SaveChangesAsync();
     }

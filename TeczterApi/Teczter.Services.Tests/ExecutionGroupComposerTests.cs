@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using Shouldly;
 using Teczter.Domain.Entities;
-using Teczter.Services.Composers;
+using Teczter.Services.ComposersAndBuilders;
 using Teczter.Services.RequestDtos.Executions;
 
 namespace Teczter.Services.Tests;
@@ -27,7 +27,8 @@ public class ExecutionGroupComposerTests
         var result = _sut.AddExecution(execution).Build();
 
         //Assert:
-        result.Executions.Single().ShouldBe(execution);
+        result.Value.ShouldNotBeNull();
+        result.Value.Executions.Single().ShouldBe(execution);
     }
 
     [Test]
@@ -40,7 +41,8 @@ public class ExecutionGroupComposerTests
         var result = _sut.AddExecutions(executions).Build();
 
         //Assert:
-        result.Executions.ShouldBe(executions);
+        result.Value.ShouldNotBeNull();
+        result.Value.Executions.ShouldBe(executions);
     }
 
     [Test]
@@ -53,7 +55,8 @@ public class ExecutionGroupComposerTests
         var result = _sut.AddExecution(execution).Build();
 
         //Assert:
-        result.Executions.Single().TestId.ShouldBe(execution.TestId);
+        result.Value.ShouldNotBeNull();
+        result.Value.Executions.Single().TestId.ShouldBe(execution.TestId);
     }
 
     [Test]
@@ -66,9 +69,10 @@ public class ExecutionGroupComposerTests
         var result = _sut.AddExecutions(executions).Build();
 
         //Assert:
-        result.Executions.Count.ShouldBe(executions.Count);
-        result.Executions.First().TestId.ShouldBe(executions.First().TestId);
-        result.Executions.Last().TestId.ShouldBe(executions.Last().TestId);
+        result.Value.ShouldNotBeNull();
+        result.Value.Executions.Count.ShouldBe(executions.Count);
+        result.Value.Executions.First().TestId.ShouldBe(executions.First().TestId);
+        result.Value.Executions.Last().TestId.ShouldBe(executions.Last().TestId);
     }
 
     [Test]
@@ -78,8 +82,9 @@ public class ExecutionGroupComposerTests
         var result = _sut.SetExecutionGroupNotes(null).Build();
 
         //Assert:
-        result.ExecutionGroupNotes.ShouldNotBeNull();
-        result.ExecutionGroupNotes.Count.ShouldBe(0);
+        result.Value.ShouldNotBeNull();
+        result.Value.ExecutionGroupNotes.ShouldNotBeNull();
+        result.Value.ExecutionGroupNotes.Count.ShouldBe(0);
     }
 
     [Test]
@@ -92,7 +97,8 @@ public class ExecutionGroupComposerTests
         var result = _sut.SetExecutionGroupNotes(notes).Build();
 
         //Assert:
-        result.ExecutionGroupNotes.ShouldBe(notes);
+        result.Value.ShouldNotBeNull();
+        result.Value.ExecutionGroupNotes.ShouldBe(notes);
     }
 
     [Test]
@@ -105,7 +111,8 @@ public class ExecutionGroupComposerTests
         var result = _sut.SetName(name).Build();
 
         //Assert:
-        result.ExecutionGroupName.ShouldBe(name);
+        result.Value.ShouldNotBeNull();
+        result.Value.ExecutionGroupName.ShouldBe(name);
     }
 
     [Test]
@@ -118,7 +125,8 @@ public class ExecutionGroupComposerTests
         var result = _sut.SetSoftwareVersionNumber(versionNumber).Build();
 
         //Assert:
-        result.SoftwareVersionNumber.ShouldBe(versionNumber);
+        result.Value.ShouldNotBeNull();
+        result.Value.SoftwareVersionNumber.ShouldBe(versionNumber);
     }
 
     private static ExecutionGroupEntity GetBasicSingleExecutionGroupInstance()

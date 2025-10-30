@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Teczter.Domain;
 using Teczter.Domain.Entities;
+using Teczter.Domain.Enums;
 using Teczter.Persistence;
 using Teczter.Services.AdapterInterfaces;
 using Teczter.Services.RequestDtos.Tests;
@@ -22,7 +23,7 @@ public class TestService(ITestAdapter _testAdapter,
     {
         var testResult = _composer.UsingContext(test)
             .AddLinkUrl(url)
-            .ValidateInvariants();
+            .Build();
 
         if (testResult.IsValid)
         {
@@ -30,7 +31,7 @@ public class TestService(ITestAdapter _testAdapter,
 
             if (result.IsValid)
             {
-                await _uow.CommitChanges();
+                await _uow.SaveChanges();
             }
 
             return result;
@@ -43,7 +44,7 @@ public class TestService(ITestAdapter _testAdapter,
     {
         var testResult = _composer.UsingContext(test)
             .AddStep(testStep)
-            .ValidateInvariants();
+            .Build();
 
         if (testResult.IsValid)
         {
@@ -51,7 +52,7 @@ public class TestService(ITestAdapter _testAdapter,
 
             if (result.IsValid)
             {
-                await _uow.CommitChanges();
+                await _uow.SaveChanges();
             }
 
             return result;
@@ -73,13 +74,12 @@ public class TestService(ITestAdapter _testAdapter,
 
         if (testResult.IsValid)
         {
-            await _testAdapter.AddNewTest(testResult.Value!);
-
             var result = await ValidateTestState(testResult.Value!);
 
             if (result.IsValid)
             {
-                await _uow.CommitChanges();
+                await _testAdapter.AddNewTest(testResult.Value!);
+                await _uow.SaveChanges();
             }
 
             return result;
@@ -91,14 +91,16 @@ public class TestService(ITestAdapter _testAdapter,
     public async Task DeleteTest(TestEntity test)
     {
         test.Delete();
-        var executionsToDelete = await _executionAdapter.GetExecutionsForTest(test.Id);
+
+        var executions = await _executionAdapter.GetExecutionsForTest(test.Id);
+        var executionsToDelete = executions.Where(x => x.ExecutionState is ExecutionStateType.Untested);
 
         foreach (var execution in executionsToDelete)
         {
             execution.Delete();
         }
 
-        await _uow.CommitChanges();
+        await _uow.SaveChanges();
     }
 
     public async Task<TestEntity?> GetTestById(int id)
@@ -136,7 +138,7 @@ public class TestService(ITestAdapter _testAdapter,
 
             if (result.IsValid)
             {
-                await _uow.CommitChanges();
+                await _uow.SaveChanges();
             }
 
             return result; 
@@ -155,7 +157,7 @@ public class TestService(ITestAdapter _testAdapter,
 
             if (result.IsValid)
             {
-                await _uow.CommitChanges();
+                await _uow.SaveChanges();
             }
 
             return result; 
@@ -170,7 +172,7 @@ public class TestService(ITestAdapter _testAdapter,
             .SetTitle(testUpdates.Title)
             .SetDescription(testUpdates.Description)
             .SetOwningDepartment(testUpdates.OwningDepartment)
-            .ValidateInvariants();
+            .Build();
 
         if (testResult.IsValid)
         {
@@ -178,13 +180,13 @@ public class TestService(ITestAdapter _testAdapter,
 
             if (result.IsValid)
             {
-                await _uow.CommitChanges();
+                await _uow.SaveChanges();
             }
 
             return result; 
         }
 
-        return testResult; ;
+        return testResult;
     }
 
     public async Task<TeczterValidationResult<TestEntity>> UpdateTestStep(TestEntity test, int testStepId, UpdateTestStepRequestDto request)
@@ -199,7 +201,7 @@ public class TestService(ITestAdapter _testAdapter,
 
         if (result.IsValid)
         {
-            await _uow.CommitChanges();
+            await _uow.SaveChanges();
         }
 
         return result;

@@ -4,7 +4,7 @@ using Shouldly;
 using Teczter.Domain.Entities;
 using Teczter.Domain.Enums;
 using Teczter.Domain.Exceptions;
-using Teczter.Services.Composers;
+using Teczter.Services.ComposersAndBuilders;
 using Teczter.Services.RequestDtos.TestSteps;
 
 namespace Teczter.Services.Tests;
@@ -22,13 +22,13 @@ public class TestComposerTests
     }
 
     [Test]
-    public void AddLinkUrl_ValidateInvariants_WhenValidAndAdded_ShouldSucceed_And_ExistInTheInstanceProvided()
+    public void AddLinkUrl_Build_WhenValidAndAdded_ShouldSucceed_And_ExistInTheInstanceProvided()
     {
         //Arrange:
         var linkUrl = "www.ValidUrl.com";
 
         //Act:
-        var result = _sut.AddLinkUrl(linkUrl).ValidateInvariants();
+        var result = _sut.AddLinkUrl(linkUrl).Build();
 
         //Assert:
         result.Value.ShouldNotBeNull();
@@ -43,7 +43,7 @@ public class TestComposerTests
         List<string> linkUrl = ["www.ValidUrl.com", "www.ValidUrl2.com"];
 
         //Act:
-        var result = _sut.AddLinkUrls(linkUrl).ValidateInvariants();
+        var result = _sut.AddLinkUrls(linkUrl).Build();
 
         //Assert:
         result.Value.ShouldNotBeNull();
@@ -52,13 +52,13 @@ public class TestComposerTests
     }
 
     [Test]
-    public void AddStep_ValidateInvariants_WhenAdded_ShouldSucceeed_And_ExistInTheInstanceProvided()
+    public void AddStep_Build_WhenAdded_ShouldSucceeed_And_ExistInTheInstanceProvided()
     {
         //Arrange:
         var testStep = GetSpecifiedNumberOfBasicTestSteps(1).Single();
 
         //Act:
-        var result = _sut.AddStep(testStep).ValidateInvariants();
+        var result = _sut.AddStep(testStep).Build();
 
         //Assert:
         result.Value.ShouldNotBeNull();
@@ -67,13 +67,13 @@ public class TestComposerTests
     }
 
     [Test]
-    public void AddSteps_ValidateInvariants__WhenMultipleStepsAdded_ShouldSucceed_And_AllExistInTheInstanceProvided()
+    public void AddSteps_Build__WhenMultipleStepsAdded_ShouldSucceed_And_AllExistInTheInstanceProvided()
     {
         //Arrange:
         var testSteps = GetSpecifiedNumberOfBasicTestSteps(4);
 
         //Act:
-        var result = _sut.AddSteps(testSteps).ValidateInvariants();
+        var result = _sut.AddSteps(testSteps).Build();
 
         //Assert:
         result.Value.ShouldNotBeNull();
@@ -88,7 +88,7 @@ public class TestComposerTests
         var testStep = GetSpecifiedNumberOfBasicCreateTestStepRequestDtos(1).Single();
 
         //Act:
-        var result = _sut.AddStep(testStep).ValidateInvariants();
+        var result = _sut.AddStep(testStep).Build();
 
         //Assert:
         result.Value.ShouldNotBeNull();
@@ -104,7 +104,7 @@ public class TestComposerTests
         var testSteps = GetSpecifiedNumberOfBasicCreateTestStepRequestDtos(2);
 
         //Act:
-        var result = _sut.AddSteps(testSteps).ValidateInvariants();
+        var result = _sut.AddSteps(testSteps).Build();
 
         //Assert:
         result.Value.ShouldNotBeNull();
@@ -117,13 +117,13 @@ public class TestComposerTests
     }
 
     [Test]
-    public void SetDescription_ValidateInvariants_WhenInvoked_ShouldSucceed_And_SetDescriptionAppropriately()
+    public void SetDescription_Build_WhenInvoked_ShouldSucceed_And_SetDescriptionAppropriately()
     {
         //Arrange:
         var description = "New description for test";
 
         //Act:
-        var result = _sut.SetDescription(description).ValidateInvariants();
+        var result = _sut.SetDescription(description).Build();
 
         //Assert:
         result.Value.ShouldNotBeNull();
@@ -139,7 +139,7 @@ public class TestComposerTests
         var currentDescription = originaltest.Description;
 
         //Act:
-        var result = _sut.SetDescription(null).ValidateInvariants();
+        var result = _sut.SetDescription(null).Build();
 
         //Assert:
         result.Value.ShouldNotBeNull();
@@ -155,7 +155,7 @@ public class TestComposerTests
         var department = "Accounting";
 
         //Act:
-        var result = _sut.SetOwningDepartment(department).ValidateInvariants();
+        var result = _sut.SetOwningDepartment(department).Build();
 
         //Assert:
         result.Value.ShouldNotBeNull();
@@ -164,13 +164,13 @@ public class TestComposerTests
     }
 
     [Test]
-    public void SetOwningDepartment_ValidateInvariants_WhenInvalidDepartment_ShouldFail()
+    public void SetOwningDepartment_Build_WhenInvalidDepartment_ShouldFail()
     {
         //Arrange:
         var department = "Invalid dept";
 
         //Act:
-        var result = _sut.SetOwningDepartment(department).ValidateInvariants();
+        var result = _sut.SetOwningDepartment(department).Build();
 
         //Assert:
         result.Value.ShouldBeNull();
@@ -195,13 +195,13 @@ public class TestComposerTests
     }
 
     [Test]
-    public void SetTitle_ValidateInvariants_WhenInvoked_ShouldSucceed_And_SetTitleAppropriately()
+    public void SetTitle_Build_WhenInvoked_ShouldSucceed_And_SetTitleAppropriately()
     {
         //Arrange:
         var title = "New Title";
 
         //Act:
-        var result = _sut.SetTitle(title).ValidateInvariants();
+        var result = _sut.SetTitle(title).Build();
 
         //Assert:
         result.Value.ShouldNotBeNull();
@@ -210,7 +210,7 @@ public class TestComposerTests
     }
 
     [Test]
-    public void SetTitle_ValidateInvariants_WhenNullValue_ShouldSucceed_LeaveAsPreviouslySetValue()
+    public void SetTitle_Build_WhenNullValue_ShouldSucceed_LeaveAsPreviouslySetValue()
     {
         //Arrange:
         var originalTest = GetBasicSingleTestInstance();

@@ -1,4 +1,5 @@
-﻿using Teczter.Domain.Entities;
+﻿using Teczter.Domain;
+using Teczter.Domain.Entities;
 using Teczter.Services.RequestDtos.Executions;
 
 namespace Teczter.Services.ServiceInterfaces;
@@ -13,5 +14,5 @@ public interface IExecutionGroupComposer
     IExecutionGroupComposer AddExecution(CreateExecutionRequestDto execution);
     IExecutionGroupComposer AddExecutions(IEnumerable<ExecutionEntity> executions);
     IExecutionGroupComposer AddExecution(ExecutionEntity execution);
-    ExecutionGroupEntity Build();
+    TeczterValidationResult<ExecutionGroupEntity> Build();
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Teczter.Domain.Exceptions;
 using Teczter.Services.RequestDtos.ExecutionGroups;
 using Teczter.Services.RequestDtos.Executions;
 using Teczter.Services.ServiceInterfaces;
@@ -9,11 +8,8 @@ namespace Teczter.WebApi.Controllers;
 
 [Route("Teczter/[controller]")]
 [ApiController]
-public class ExecutionGroupsController(IExecutionGroupService executionGroupService, IExecutionService executionService) : ControllerBase
+public class ExecutionGroupsController(IExecutionGroupService _executionGroupService, IExecutionService _executionService) : ControllerBase
 {
-    private readonly IExecutionGroupService _executionGroupService = executionGroupService;
-    private readonly IExecutionService _exececutionService = executionService;
-
     [HttpGet]
     public async Task<ActionResult<ExecutionGroupDto>> GetExecutionGroupSearchResults([FromQuery] string? executionGroupName, [FromQuery] string? releaseVersion, [FromQuery] int pageNumber = 1)
     {
@@ -52,19 +48,17 @@ public class ExecutionGroupsController(IExecutionGroupService executionGroupServ
             return BadRequest("Cannot delete an execution group that has been closed.");
         }
 
-        try
-        {
-            await _executionGroupService.DeleteExecutionGroup(executionGroup);
+        var result = await _executionGroupService.DeleteExecutionGroup(executionGroup);
 
-            return NoContent();
-        }
-        catch (TeczterValidationException ex)
+        if (!result.IsValid)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(result.ErrorMessages);
         }
+
+        return NoContent();
     }
 
-    [HttpPost("{id:int}/clones")]
+    [HttpPost("{id:int}/clone")]
     public async Task<ActionResult<ExecutionGroupDto>> CloneExecutionGroup(int id, [FromQuery] string newExecutionGroupname, [FromQuery] string? softwareVersionNumber)
     {
         var executionGroupToClone = await _executionGroupService.GetExecutionGroupById(id);
@@ -143,16 +137,14 @@ public class ExecutionGroupsController(IExecutionGroupService executionGroupServ
             return BadRequest($"Cannot delete executions from an execution group that has been closed.");
         }
 
-        try
-        {
-            await _executionGroupService.DeleteExecution(executionGroup, executionId);
+        var result = await _executionGroupService.DeleteExecution(executionGroup, executionId);
 
-            return Ok(new ExecutionGroupDto(executionGroup));
-        }
-        catch (TeczterValidationException ex)
+        if (!result.IsValid)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(result.ErrorMessages);
         }
+
+        return Ok(new ExecutionGroupDto(executionGroup));
     }
 
     [HttpGet("{groupId:int}/Executions/{executionId:int}")]
@@ -175,37 +167,30 @@ public class ExecutionGroupsController(IExecutionGroupService executionGroupServ
         return Ok(new ExecutionDto(execution));
     }
 
-    [HttpPatch("{groupId: int})/Executions/{executionId:int}")]
+    [HttpPatch("{groupId:int})/Executions/{executionId:int}")]
     public async Task<ActionResult<ExecutionDto>> CompleteExecution(int groupId, int executionId, [FromBody] CompleteExecutionRequestDto request)
     {
-        try
+        var executionGroup = await _executionGroupService.GetExecutionGroupById(groupId);
+
+        if (executionGroup is null)
         {
-            var executionGroup = await _executionGroupService.GetExecutionGroupById(groupId);
-
-            if (executionGroup is null)
-            {
-                return BadRequest($"Execution group {groupId} does not exist.");
-            }
-
-            var execution = executionGroup.Executions.SingleOrDefault(x => x.Id == executionId);
-
-            if (execution is null)
-            {
-                return BadRequest($"Execution {executionId} does not exist in execution group {groupId}");
-            }
-
-            var result = await _exececutionService.CompleteExecution(execution, request);
-
-            if (!result.IsValid)
-            {
-                return BadRequest(result.ErrorMessages);
-            }
-
-            return Ok(new ExecutionDto(result.Value!));
+            return BadRequest($"Execution group {groupId} does not exist.");
         }
-        catch (TeczterValidationException ex)
+
+        var execution = executionGroup.Executions.SingleOrDefault(x => x.Id == executionId);
+
+        if (execution is null)
+        { 
+            return BadRequest($"Execution {executionId} does not exist in execution group {groupId}");
+        }
+
+        var result = await _executionService.CompleteExecution(execution, request);
+
+        if (!result.IsValid)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(result.ErrorMessages);
         }
+
+        return Ok(new ExecutionDto(result.Value!));
     }
 }

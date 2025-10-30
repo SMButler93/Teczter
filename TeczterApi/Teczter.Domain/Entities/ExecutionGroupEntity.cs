@@ -25,12 +25,11 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 
     public void AddExecution(ExecutionEntity execution) => Executions.Add(execution);
 
-    public void Delete()
+    public TeczterValidationResult<ExecutionGroupEntity> Delete()
     {
         if (IsClosed)
         {
-            throw new TeczterValidationException("Cannot delete an execution group that " +
-                "has been closed.");
+            return TeczterValidationResult<ExecutionGroupEntity>.Fail("Cannot delete an execution group that has been closed.");
         }
 
         foreach(var execution in Executions)
@@ -41,14 +40,22 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         IsDeleted = true;
         RevisedOn = DateTime.Now;
         //RevisedBy?
+
+        return TeczterValidationResult<ExecutionGroupEntity>.Succeed(this);
     }
 
-    public void DeleteExecution(ExecutionEntity execution)
+    public TeczterValidationResult<ExecutionEntity> DeleteExecution(ExecutionEntity execution)
     {
-        execution.Delete();
-        Executions.Remove(execution);
-        RevisedOn = DateTime.Now;
-        //RevisedBy?
+        var result = execution.Delete();
+
+        if (result.IsValid)
+        {
+            Executions.Remove(execution);
+            RevisedOn = DateTime.Now;
+            //RevisedBy?
+        }
+
+        return result;
     }
 
     public void CloseTestRound() => ClosedDate = DateTime.Now; //RevisedBy?

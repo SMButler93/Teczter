@@ -25,7 +25,7 @@ public class ExecutionService : IExecutionService
     {
         if (request.HasPassed)
         {
-            //Must pass in userId when setup.
+            //Must provide a userId when setup.
             execution.Pass(default);
         } else
         {
@@ -34,7 +34,10 @@ public class ExecutionService : IExecutionService
 
         var result = await ValidateExecutionState(execution);
 
-        await EvaluateValidationResultAndPersist(result);
+        if (result.IsValid)
+        {
+            await _uow.SaveChanges();
+        }
 
         return result;
     }
@@ -49,16 +52,5 @@ public class ExecutionService : IExecutionService
         }
 
         return TeczterValidationResult<ExecutionEntity>.Succeed(execution);
-    }
-
-    private async Task EvaluateValidationResultAndPersist(TeczterValidationResult<ExecutionEntity> result)
-    {
-        if (!result.IsValid)
-        {
-            _uow.Rollback();
-            return;
-        }
-
-        await _uow.CommitChanges();
     }
 }

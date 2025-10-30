@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Teczter.Domain.Entities.interfaces;
 using Teczter.Domain.Exceptions;
 
@@ -19,28 +18,32 @@ public class TestStepEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
     public List<string> Urls { get; set; } = [];
     public byte[] RowVersion { get; set; } = [];
 
-    public void AddLinkUrl(string url)
+    public TeczterValidationResult<TestStepEntity> AddLinkUrl(string url)
     {
         if (!IsValidUrl(url))
         {
-            throw new TeczterValidationException($"{url} is an invalid URL.");
+            return TeczterValidationResult<TestStepEntity>.Fail($"{url} is an invalid URL.");
         }
 
         Urls.Add(url);
         RevisedOn = DateTime.Now;
         //RevisedBy
+
+        return TeczterValidationResult<TestStepEntity>.Succeed(this);
     }
 
-    public void RemoveLinkUrl(string url)
+    public TeczterValidationResult<TestStepEntity> RemoveLinkUrl(string url)
     {
         if (!Urls.Contains(url, StringComparer.OrdinalIgnoreCase))
         {
-            throw new TeczterValidationException("Cannot remove a link that does not belong to this test step");
+            return TeczterValidationResult<TestStepEntity>.Fail("Cannot remove a link that does not belong to this test step");
         }
 
         Urls.Remove(url);
         RevisedOn = DateTime.Now;
         //RevisedById?
+
+        return TeczterValidationResult<TestStepEntity>.Succeed(this);
     }
 
     public void Delete()

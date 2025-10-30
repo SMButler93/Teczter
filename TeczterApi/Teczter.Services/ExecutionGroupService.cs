@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Teczter.Domain;
 using Teczter.Domain.Entities;
-using Teczter.Domain.Exceptions;
 using Teczter.Persistence;
 using Teczter.Services.AdapterInterfaces;
 using Teczter.Services.RequestDtos.ExecutionGroups;
@@ -11,26 +10,13 @@ using Teczter.Services.ServiceInterfaces;
 
 namespace Teczter.Services;
 
-public class ExecutionGroupService : IExecutionGroupService
+public class ExecutionGroupService(
+        IExecutionGroupAdapter _executionGroupAdapter,
+        IExecutionGroupComposer _composer,
+        IValidator<ExecutionGroupEntity> _validator,
+        IUnitOfWork _uow) : IExecutionGroupService
 {
-    private readonly IExecutionGroupAdapter _executionGroupAdapter;
-    private readonly IExecutionGroupComposer _composer;
-    private readonly IValidator<ExecutionGroupEntity> _validator;
-    private readonly IUnitOfWork _uow;
-
     private const int pageSize = 15;
-
-    public ExecutionGroupService(
-        IExecutionGroupAdapter executionGroupAdapter, 
-        IExecutionGroupComposer composer,
-        IValidator<ExecutionGroupEntity> validator,
-        IUnitOfWork uow)
-    {
-        _executionGroupAdapter = executionGroupAdapter;
-        _composer = composer;
-        _validator = validator;
-        _uow = uow;
-    }
 
     public async Task<TeczterValidationResult<ExecutionGroupEntity>> CloneExecutionGroup(
         ExecutionGroupEntity executionGroupToClone, 
@@ -43,44 +29,71 @@ public class ExecutionGroupService : IExecutionGroupService
 
         var result = await ValidateExecutionGroup(newExecutionGroup);
 
-        await EvaluateValidationResultAndPersist(result);
+        if (result.IsValid)
+        {
+            await _uow.SaveChanges();
+        }
+
         return result;
     }
 
     public async Task<TeczterValidationResult<ExecutionGroupEntity>> CreateExecution(ExecutionGroupEntity executionGroup, CreateExecutionRequestDto request)
     {
-        var group = _composer
+        var groupResult = _composer
             .UsingContext(executionGroup)
             .AddExecution(request)
             .Build();
 
-        var result = await ValidateExecutionGroup(group);
+        if (groupResult.IsValid)
+        {
+            var result = await ValidateExecutionGroup(groupResult.Value!);
 
-        await EvaluateValidationResultAndPersist(result);
-        return result;
+            if (result.IsValid)
+            {
+                await _uow.SaveChanges();
+            }
+
+            return result;
+        }
+
+        return groupResult;
     }
 
     public async Task<TeczterValidationResult<ExecutionGroupEntity>> CreateNewExecutionGroup(CreateExecutionGroupRequestDto request)
     {
-        var group = _composer
+        var groupResult = _composer
             .SetName(request.ExecutionGroupName)
             .SetSoftwareVersionNumber(request.SoftwareVersionNumber)
             .SetExecutionGroupNotes(request.ExecutionGroupNotes)
             .AddExecutions(request.Executions)
             .Build();
 
-        await _executionGroupAdapter.AddNewExecutionGroup(group);
+        if (groupResult.IsValid)
+        {
+            var result = await ValidateExecutionGroup(groupResult.Value!);
 
-        var result = await ValidateExecutionGroup(group);
+            if (result.IsValid)
+            {
+                await _executionGroupAdapter.AddNewExecutionGroup(groupResult.Value!);
+                await _uow.SaveChanges();
+            }
 
-        await EvaluateValidationResultAndPersist(result);
-        return result;
+            return result;
+        }
+
+        return groupResult;
     }
 
-    public async Task DeleteExecutionGroup(ExecutionGroupEntity executionGroup)
+    public async Task<TeczterValidationResult<ExecutionGroupEntity>> DeleteExecutionGroup(ExecutionGroupEntity executionGroup)
     {
-        executionGroup.Delete();
-        await _uow.CommitChanges();
+        var result = executionGroup.Delete();
+
+        if (result.IsValid)
+        {
+            await _uow.SaveChanges();
+        }
+
+        return result;
     }
 
     public Task<ExecutionGroupEntity?> GetExecutionGroupById(int id)
@@ -121,25 +134,17 @@ public class ExecutionGroupService : IExecutionGroupService
         return TeczterValidationResult<ExecutionGroupEntity>.Succeed(executionGroup);
     }
 
-    private async Task EvaluateValidationResultAndPersist(TeczterValidationResult<ExecutionGroupEntity> result)
+    public async Task<TeczterValidationResult<ExecutionEntity>> DeleteExecution(ExecutionGroupEntity executionGroup, int executionId)
     {
-        if (!result.IsValid)
+        var execution = executionGroup.Executions.Single(x => x.Id == executionId && !x.IsDeleted);
+
+        var result = executionGroup.DeleteExecution(execution);
+
+        if (result.IsValid)
         {
-            _uow.Rollback();
-            return;
+            await _uow.SaveChanges(); 
         }
 
-        await _uow.CommitChanges();
-    }
-
-    public async Task DeleteExecution(ExecutionGroupEntity executionGroup, int executionId)
-    {
-        var execution = executionGroup.Executions.SingleOrDefault(x => x.Id == executionId && !x.IsDeleted) ??
-            throw new TeczterValidationException("Cannot delete an execution that does not exist, has already been deleted, " +
-            "or does not belong to this execution group.");
-
-        executionGroup.DeleteExecution(execution);
-
-        await _uow.CommitChanges();
+        return result;
     }
 }

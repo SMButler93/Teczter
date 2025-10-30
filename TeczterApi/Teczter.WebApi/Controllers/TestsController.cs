@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Teczter.Domain.Exceptions;
+using Teczter.Services.ComposersAndBuilders;
 using Teczter.Services.RequestDtos.Tests;
 using Teczter.Services.RequestDtos.TestSteps;
 using Teczter.Services.ServiceInterfaces;
@@ -9,10 +9,8 @@ namespace Teczter.WebApi.Controllers;
 
 [Route("Teczter/[controller]")]
 [ApiController]
-public class TestsController(ITestService testService) : ControllerBase
+public class TestsController(ITestService _testService) : ControllerBase
 {
-    private readonly ITestService _testService = testService;
-
     [HttpGet]
     public async Task<ActionResult<List<TestDto>>> GetTestSearchResults([FromQuery] string? testName, [FromQuery] string? owningDepartment, [FromQuery] int pageNumber = 1)
     {
@@ -58,7 +56,9 @@ public class TestsController(ITestService testService) : ControllerBase
 
         if (!result.IsValid)
         {
-            return BadRequest(result.ErrorMessages);
+            var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
+
+            return BadRequest(message);
         }
 
         return Ok(new TestDto(result.Value!));
@@ -78,7 +78,9 @@ public class TestsController(ITestService testService) : ControllerBase
 
         if (!result.IsValid)
         {
-            return BadRequest(result.ErrorMessages);
+            var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
+
+            return BadRequest(message);
         }
 
         return Ok(new TestDto(test));
@@ -98,7 +100,9 @@ public class TestsController(ITestService testService) : ControllerBase
 
         if (!result.IsValid)
         {
-            return BadRequest(result.ErrorMessages);
+            var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
+
+            return BadRequest(message);
         }
 
         return Ok(new TestDto(test));
@@ -111,14 +115,16 @@ public class TestsController(ITestService testService) : ControllerBase
 
         if (test is null)
         {
-            return NotFound($"test {id} does not exist.");
+            return NotFound($"Test {id} does not exist.");
         }
 
         var result = await _testService.RemoveLinkUrl(test, url);
 
         if (!result.IsValid)
         {
-            return BadRequest(result.ErrorMessages);
+            var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
+
+            return BadRequest(message);
         }
 
         return Ok(new TestDto(test));
@@ -138,7 +144,9 @@ public class TestsController(ITestService testService) : ControllerBase
 
         if (!result.IsValid)
         {
-            return BadRequest(result.ErrorMessages);
+            var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
+
+            return BadRequest(message);
         }
 
         return Ok(new TestDto(test));
@@ -151,14 +159,16 @@ public class TestsController(ITestService testService) : ControllerBase
 
         if (test is null)
         {
-            return NotFound($"test {testId} does not exist.");
+            return NotFound($"Test {testId} does not exist.");
         }
 
         var result = await _testService.RemoveTestStep(test, testStepId);
 
         if (!result.IsValid)
         {
-            return BadRequest(result.ErrorMessages);
+            var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
+
+            return BadRequest(message);
         }
 
         return Ok(new TestDto(test));
@@ -171,14 +181,16 @@ public class TestsController(ITestService testService) : ControllerBase
 
         if (test is null)
         {
-            return NotFound($"test {testId} does not exist.");
+            return NotFound($"Test {testId} does not exist.");
         }
 
         var result = await _testService.UpdateTestStep(test, testStepId, request);
 
         if (!result.IsValid)
         {
-            return BadRequest(result.ErrorMessages);
+            var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
+
+            return BadRequest(message);
         }
 
         return Ok(new TestDto(test));
