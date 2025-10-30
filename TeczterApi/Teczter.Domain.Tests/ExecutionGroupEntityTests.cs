@@ -28,9 +28,10 @@ public class ExecutionGroupEntityTests
     public void DeleteExecutionGroup_WhenDeleted_ShouldDeleteEveryOwnedExecution()
     {
         //Act:
-        _sut.Delete();
+        var result = _sut.Delete();
 
         //Assert:
+        result.IsValid.ShouldBeTrue();
         _sut.IsDeleted.ShouldBeTrue();
         _sut.Executions.ShouldAllBe(x => x.IsDeleted);
     }

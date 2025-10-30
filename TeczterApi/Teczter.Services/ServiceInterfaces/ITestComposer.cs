@@ -17,5 +17,4 @@ public interface ITestComposer
     ITestComposer AddLinkUrls(IEnumerable<string> links);
     ITestComposer AddLinkUrl(string linkUrl);
     TeczterValidationResult<TestEntity> Build();
-    TeczterValidationResult<TestEntity> ValidateInvariants();
 }

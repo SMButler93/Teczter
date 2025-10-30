@@ -22,7 +22,7 @@ public class CompleteExecutionRequestValidator : AbstractValidator<CompleteExecu
             return request.FailedStepId.HasValue;
         }
 
-        return !request.FailedStepId.HasValue;
+        return true;
     }
 
     private bool HasFailureReasonWhenFailed(CompleteExecutionRequestDto request)
@@ -32,6 +32,6 @@ public class CompleteExecutionRequestValidator : AbstractValidator<CompleteExecu
             return !string.IsNullOrEmpty(request.FailureReason);
         }
 
-        return string.IsNullOrEmpty(request.FailureReason);
+        return true;
     }
 }

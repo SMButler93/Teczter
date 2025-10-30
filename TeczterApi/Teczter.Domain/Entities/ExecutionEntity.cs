@@ -63,17 +63,18 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         //RevisedBy?
     }
 
-    public void Delete()
+    public TeczterValidationResult<ExecutionEntity> Delete()
     {
         if (ExecutionGroup.IsClosed)
         {
-            throw new TeczterValidationException("Cannot delete an execution that is part " +
-                "of a completed execution group");
+            TeczterValidationResult<ExecutionEntity>.Fail("Cannot delete an execution that is part of a completed execution group.");
         }
 
         IsDeleted = true;
         RevisedOn = DateTime.Now;
         //RevisedBy?
+
+        return TeczterValidationResult<ExecutionEntity>.Succeed(this);
     }
 
     public ExecutionEntity CloneExecution()

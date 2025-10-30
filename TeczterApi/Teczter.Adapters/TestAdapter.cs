@@ -5,10 +5,8 @@ using Teczter.Services.AdapterInterfaces;
 
 namespace Teczter.Adapters;
 
-public class TestAdapter(TeczterDbContext dbContext) : ITestAdapter
+public class TestAdapter(TeczterDbContext _dbContext) : ITestAdapter
 {
-    private readonly TeczterDbContext _dbContext = dbContext;
-
     public async Task AddNewTest(TestEntity test)
     {
         await _dbContext.Tests.AddAsync(test);

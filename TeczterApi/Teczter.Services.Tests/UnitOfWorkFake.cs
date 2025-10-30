@@ -4,7 +4,7 @@ namespace Teczter.Services.Tests;
 
 public class UnitOfWorkFake : IUnitOfWork
 {
-    public Task CommitChanges()
+    public Task SaveChanges()
     {
         return Task.CompletedTask;
     }

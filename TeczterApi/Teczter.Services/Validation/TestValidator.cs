@@ -18,10 +18,8 @@ public class TestValidator : AbstractValidator<TestEntity>
         _testStepValidator = testStepValidator;
 
         RuleFor(x => x.Title)
-            .NotEmpty().WithMessage("A test must have a title.");
-
-        RuleFor(x => x)
-            .MustAsync((x, _) => TestValidationRules.BeUniqueTitle(x, _testValidationRepository))
+            .NotEmpty().WithMessage("A test must have a title.")
+            .MustAsync((title, _) => TestValidationRules.BeUniqueTitle(title, _testValidationRepository))
             .WithMessage("A test must have a unique title.");
 
         RuleFor(x => x.Description)

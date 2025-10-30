@@ -1,12 +1,14 @@
-﻿using Teczter.Domain.Entities;
+﻿using Teczter.Domain;
+using Teczter.Domain.Entities;
 using Teczter.Services.RequestDtos.Executions;
 using Teczter.Services.ServiceInterfaces;
 
-namespace Teczter.Services.Composers;
+namespace Teczter.Services.ComposersAndBuilders;
 
 public class ExecutionGroupComposer : IExecutionGroupComposer
 {
     private ExecutionGroupEntity _executionGroup = new();
+    private List<string> Errors = [];
 
     public IExecutionGroupComposer AddExecution(CreateExecutionRequestDto execution)
     {
@@ -47,9 +49,14 @@ public class ExecutionGroupComposer : IExecutionGroupComposer
         return this;
     }
 
-    public ExecutionGroupEntity Build()
+    public TeczterValidationResult<ExecutionGroupEntity> Build()
     {
-        return _executionGroup;
+        if (Errors.Any())
+        {
+            return TeczterValidationResult<ExecutionGroupEntity>.Fail(Errors.ToArray());
+        }
+
+        return TeczterValidationResult<ExecutionGroupEntity>.Succeed(_executionGroup);
     }
 
     public IExecutionGroupComposer SetExecutionGroupNotes(List<string>? notes)

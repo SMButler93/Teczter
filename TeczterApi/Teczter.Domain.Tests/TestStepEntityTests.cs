@@ -26,8 +26,12 @@ public class TestStepEntityTests
         //Arrange:
         var invalidUrl = "invalidUrl.www";
 
-        //Act & Assert:
-        Should.Throw<TeczterValidationException>(() => _sut.AddLinkUrl(invalidUrl));
+        //Act:
+        var result = _sut.AddLinkUrl(invalidUrl);
+
+        //Assert:
+        result.IsValid.ShouldBeFalse();
+        result.ErrorMessages.ShouldNotBeEmpty();
     }
 
     [Test]
@@ -36,8 +40,12 @@ public class TestStepEntityTests
         //Arrange:
         var validUrl = "www.validUrl.com";
 
-        //Act & Assert:
-        Should.NotThrow(() => _sut.AddLinkUrl(validUrl));
+        //Act:
+        var result = _sut.AddLinkUrl(validUrl);
+
+        //Assert:
+        result.IsValid.ShouldBeTrue();
+        result.Value.ShouldNotBeNull();
     }
 
     [Test]
@@ -49,9 +57,11 @@ public class TestStepEntityTests
         _sut.AddLinkUrl(url);
 
         //Act:
-        _sut.RemoveLinkUrl(url);
+        var result = _sut.RemoveLinkUrl(url);
 
         //Assert:
+        result.IsValid.ShouldBeTrue();
+        result.Value.ShouldNotBeNull();
         _sut.Urls.ShouldNotContain(url);
         _sut.RevisedOn.ShouldNotBe(currentRevisedOn);
     }

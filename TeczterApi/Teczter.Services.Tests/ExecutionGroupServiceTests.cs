@@ -59,9 +59,10 @@ public class ExecutionGroupServiceTests
         var executionGroup = GetSingleBasicExecutionGroupInstance();
 
         //Act:
-        await _sut.DeleteExecutionGroup(executionGroup);
+        var result = await _sut.DeleteExecutionGroup(executionGroup);
 
         //Assert:
+        result.IsValid.ShouldBeTrue();
         executionGroup.IsDeleted.ShouldBeTrue();
         executionGroup.Executions.ShouldAllBe(x => x.IsDeleted);
     }
@@ -73,8 +74,12 @@ public class ExecutionGroupServiceTests
         var executionGroup = GetSingleBasicExecutionGroupInstance();
         executionGroup.CloseTestRound();
 
-        //Act & Assert:
-        await Should.ThrowAsync<TeczterValidationException>(() => _sut.DeleteExecutionGroup(executionGroup));
+        //Act:
+        var result = await _sut.DeleteExecutionGroup(executionGroup);
+
+        //Assert:
+        result.IsValid.ShouldBeFalse();
+        result.ErrorMessages.ShouldNotBeEmpty();
     }
 
     private static ExecutionGroupEntity GetSingleBasicExecutionGroupInstance()
