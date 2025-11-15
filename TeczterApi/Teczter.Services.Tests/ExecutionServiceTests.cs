@@ -5,7 +5,6 @@ using NUnit.Framework;
 using Shouldly;
 using Teczter.Domain.Entities;
 using Teczter.Domain.Enums;
-using Teczter.Domain.Exceptions;
 using Teczter.Services.AdapterInterfaces;
 using Teczter.Services.RequestDtos.Executions;
 

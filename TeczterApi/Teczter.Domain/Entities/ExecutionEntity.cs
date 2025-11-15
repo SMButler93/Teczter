@@ -1,6 +1,5 @@
 ﻿using Teczter.Domain.Entities.interfaces;
 using Teczter.Domain.Enums;
-using Teczter.Domain.Exceptions;
 
 namespace Teczter.Domain.Entities;
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Teczter.Infrastructure.Cache;
 using Teczter.Persistence;
 using Teczter.Services.ComposersAndBuilders;
 using Teczter.Services.ServiceInterfaces;
@@ -16,5 +17,6 @@ public static class ServiceLayerDependencyInjection
         services.AddScoped<IExecutionGroupComposer, ExecutionGroupComposer>();
         services.AddScoped<IExecutionService, ExecutionService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddSingleton(typeof(ITeczterCache<>), typeof(TeczterCache<>));
     }
 }

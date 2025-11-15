@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Teczter.Domain;
 using Teczter.Domain.Entities;
 using Teczter.Domain.Enums;
+using Teczter.Infrastructure.Cache;
 using Teczter.Persistence;
 using Teczter.Services.AdapterInterfaces;
 using Teczter.Services.RequestDtos.Tests;
@@ -15,7 +16,8 @@ public class TestService(ITestAdapter _testAdapter,
         IExecutionAdapter _executionAdapter,
         ITestComposer _composer,
         IUnitOfWork _uow,
-        IValidator<TestEntity> _testValidator) : ITestService
+        IValidator<TestEntity> _testValidator,
+        ITeczterCache<TestEntity> _cache) : ITestService
 {
     private const int testsPerPage = 15;
 
@@ -32,6 +34,7 @@ public class TestService(ITestAdapter _testAdapter,
             if (result.IsValid)
             {
                 await _uow.SaveChanges();
+                await _cache.RemoveCache(result.Value!.Id);
             }
 
             return result;
@@ -53,6 +56,7 @@ public class TestService(ITestAdapter _testAdapter,
             if (result.IsValid)
             {
                 await _uow.SaveChanges();
+                await _cache.RemoveCache(result.Value!.Id);
             }
 
             return result;
@@ -101,11 +105,26 @@ public class TestService(ITestAdapter _testAdapter,
         }
 
         await _uow.SaveChanges();
+        await _cache.RemoveCache(test.Id);
     }
 
     public async Task<TestEntity?> GetTestById(int id)
     {
-        return await _testAdapter.GetTestById(id);
+        var test = await _cache.GetCachedResult(id);
+
+        if (test is not null)
+        {
+            return test;
+        }
+
+        test = await _testAdapter.GetTestById(id);
+
+        if (test is not null)
+        {
+            await _cache.SetCache(test);
+        }
+
+        return test;
     }
 
     public async Task<List<TestEntity>> GetTestSearchResults(int pageNumber, string? testTitle, string? owningDepartment)
@@ -139,6 +158,7 @@ public class TestService(ITestAdapter _testAdapter,
             if (result.IsValid)
             {
                 await _uow.SaveChanges();
+                await _cache.RemoveCache(result.Value!.Id);
             }
 
             return result; 
@@ -158,6 +178,7 @@ public class TestService(ITestAdapter _testAdapter,
             if (result.IsValid)
             {
                 await _uow.SaveChanges();
+                await _cache.RemoveCache(result.Value!.Id);
             }
 
             return result; 
@@ -181,6 +202,7 @@ public class TestService(ITestAdapter _testAdapter,
             if (result.IsValid)
             {
                 await _uow.SaveChanges();
+                await _cache.RemoveCache(result.Value!.Id);
             }
 
             return result; 
@@ -202,6 +224,7 @@ public class TestService(ITestAdapter _testAdapter,
         if (result.IsValid)
         {
             await _uow.SaveChanges();
+            await _cache.RemoveCache(result.Value!.Id);
         }
 
         return result;

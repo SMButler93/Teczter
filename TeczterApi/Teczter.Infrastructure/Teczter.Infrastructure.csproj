@@ -7,13 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="12.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.10" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Teczter.Domain\Teczter.Domain.csproj" />
-    <ProjectReference Include="..\Teczter.Infrastructure\Teczter.Infrastructure.csproj" />
-    <ProjectReference Include="..\Teczter.Persistence\Teczter.Persistence.csproj" />
   </ItemGroup>
 
 </Project>
