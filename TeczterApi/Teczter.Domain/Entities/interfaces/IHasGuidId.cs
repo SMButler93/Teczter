@@ -1,6 +1,6 @@
 ﻿namespace Teczter.Domain.Entities.interfaces;
 
-internal interface IHasGuidid
+public interface IHasGuidid
 {
     Guid Id { get; }
 }

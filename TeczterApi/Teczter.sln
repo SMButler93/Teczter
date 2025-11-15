@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teczter.Domain.Tests", "Tec
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teczter.Adapter.Tests", "Teczter.Adapter.Tests\Teczter.Adapter.Tests.csproj", "{4836036D-C4CA-4099-A6FF-CFFF3D239CE0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teczter.Infrastructure", "Teczter.Infrastructure\Teczter.Infrastructure.csproj", "{A92300C8-BC7C-4D8A-84CD-0836A18A5269}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{4836036D-C4CA-4099-A6FF-CFFF3D239CE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4836036D-C4CA-4099-A6FF-CFFF3D239CE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4836036D-C4CA-4099-A6FF-CFFF3D239CE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A92300C8-BC7C-4D8A-84CD-0836A18A5269}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A92300C8-BC7C-4D8A-84CD-0836A18A5269}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A92300C8-BC7C-4D8A-84CD-0836A18A5269}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A92300C8-BC7C-4D8A-84CD-0836A18A5269}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

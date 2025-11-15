@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using Shouldly;
 using Teczter.Domain.Entities;
-using Teczter.Domain.Exceptions;
 
 namespace Teczter.Domain.Tests;
 
