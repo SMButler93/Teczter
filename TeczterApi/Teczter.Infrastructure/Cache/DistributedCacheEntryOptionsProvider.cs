@@ -19,6 +19,6 @@ internal static class DistributedCacheEntryOptionsProvider
             };
         }
 
-        throw new ArgumentException($"Time to live configuration does not exist for {typeof(T).Name} type.");
+        throw new ArgumentException($"Time to live configuration does not exist for the {typeof(T).Name} type.");
     }
 }

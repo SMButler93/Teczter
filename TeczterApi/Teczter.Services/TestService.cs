@@ -12,63 +12,69 @@ using Teczter.Services.ServiceInterfaces;
 
 namespace Teczter.Services;
 
-public class TestService(ITestAdapter _testAdapter,
-        IExecutionAdapter _executionAdapter,
-        ITestComposer _composer,
-        IUnitOfWork _uow,
-        IValidator<TestEntity> _testValidator,
-        ITeczterCache<TestEntity> _cache) : ITestService
+public class TestService(ITestAdapter testAdapter,
+        IExecutionAdapter executionAdapter,
+        ITestComposer composer,
+        IUnitOfWork uow,
+        IValidator<TestEntity> testValidator,
+        ITeczterCache<TestEntity> cache) : ITestService
 {
-    private const int testsPerPage = 15;
+    private const int TestsPerPage = 15;
 
-    public async Task<TeczterValidationResult<TestEntity>> AddLinkUrl(TestEntity test, string url)
+    public async Task<TeczterValidationResult<TestEntity>> AddLinkUrl(TestEntity test, string url, CancellationToken ct)
     {
-        var testResult = _composer.UsingContext(test)
+        var testResult = composer.UsingContext(test)
             .AddLinkUrl(url)
             .Build();
 
-        if (testResult.IsValid)
+        if (!testResult.IsValid)
         {
-            var result = await ValidateTestState(test);
+            return testResult;
+        }
+        
+        var result = await ValidateTestState(test, ct);
 
-            if (result.IsValid)
-            {
-                await _uow.SaveChanges();
-                await _cache.RemoveCache(result.Value!.Id);
-            }
-
+        if (!result.IsValid)
+        {
             return result;
         }
+        
+        await uow.SaveChanges(ct);
+        await cache.RemoveCache(result.Value!.Id, ct);
 
-        return testResult;
+        return result;
+
     }
 
-    public async Task<TeczterValidationResult<TestEntity>> AddTestStep(TestEntity test, CreateTestStepRequestDto testStep)
+    public async Task<TeczterValidationResult<TestEntity>> AddTestStep(TestEntity test, CreateTestStepRequestDto testStep, CancellationToken ct)
     {
-        var testResult = _composer.UsingContext(test)
+        var testResult = composer.UsingContext(test)
             .AddStep(testStep)
             .Build();
 
-        if (testResult.IsValid)
+        if (!testResult.IsValid)
         {
-            var result = await ValidateTestState(test);
+            return testResult;
+        }
+        
+        var result = await ValidateTestState(test, ct);
 
-            if (result.IsValid)
-            {
-                await _uow.SaveChanges();
-                await _cache.RemoveCache(result.Value!.Id);
-            }
-
+        if (!result.IsValid)
+        {
             return result;
         }
+        
+        await uow.SaveChanges(ct);
+        await cache.RemoveCache(result.Value!.Id, ct);
 
-        return testResult;
+        return result;
+
     }
 
-    public async Task<TeczterValidationResult<TestEntity>> CreateNewTest(CreateTestRequestDto request)
+    public async Task<TeczterValidationResult<TestEntity>> CreateNewTest(CreateTestRequestDto request, CancellationToken ct)
     {
         //Set created by user ID when users implemented.
-        var testResult = _composer
+        var testResult = composer
             .SetTitle(request.Title)
             .SetDescription(request.Description)
             .SetOwningDepartment(request.OwningDepartment)
@@ -76,27 +82,30 @@ public class TestService(ITestAdapter _testAdapter,
             .AddSteps(request.TestSteps)
             .Build();
 
-        if (testResult.IsValid)
+        if (!testResult.IsValid)
         {
-            var result = await ValidateTestState(testResult.Value!);
+            return testResult;
+        }
+        
+        var result = await ValidateTestState(testResult.Value!, ct);
 
-            if (result.IsValid)
-            {
-                await _testAdapter.AddNewTest(testResult.Value!);
-                await _uow.SaveChanges();
-            }
-
+        if (!result.IsValid)
+        {
             return result;
         }
+        
+        await testAdapter.AddNewTest(testResult.Value!, ct);
+        await uow.SaveChanges(ct);
 
-        return testResult;
+        return result;
+
     }
 
-    public async Task DeleteTest(TestEntity test)
+    public async Task DeleteTest(TestEntity test, CancellationToken ct)
     {
         test.Delete();
 
-        var executions = await _executionAdapter.GetExecutionsForTest(test.Id);
+        var executions = await executionAdapter.GetExecutionsForTest(test.Id);
         var executionsToDelete = executions.Where(x => x.ExecutionState is ExecutionStateType.Untested);
 
         foreach (var execution in executionsToDelete)
@@ -104,32 +113,32 @@ public class TestService(ITestAdapter _testAdapter,
             execution.Delete();
         }
 
-        await _uow.SaveChanges();
-        await _cache.RemoveCache(test.Id);
+        await uow.SaveChanges(ct);
+        await cache.RemoveCache(test.Id, ct);
     }
 
-    public async Task<TestEntity?> GetTestById(int id)
+    public async Task<TestEntity?> GetTestById(int id, CancellationToken ct)
     {
-        var test = await _cache.GetCachedResult(id);
+        var test = await cache.GetCachedResult(id, ct);
 
         if (test is not null)
         {
             return test;
         }
 
-        test = await _testAdapter.GetTestById(id);
+        test = await testAdapter.GetTestById(id, ct);
 
         if (test is not null)
         {
-            await _cache.SetCache(test);
+            await cache.SetCache(test, ct);
         }
 
         return test;
     }
 
-    public async Task<List<TestEntity>> GetTestSearchResults(int pageNumber, string? testTitle, string? owningDepartment)
+    public async Task<List<TestEntity>> GetTestSearchResults(int pageNumber, string? testTitle, string? owningDepartment, CancellationToken ct)
     {
-        var testSearchQuery = _testAdapter.GetTestSearchBaseQuery();
+        var testSearchQuery = testAdapter.GetTestSearchBaseQuery();
 
         if (testTitle is not null)
         {
@@ -142,76 +151,84 @@ public class TestService(ITestAdapter _testAdapter,
         }
 
         testSearchQuery = testSearchQuery.OrderBy(x => x.Title);
-        testSearchQuery = testSearchQuery.Skip((pageNumber - 1) * testsPerPage).Take(testsPerPage);
+        testSearchQuery = testSearchQuery.Skip((pageNumber - 1) * TestsPerPage).Take(TestsPerPage);
 
-        return await testSearchQuery.ToListAsync();
+        return await testSearchQuery.ToListAsync(ct);
     }
 
-    public async Task<TeczterValidationResult<TestEntity>> RemoveLinkUrl(TestEntity test, string url)
+    public async Task<TeczterValidationResult<TestEntity>> RemoveLinkUrl(TestEntity test, string url, CancellationToken ct)
     {
         var testResult = test.RemoveLinkUrl(url);
 
-        if (testResult.IsValid)
+        if (!testResult.IsValid)
         {
-            var result = await ValidateTestState(test);
-
-            if (result.IsValid)
-            {
-                await _uow.SaveChanges();
-                await _cache.RemoveCache(result.Value!.Id);
-            }
-
-            return result; 
+            return testResult;
         }
+        
+        var result = await ValidateTestState(test, ct);
 
-        return testResult;
+        if (!result.IsValid)
+        {
+            return result;
+        }
+        
+        await uow.SaveChanges(ct);
+        await cache.RemoveCache(result.Value!.Id, ct);
+
+        return result;
+
     }
 
-    public async Task<TeczterValidationResult<TestEntity>> RemoveTestStep(TestEntity test, int testStepId)
+    public async Task<TeczterValidationResult<TestEntity>> RemoveTestStep(TestEntity test, int testStepId, CancellationToken ct)
     {
         var testResult = test.RemoveTestStep(testStepId);
 
-        if (testResult.IsValid)
+        if (!testResult.IsValid)
         {
-            var result = await ValidateTestState(test);
-
-            if (result.IsValid)
-            {
-                await _uow.SaveChanges();
-                await _cache.RemoveCache(result.Value!.Id);
-            }
-
-            return result; 
+            return testResult;
         }
+        
+        var result = await ValidateTestState(test, ct);
 
-        return testResult;
+        if (!result.IsValid)
+        {
+            return result;
+        }
+        
+        await uow.SaveChanges(ct);
+        await cache.RemoveCache(result.Value!.Id, ct);
+
+        return result;
+
     }
 
-    public async Task<TeczterValidationResult<TestEntity>> UpdateTest(TestEntity test, UpdateTestRequestDto testUpdates)
+    public async Task<TeczterValidationResult<TestEntity>> UpdateTest(TestEntity test, UpdateTestRequestDto testUpdates, CancellationToken ct)
     {
-        var testResult = _composer.UsingContext(test)
+        var testResult = composer.UsingContext(test)
             .SetTitle(testUpdates.Title)
             .SetDescription(testUpdates.Description)
             .SetOwningDepartment(testUpdates.OwningDepartment)
             .Build();
 
-        if (testResult.IsValid)
+        if (!testResult.IsValid)
         {
-            var result = await ValidateTestState(test);
-
-            if (result.IsValid)
-            {
-                await _uow.SaveChanges();
-                await _cache.RemoveCache(result.Value!.Id);
-            }
-
-            return result; 
+            return testResult;
         }
+        
+        var result = await ValidateTestState(test, ct);
 
-        return testResult;
+        if (!result.IsValid)
+        {
+            return result;
+        }
+        
+        await uow.SaveChanges(ct);
+        await cache.RemoveCache(result.Value!.Id, ct);
+
+        return result;
     }
 
-    public async Task<TeczterValidationResult<TestEntity>> UpdateTestStep(TestEntity test, int testStepId, UpdateTestStepRequestDto request)
+    public async Task<TeczterValidationResult<TestEntity>> UpdateTestStep(TestEntity test, int testStepId, UpdateTestStepRequestDto request, CancellationToken ct)
     {
         var testStep = test.TestSteps.Single(x => x.Id == testStepId && !x.IsDeleted);
 
@@ -219,20 +236,22 @@ public class TestService(ITestAdapter _testAdapter,
 
         test.SetCorrectStepPlacementValuesOnUpdate();
 
-        var result = await ValidateTestState(test);
+        var result = await ValidateTestState(test, ct);
 
-        if (result.IsValid)
+        if (!result.IsValid)
         {
-            await _uow.SaveChanges();
-            await _cache.RemoveCache(result.Value!.Id);
+            return result;
         }
+        
+        await uow.SaveChanges(ct);
+        await cache.RemoveCache(result.Value!.Id, ct);
 
         return result;
     }
 
-    public async Task<TeczterValidationResult<TestEntity>> ValidateTestState(TestEntity test)
+    public async Task<TeczterValidationResult<TestEntity>> ValidateTestState(TestEntity test, CancellationToken ct)
     {
-        var result = await _testValidator.ValidateAsync(test);
+        var result = await testValidator.ValidateAsync(test, ct);
 
         if (!result.IsValid)
         {

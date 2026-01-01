@@ -8,12 +8,16 @@ namespace Teczter.WebApi.Controllers;
 
 [Route("Teczter/[controller]")]
 [ApiController]
-public class ExecutionGroupsController(IExecutionGroupService _executionGroupService, IExecutionService _executionService) : ControllerBase
+public class ExecutionGroupsController(IExecutionGroupService executionGroupService, IExecutionService executionService) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<ExecutionGroupDto>> GetExecutionGroupSearchResults([FromQuery] string? executionGroupName, [FromQuery] string? releaseVersion, [FromQuery] int pageNumber = 1)
+    public async Task<ActionResult<ExecutionGroupDto>> GetExecutionGroupSearchResults(
+        [FromQuery] string? executionGroupName, 
+        [FromQuery] string? releaseVersion, 
+        CancellationToken ct, 
+        [FromQuery] int pageNumber = 1)
     {
-        var executionGroups = await _executionGroupService.GetExecutionGroupSearchResults(pageNumber, executionGroupName, releaseVersion);
+        var executionGroups = await executionGroupService.GetExecutionGroupSearchResults(pageNumber, executionGroupName, releaseVersion, ct);
 
         var executionGroupDtos = executionGroups.Select(x => new ExecutionGroupDto(x)).ToList();
 
@@ -21,9 +25,9 @@ public class ExecutionGroupsController(IExecutionGroupService _executionGroupSer
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<ExecutionGroupDto>> GetExecutionGroup(int id)
+    public async Task<ActionResult<ExecutionGroupDto>> GetExecutionGroup(int id, CancellationToken ct)
     {
-        var executionGroup = await _executionGroupService.GetExecutionGroupById(id);
+        var executionGroup = await executionGroupService.GetExecutionGroupById(id, ct);
 
         if (executionGroup is null)
         {
@@ -34,9 +38,9 @@ public class ExecutionGroupsController(IExecutionGroupService _executionGroupSer
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteExecutionGroup(int id)
+    public async Task<IActionResult> DeleteExecutionGroup(int id, CancellationToken ct)
     {
-        var executionGroup = await _executionGroupService.GetExecutionGroupById(id);
+        var executionGroup = await executionGroupService.GetExecutionGroupById(id, ct);
 
         if (executionGroup is null)
         {
@@ -48,7 +52,7 @@ public class ExecutionGroupsController(IExecutionGroupService _executionGroupSer
             return BadRequest("Cannot delete an execution group that has been closed.");
         }
 
-        var result = await _executionGroupService.DeleteExecutionGroup(executionGroup);
+        var result = await executionGroupService.DeleteExecutionGroup(executionGroup, ct);
 
         if (!result.IsValid)
         {
@@ -59,16 +63,20 @@ public class ExecutionGroupsController(IExecutionGroupService _executionGroupSer
     }
 
     [HttpPost("{id:int}/clone")]
-    public async Task<ActionResult<ExecutionGroupDto>> CloneExecutionGroup(int id, [FromQuery] string newExecutionGroupname, [FromQuery] string? softwareVersionNumber)
+    public async Task<ActionResult<ExecutionGroupDto>> CloneExecutionGroup(
+        int id, 
+        [FromQuery] string newExecutionGroupName, 
+        [FromQuery] string? softwareVersionNumber,
+        CancellationToken ct)
     {
-        var executionGroupToClone = await _executionGroupService.GetExecutionGroupById(id);
+        var executionGroupToClone = await executionGroupService.GetExecutionGroupById(id, ct);
 
         if (executionGroupToClone is null)
         {
             return NotFound($"Execution group {id} does not exist");
         }
 
-        var result = await _executionGroupService.CloneExecutionGroup(executionGroupToClone, newExecutionGroupname, softwareVersionNumber);
+        var result = await executionGroupService.CloneExecutionGroup(executionGroupToClone, newExecutionGroupName, softwareVersionNumber, ct);
 
         if (!result.IsValid)
         {
@@ -81,9 +89,9 @@ public class ExecutionGroupsController(IExecutionGroupService _executionGroupSer
     }
 
     [HttpPost]
-    public async Task<ActionResult<ExecutionGroupDto>> CreateExecutionGroup([FromBody] CreateExecutionGroupRequestDto request)
+    public async Task<ActionResult<ExecutionGroupDto>> CreateExecutionGroup([FromBody] CreateExecutionGroupRequestDto request, CancellationToken ct)
     {
-        var result = await _executionGroupService.CreateNewExecutionGroup(request);
+        var result = await executionGroupService.CreateNewExecutionGroup(request, ct);
 
         if (!result.IsValid)
         {
@@ -96,9 +104,9 @@ public class ExecutionGroupsController(IExecutionGroupService _executionGroupSer
     }
 
     [HttpPost("{id:int}/Executions")]
-    public async Task<ActionResult<ExecutionGroupDto>> CreateExecution(int id, [FromBody] CreateExecutionRequestDto request)
+    public async Task<ActionResult<ExecutionGroupDto>> CreateExecution(int id, [FromBody] CreateExecutionRequestDto request, CancellationToken ct)
     {
-        var executionGroup = await _executionGroupService.GetExecutionGroupById(id);
+        var executionGroup = await executionGroupService.GetExecutionGroupById(id, ct);
 
         if (executionGroup is null)
         {
@@ -110,7 +118,7 @@ public class ExecutionGroupsController(IExecutionGroupService _executionGroupSer
             return BadRequest("Cannot add new executions to an execution group that has closed.");
         }
 
-        var result = await _executionGroupService.CreateExecution(executionGroup, request);
+        var result = await executionGroupService.CreateExecution(executionGroup, request, ct);
 
         if (!result.IsValid)
         {
@@ -123,9 +131,9 @@ public class ExecutionGroupsController(IExecutionGroupService _executionGroupSer
     }
 
     [HttpDelete("{groupId:int}/Executions/{executionId:int}")]
-    public async Task<ActionResult<ExecutionGroupDto>> DeleteExecution(int groupId, int executionId)
+    public async Task<ActionResult<ExecutionGroupDto>> DeleteExecution(int groupId, int executionId, CancellationToken ct)
     {
-        var executionGroup = await _executionGroupService.GetExecutionGroupById(groupId);
+        var executionGroup = await executionGroupService.GetExecutionGroupById(groupId, ct);
 
         if (executionGroup is null)
         {
@@ -137,7 +145,7 @@ public class ExecutionGroupsController(IExecutionGroupService _executionGroupSer
             return BadRequest($"Cannot delete executions from an execution group that has been closed.");
         }
 
-        var result = await _executionGroupService.DeleteExecution(executionGroup, executionId);
+        var result = await executionGroupService.DeleteExecution(executionGroup, executionId, ct);
 
         if (!result.IsValid)
         {
@@ -148,9 +156,9 @@ public class ExecutionGroupsController(IExecutionGroupService _executionGroupSer
     }
 
     [HttpGet("{groupId:int}/Executions/{executionId:int}")]
-    public async Task<ActionResult<ExecutionDto>> GetExecutionById(int groupId, int executionId)
+    public async Task<ActionResult<ExecutionDto>> GetExecutionById(int groupId, int executionId, CancellationToken ct)
     {
-        var executionGroup = await _executionGroupService.GetExecutionGroupById(groupId);
+        var executionGroup = await executionGroupService.GetExecutionGroupById(groupId, ct);
 
         if (executionGroup is null)
         {
@@ -168,9 +176,9 @@ public class ExecutionGroupsController(IExecutionGroupService _executionGroupSer
     }
 
     [HttpPatch("{groupId:int})/Executions/{executionId:int}")]
-    public async Task<ActionResult<ExecutionDto>> CompleteExecution(int groupId, int executionId, [FromBody] CompleteExecutionRequestDto request)
+    public async Task<ActionResult<ExecutionDto>> CompleteExecution(int groupId, int executionId, [FromBody] CompleteExecutionRequestDto request, CancellationToken ct)
     {
-        var executionGroup = await _executionGroupService.GetExecutionGroupById(groupId);
+        var executionGroup = await executionGroupService.GetExecutionGroupById(groupId, ct);
 
         if (executionGroup is null)
         {
@@ -184,7 +192,7 @@ public class ExecutionGroupsController(IExecutionGroupService _executionGroupSer
             return BadRequest($"Execution {executionId} does not exist in execution group {groupId}");
         }
 
-        var result = await _executionService.CompleteExecution(execution, request);
+        var result = await executionService.CompleteExecution(execution, request, ct);
 
         if (!result.IsValid)
         {

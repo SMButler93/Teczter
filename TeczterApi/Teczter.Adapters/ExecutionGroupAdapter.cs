@@ -9,9 +9,9 @@ public class ExecutionGroupAdapter(TeczterDbContext dbContext) : IExecutionGroup
 {
     private readonly TeczterDbContext _dbContext = dbContext;
 
-    public async Task AddNewExecutionGroup(ExecutionGroupEntity executionGroup)
+    public async Task AddNewExecutionGroup(ExecutionGroupEntity executionGroup, CancellationToken ct)
     {
-        await _dbContext.ExecutionGroups.AddAsync(executionGroup);
+        await _dbContext.ExecutionGroups.AddAsync(executionGroup, ct);
     }
 
     public IQueryable<ExecutionGroupEntity> GetBasicExecutionGroupSearchQuery()
@@ -22,12 +22,12 @@ public class ExecutionGroupAdapter(TeczterDbContext dbContext) : IExecutionGroup
             .Where(x => !x.IsDeleted);
     }
 
-    public async Task<ExecutionGroupEntity?> GetExecutionGroupById(int id)
+    public async Task<ExecutionGroupEntity?> GetExecutionGroupById(int id, CancellationToken ct)
     {
         return await _dbContext.ExecutionGroups
             .Include(x => x.Executions)
             .ThenInclude(y => y.Test)
             .ThenInclude(z => z.TestSteps)
-            .SingleOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+            .SingleOrDefaultAsync(x => x.Id == id && !x.IsDeleted, ct);
     }
 }

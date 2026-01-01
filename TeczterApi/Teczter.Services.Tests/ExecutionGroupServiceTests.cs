@@ -12,10 +12,10 @@ namespace Teczter.Services.Tests;
 [TestFixture]
 public class ExecutionGroupServiceTests
 {
-    private Mock<IExecutionGroupAdapter> _executionGroupAdapterMock = new();
-    private Mock<IExecutionGroupComposer> _executionGroupComposerMock = new();
-    private Mock<IValidator<ExecutionGroupEntity>> _executionGroupValidatorMock = new();
-    private UnitOfWorkFake _uow = new();
+    private readonly Mock<IExecutionGroupAdapter> _executionGroupAdapterMock = new();
+    private readonly Mock<IExecutionGroupComposer> _executionGroupComposerMock = new();
+    private readonly Mock<IValidator<ExecutionGroupEntity>> _executionGroupValidatorMock = new();
+    private readonly UnitOfWorkFake _uow = new();
 
     private ExecutionGroupService _sut = null!;
 
@@ -34,13 +34,14 @@ public class ExecutionGroupServiceTests
     {
         //Arrange:
         var executionGroupToClone = GetSingleBasicExecutionGroupInstance();
-        var newName = "Group 2";
-        var newSoftwareVersionNumber = "1.1.2";
+        const string newName = "Group 2";
+        const string newSoftwareVersionNumber = "1.1.2";
         var validationResult = new ValidationResult();
+        var ct = new CancellationTokenSource().Token;
         _executionGroupValidatorMock.Setup(x => x.ValidateAsync(It.IsAny<ExecutionGroupEntity>(), It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
 
         //Act:
-        var result = await _sut.CloneExecutionGroup(executionGroupToClone, newName, newSoftwareVersionNumber);
+        var result = await _sut.CloneExecutionGroup(executionGroupToClone, newName, newSoftwareVersionNumber, ct);
 
         //Assert:
         result.IsValid.ShouldBeTrue();
@@ -56,9 +57,10 @@ public class ExecutionGroupServiceTests
     {
         //Arrange:
         var executionGroup = GetSingleBasicExecutionGroupInstance();
+        var ct = new CancellationTokenSource().Token;
 
         //Act:
-        var result = await _sut.DeleteExecutionGroup(executionGroup);
+        var result = await _sut.DeleteExecutionGroup(executionGroup, ct);
 
         //Assert:
         result.IsValid.ShouldBeTrue();
@@ -71,10 +73,11 @@ public class ExecutionGroupServiceTests
     {
         //Arrange:
         var executionGroup = GetSingleBasicExecutionGroupInstance();
+        var ct = new CancellationTokenSource().Token;
         executionGroup.CloseTestRound();
-
+        
         //Act:
-        var result = await _sut.DeleteExecutionGroup(executionGroup);
+        var result = await _sut.DeleteExecutionGroup(executionGroup, ct);
 
         //Assert:
         result.IsValid.ShouldBeFalse();

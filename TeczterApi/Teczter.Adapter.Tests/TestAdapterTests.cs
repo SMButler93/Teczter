@@ -40,9 +40,10 @@ public class TestAdapterTests
     {
         //Arrange:
         var testToSearchFor = GetMultipleBasicTestInstances().First();
-
+        var ct = new CancellationTokenSource().Token;
+        
         //Act:
-        var result = await _sut.GetTestById(testToSearchFor.Id);
+        var result = await _sut.GetTestById(testToSearchFor.Id, ct);
 
         //Assert:
         result.ShouldNotBeNull();
@@ -57,10 +58,11 @@ public class TestAdapterTests
     public async Task GetTestById_WhenDoesNotExists_ShouldReturnNull()
     {
         //Arrange:
-        var nonExistentTestId = 123;
+        const int nonExistentTestId = 123;
+        var ct = new CancellationTokenSource().Token;
 
         //Act:
-        var result = await _sut.GetTestById(nonExistentTestId);
+        var result = await _sut.GetTestById(nonExistentTestId, ct);
 
         //Assert:
         result.ShouldBeNull();
@@ -72,9 +74,10 @@ public class TestAdapterTests
         //Arrange:
         var testToAdd = GetSingleBasicTestInstance();
         var initialPersistedTestsCount = await _dbContext.Tests.CountAsync();
+        var ct = new CancellationTokenSource().Token;
 
         //Act:
-        await _sut.AddNewTest(testToAdd);
+        await _sut.AddNewTest(testToAdd, ct);
         await _dbContext.SaveChangesAsync();
         var persistedTestsWithNewEntry = await _dbContext.Tests.ToListAsync();
 

@@ -4,12 +4,8 @@ namespace Teczter.Services.Tests;
 
 public class UnitOfWorkFake : IUnitOfWork
 {
-    public Task SaveChanges()
+    public Task SaveChanges(CancellationToken ct)
     {
         return Task.CompletedTask;
-    }
-
-    public void Rollback()
-    {
     }
 }

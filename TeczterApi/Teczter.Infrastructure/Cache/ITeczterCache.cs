@@ -7,9 +7,9 @@ public interface ITeczterCache<T> where T : class, IHasIntId
     public string KeyPrefix { get; }
     public DistributedCacheEntryOptions Options { get; }
 
-    Task SetCache(T obj);
+    Task SetCache(T obj, CancellationToken ct);
 
-    Task RemoveCache(int objectId);
+    Task RemoveCache(int objectId, CancellationToken ct);
 
-    Task<T?> GetCachedResult(int objectId);
+    Task<T?> GetCachedResult(int objectId, CancellationToken ct);
 }

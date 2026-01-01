@@ -43,10 +43,11 @@ public class TestServiceTests
         //Arrange:
         var tests = GetMultipleBasicTestInstances().OrderBy(x => x.Title);
         var queryable = tests.AsQueryable();
+        var ct = new CancellationTokenSource().Token;
         _testAdapterMock.Setup(x => x.GetTestSearchBaseQuery()).Returns(queryable.BuildMock());
 
         //Act:
-        var results = await _sut.GetTestSearchResults(1, null, null);
+        var results = await _sut.GetTestSearchResults(1, null, null, ct);
 
         //Assert:
         results.ShouldBe(tests);
@@ -58,10 +59,11 @@ public class TestServiceTests
         //Arrange:
         var tests = GetMultipleBasicTestInstances();
         var queryable = tests.AsQueryable();
+        var ct = new CancellationTokenSource().Token;
         _testAdapterMock.Setup(x => x.GetTestSearchBaseQuery()).Returns(queryable.BuildMock());
 
         //Act:
-        var results = await _sut.GetTestSearchResults(1, "One", null);
+        var results = await _sut.GetTestSearchResults(1, "One", null, ct);
 
         //Assert:
         results.Count.ShouldBe(1);
@@ -74,10 +76,11 @@ public class TestServiceTests
         //Arrange:
         var tests = GetMultipleBasicTestInstances();
         var queryable = tests.AsQueryable();
+        var ct = new CancellationTokenSource().Token;
         _testAdapterMock.Setup(x => x.GetTestSearchBaseQuery()).Returns(queryable.BuildMock());
 
         //Act:
-        var results = await _sut.GetTestSearchResults(1, null, Department.Accounting.ToString());
+        var results = await _sut.GetTestSearchResults(1, null, nameof(Department.Accounting), ct);
 
         //Assert:
         results.Count.ShouldBe(1);
@@ -90,10 +93,11 @@ public class TestServiceTests
         //Arrange:
         var tests = GetMultipleBasicTestInstances();
         var queryable = tests.AsQueryable();
+        var ct = new CancellationTokenSource().Token;
         _testAdapterMock.Setup(x => x.GetTestSearchBaseQuery()).Returns(queryable.BuildMock());
 
         //Act:
-        var results = await _sut.GetTestSearchResults(1, "ABC", null);
+        var results = await _sut.GetTestSearchResults(1, "ABC", null, ct);
 
         //Assert:
         results.ShouldBeEmpty();
@@ -105,12 +109,13 @@ public class TestServiceTests
         //Arrange:
         var test = GetBasicTestInstance();
         var validationResult = new ValidationResult();
-        var url = "www.url.com";
+        const string url = "www.url.com";
+        var ct = new CancellationTokenSource().Token;
         test.AddLinkUrl(url);
         _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
 
         //Act:
-        var result = await _sut.RemoveLinkUrl(test, url);
+        var result = await _sut.RemoveLinkUrl(test, url, ct);
 
         //Assert.
         result.Value.ShouldNotBeNull();
@@ -122,10 +127,11 @@ public class TestServiceTests
     {
         //Arrange:
         var test = GetBasicTestInstance();
-        var url = "www.url.com";
+        const string url = "www.url.com";
+        var ct = new CancellationTokenSource().Token;
 
         //Act:
-        var result = await _sut.RemoveLinkUrl(test, url);
+        var result = await _sut.RemoveLinkUrl(test, url, ct);
 
         //Assert:
         result.IsValid.ShouldBeFalse();
@@ -140,10 +146,11 @@ public class TestServiceTests
         var test = GetBasicTestInstance();
         var stepToRemove = test.TestSteps[0];
         var validationResult = new ValidationResult();
+        var ct = new CancellationTokenSource().Token;
         _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
 
         //Act:
-        var result = await _sut.RemoveTestStep(test, stepToRemove.Id);
+        var result = await _sut.RemoveTestStep(test, stepToRemove.Id, ct);
 
         //Assert:
         result.Value.ShouldNotBeNull();
@@ -157,10 +164,11 @@ public class TestServiceTests
     {
         //Arrange:
         var test = GetBasicTestInstance();
-        var stepToRemoveId = 5;
+        const int stepToRemoveId = 5;
+        var ct = new CancellationTokenSource().Token;
 
         //Act:
-        var result = await _sut.RemoveTestStep(test, stepToRemoveId);
+        var result = await _sut.RemoveTestStep(test, stepToRemoveId, ct);
 
         //Assert:
         result.IsValid.ShouldBeFalse();
@@ -176,10 +184,11 @@ public class TestServiceTests
         var validationResult = new ValidationResult();
         var stepToUpdate = test.TestSteps.Single(x => x.StepPlacement == 1);
         var request = new UpdateTestStepRequestDto { StepPlacement = 4, };
+        var ct = new CancellationTokenSource().Token;
         _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
 
         //Act:
-        var result = await _sut.UpdateTestStep(test, stepToUpdate.Id, request);
+        var result = await _sut.UpdateTestStep(test, stepToUpdate.Id, request, ct);
 
         //Assert:
         result.Value.ShouldNotBeNull();
