@@ -9,12 +9,16 @@ namespace Teczter.WebApi.Controllers;
 
 [Route("Teczter/[controller]")]
 [ApiController]
-public class TestsController(ITestService _testService) : ControllerBase
+public class TestsController(ITestService testService) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<List<TestDto>>> GetTestSearchResults([FromQuery] string? testName, [FromQuery] string? owningDepartment, [FromQuery] int pageNumber = 1)
+    public async Task<ActionResult<List<TestDto>>> GetTestSearchResults(
+        [FromQuery] string? testName, 
+        [FromQuery] string? owningDepartment, 
+        CancellationToken ct, 
+        [FromQuery] int pageNumber = 1)
     {
-        var tests = await _testService.GetTestSearchResults(pageNumber, testName, owningDepartment);
+        var tests = await testService.GetTestSearchResults(pageNumber, testName, owningDepartment, ct);
 
         var testDtos = tests.Select(x => new TestDto(x)).ToList();
 
@@ -22,9 +26,9 @@ public class TestsController(ITestService _testService) : ControllerBase
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<TestDto>> GetTest(int id)
+    public async Task<ActionResult<TestDto>> GetTest(int id, CancellationToken ct)
     {
-        var test = await _testService.GetTestById(id);
+        var test = await testService.GetTestById(id, ct);
 
         if (test is null)
         {
@@ -35,164 +39,169 @@ public class TestsController(ITestService _testService) : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteTest(int id)
+    public async Task<IActionResult> DeleteTest(int id, CancellationToken ct)
     {
-        var test = await _testService.GetTestById(id);
+        var test = await testService.GetTestById(id, ct);
 
         if (test is null)
         {
             return NotFound($"Test {id} does not exist");
         }
 
-        await _testService.DeleteTest(test);
+        await testService.DeleteTest(test, ct);
 
         return NoContent();
     }
 
     [HttpPost]
-    public async Task<ActionResult<TestDto>> CreateTest([FromBody] CreateTestRequestDto request)
+    public async Task<ActionResult<TestDto>> CreateTest([FromBody] CreateTestRequestDto request, CancellationToken ct)
     {
-        var result = await _testService.CreateNewTest(request);
+        var result = await testService.CreateNewTest(request, ct);
 
-        if (!result.IsValid)
+        if (result.IsValid)
         {
-            var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
-
-            return BadRequest(message);
+            return Ok(new TestDto(result.Value!));
         }
+        
+        var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
 
-        return Ok(new TestDto(result.Value!));
+        return BadRequest(message);
+
     }
 
     [HttpPatch("{id:int}")]
-    public async Task<ActionResult<TestDto>> UpdateTest(int id, [FromBody] UpdateTestRequestDto request)
+    public async Task<ActionResult<TestDto>> UpdateTest(int id, [FromBody] UpdateTestRequestDto request, CancellationToken ct)
     {
-        var test = await _testService.GetTestById(id);
+        var test = await testService.GetTestById(id, ct);
 
         if (test is null)
         {
             return NotFound($"Test {id} does not exist");
         }
 
-        var result = await _testService.UpdateTest(test, request);
+        var result = await testService.UpdateTest(test, request, ct);
 
-        if (!result.IsValid)
+        if (result.IsValid)
         {
-            var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
-
-            return BadRequest(message);
+            return Ok(new TestDto(test));
         }
+        
+        var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
 
-        return Ok(new TestDto(test));
+        return BadRequest(message);
+
     }
 
     [HttpPost("{id:int}/links")]
-    public async Task<ActionResult<TestDto>> AddLinkUrl(int id, [FromBody] string url)
+    public async Task<ActionResult<TestDto>> AddLinkUrl(int id, [FromBody] string url, CancellationToken ct)
     {
-        var test = await _testService.GetTestById(id);
+        var test = await testService.GetTestById(id, ct);
 
         if (test is null)
         {
             return NotFound($"Test {id} does not exist");
         }
 
-        var result = await _testService.AddLinkUrl(test, url);
+        var result = await testService.AddLinkUrl(test, url, ct);
 
-        if (!result.IsValid)
+        if (result.IsValid)
         {
-            var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
-
-            return BadRequest(message);
+            return Ok(new TestDto(test));
         }
+        
+        var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
 
-        return Ok(new TestDto(test));
+        return BadRequest(message);
+
     }
 
     [HttpDelete("{id:int}/links")]
-    public async Task<ActionResult<TestDto>> RemoveLinkUrl(int id, [FromBody] string url)
+    public async Task<ActionResult<TestDto>> RemoveLinkUrl(int id, [FromBody] string url, CancellationToken ct)
     {
-        var test = await _testService.GetTestById(id);
+        var test = await testService.GetTestById(id, ct);
 
         if (test is null)
         {
             return NotFound($"Test {id} does not exist.");
         }
 
-        var result = await _testService.RemoveLinkUrl(test, url);
+        var result = await testService.RemoveLinkUrl(test, url, ct);
 
-        if (!result.IsValid)
+        if (result.IsValid)
         {
-            var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
-
-            return BadRequest(message);
+            return Ok(new TestDto(test));
         }
+        
+        var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
 
-        return Ok(new TestDto(test));
+        return BadRequest(message);
     }
 
     [HttpPost("{id:int}/Steps")]
-    public async Task<ActionResult<TestDto>> AddTestStep(int id, [FromBody] CreateTestStepRequestDto request)
+    public async Task<ActionResult<TestDto>> AddTestStep(int id, [FromBody] CreateTestStepRequestDto request, CancellationToken ct)
     {
-        var test = await _testService.GetTestById(id);
+        var test = await testService.GetTestById(id, ct);
 
         if (test is null)
         {
             return NotFound($"Test {id} does not exist");
         }
 
-        var result = await _testService.AddTestStep(test, request);
+        var result = await testService.AddTestStep(test, request, ct);
 
-        if (!result.IsValid)
+        if (result.IsValid)
         {
-            var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
-
-            return BadRequest(message);
+            return Ok(new TestDto(test));
         }
+        
+        var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
 
-        return Ok(new TestDto(test));
+        return BadRequest(message);
+
     }
 
     [HttpDelete("{testId:int}/Steps/{testStepId:int}")]
-    public async Task<ActionResult<TestDto>> RemoveTestStep(int testId, int testStepId)
+    public async Task<ActionResult<TestDto>> RemoveTestStep(int testId, int testStepId, CancellationToken ct)
     {
-        var test = await _testService.GetTestById(testId);
+        var test = await testService.GetTestById(testId, ct);
 
         if (test is null)
         {
             return NotFound($"Test {testId} does not exist.");
         }
 
-        var result = await _testService.RemoveTestStep(test, testStepId);
+        var result = await testService.RemoveTestStep(test, testStepId, ct);
 
-        if (!result.IsValid)
+        if (result.IsValid)
         {
-            var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
-
-            return BadRequest(message);
+            return Ok(new TestDto(test));
         }
+        
+        var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
 
-        return Ok(new TestDto(test));
+        return BadRequest(message);
+
     }
 
     [HttpPatch("{testId:int}/Steps/{testStepId:int}")]
-    public async Task<ActionResult<TestDto>> UpdateTestStep(int testId, int testStepId, [FromBody] UpdateTestStepRequestDto request)
+    public async Task<ActionResult<TestDto>> UpdateTestStep(int testId, int testStepId, [FromBody] UpdateTestStepRequestDto request, CancellationToken ct)
     {
-        var test = await _testService.GetTestById(testId);
+        var test = await testService.GetTestById(testId, ct);
 
         if (test is null)
         {
             return NotFound($"Test {testId} does not exist.");
         }
 
-        var result = await _testService.UpdateTestStep(test, testStepId, request);
+        var result = await testService.UpdateTestStep(test, testStepId, request, ct);
 
-        if (!result.IsValid)
+        if (result.IsValid)
         {
-            var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
-
-            return BadRequest(message);
+            return Ok(new TestDto(test));
         }
+        
+        var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
 
-        return Ok(new TestDto(test));
+        return BadRequest(message);
     }
 }

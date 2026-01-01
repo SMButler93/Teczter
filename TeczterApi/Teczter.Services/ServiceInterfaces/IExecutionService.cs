@@ -6,6 +6,6 @@ namespace Teczter.Services.ServiceInterfaces;
 
 public interface IExecutionService
 {
-    Task<TeczterValidationResult<ExecutionEntity>> CompleteExecution(ExecutionEntity execution, CompleteExecutionRequestDto request);
-    Task<TeczterValidationResult<ExecutionEntity>> ValidateExecutionState(ExecutionEntity execution);
+    Task<TeczterValidationResult<ExecutionEntity>> CompleteExecution(ExecutionEntity execution, CompleteExecutionRequestDto request, CancellationToken ct);
+    Task<TeczterValidationResult<ExecutionEntity>> ValidateExecutionState(ExecutionEntity execution, CancellationToken ct);
 }

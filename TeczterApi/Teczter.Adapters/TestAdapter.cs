@@ -5,23 +5,23 @@ using Teczter.Services.AdapterInterfaces;
 
 namespace Teczter.Adapters;
 
-public class TestAdapter(TeczterDbContext _dbContext) : ITestAdapter
+public class TestAdapter(TeczterDbContext dbContext) : ITestAdapter
 {
-    public async Task AddNewTest(TestEntity test)
+    public async Task AddNewTest(TestEntity test, CancellationToken ct)
     {
-        await _dbContext.Tests.AddAsync(test);
+        await dbContext.Tests.AddAsync(test, ct);
     }
 
-    public async Task<TestEntity?> GetTestById(int id)
+    public async Task<TestEntity?> GetTestById(int id, CancellationToken ct)
     {
-        return await _dbContext.Tests
+        return await dbContext.Tests
             .Include(x => x.TestSteps.OrderBy(y => y.StepPlacement))
-            .SingleOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+            .SingleOrDefaultAsync(x => x.Id == id && !x.IsDeleted, ct);
     }
 
     public IQueryable<TestEntity> GetTestSearchBaseQuery()
      {
-        return _dbContext.Tests
+        return dbContext.Tests
             .AsNoTracking()
             .Include(x => x.TestSteps)
             .Where(x => !x.IsDeleted);

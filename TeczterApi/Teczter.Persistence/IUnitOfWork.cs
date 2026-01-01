@@ -2,6 +2,5 @@
 
 public interface IUnitOfWork
 {
-    Task SaveChanges();
-    void Rollback();
+    Task SaveChanges(CancellationToken ct);
 }

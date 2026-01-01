@@ -8,20 +8,12 @@ using Teczter.Services.ServiceInterfaces;
 
 namespace Teczter.Services;
 
-public class ExecutionService : IExecutionService
+public class ExecutionService(
+    IUnitOfWork uow,
+    IValidator<ExecutionEntity> validator)
+    : IExecutionService
 {
-    private readonly IExecutionAdapter _executionAdapter;
-    private readonly IUnitOfWork _uow;
-    private readonly IValidator<ExecutionEntity> _validator;
-
-    public ExecutionService(IExecutionAdapter executionAdapter, IUnitOfWork uow, IValidator<ExecutionEntity> validator)
-    {
-        _executionAdapter = executionAdapter;
-        _uow = uow;
-        _validator = validator;
-    }
-
-    public async Task<TeczterValidationResult<ExecutionEntity>> CompleteExecution(ExecutionEntity execution, CompleteExecutionRequestDto request)
+    public async Task<TeczterValidationResult<ExecutionEntity>> CompleteExecution(ExecutionEntity execution, CompleteExecutionRequestDto request, CancellationToken ct)
     {
         if (request.HasPassed)
         {
@@ -32,19 +24,19 @@ public class ExecutionService : IExecutionService
             execution.Fail(default, (int)request.FailedStepId!, request.FailureReason!);
         }
 
-        var result = await ValidateExecutionState(execution);
+        var result = await ValidateExecutionState(execution, ct);
 
         if (result.IsValid)
         {
-            await _uow.SaveChanges();
+            await uow.SaveChanges(ct);
         }
 
         return result;
     }
 
-    public async Task<TeczterValidationResult<ExecutionEntity>> ValidateExecutionState(ExecutionEntity execution)
+    public async Task<TeczterValidationResult<ExecutionEntity>> ValidateExecutionState(ExecutionEntity execution, CancellationToken ct)
     {
-        var result = await _validator.ValidateAsync(execution);
+        var result = await validator.ValidateAsync(execution, ct);
 
         if (!result.IsValid)
         {

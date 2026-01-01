@@ -39,9 +39,10 @@ public class ExecutionGroupAdapterTests
     {
         //Arrange:
         var executionGroupToGet = GetMultipleExecutionGroupInstances().First();
+        var ct = new CancellationTokenSource().Token;
 
         //Act:
-        var result = await _sut.GetExecutionGroupById(executionGroupToGet.Id);
+        var result = await _sut.GetExecutionGroupById(executionGroupToGet.Id, ct);
 
         //Assert:
         result.ShouldNotBeNull();
@@ -58,11 +59,12 @@ public class ExecutionGroupAdapterTests
         //Arrange:
         var executionGroupToGet = GetMultipleExecutionGroupInstances().First();
         var trackedExecutionGroup = await _dbContext.ExecutionGroups.SingleAsync(x => x.Id == executionGroupToGet.Id);
+        var ct = new CancellationTokenSource().Token;
         trackedExecutionGroup.Delete();
         await _dbContext.SaveChangesAsync();
 
         //Act:
-        var result = await _sut.GetExecutionGroupById(executionGroupToGet.Id);
+        var result = await _sut.GetExecutionGroupById(executionGroupToGet.Id, ct);
 
         //Assert:
         result.ShouldBeNull();
@@ -95,6 +97,7 @@ public class ExecutionGroupAdapterTests
     public async Task CreateNewExecutionGroup_WhenExecuted_ShouldAddNewInstanceToDatabase()
     {
         //Arrange:
+        var ct = new CancellationTokenSource().Token;
         var executionGroup = new ExecutionGroupEntity()
         {
             Id = 5,
@@ -106,7 +109,7 @@ public class ExecutionGroupAdapterTests
 
         //Act:
         var initialPersistedExecutionGroupsCount = await _dbContext.ExecutionGroups.CountAsync();
-        await _sut.AddNewExecutionGroup(executionGroup);
+        await _sut.AddNewExecutionGroup(executionGroup, ct);
         await _dbContext.SaveChangesAsync();
         var persistedExecutionGroups = await _dbContext.ExecutionGroups.ToListAsync();
         var newlyPersistedExecutionGroup = await _dbContext.ExecutionGroups.SingleAsync(x => x.Id == executionGroup.Id);

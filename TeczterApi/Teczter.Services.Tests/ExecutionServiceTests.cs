@@ -13,9 +13,8 @@ namespace Teczter.Services.Tests;
 [TestFixture]
 public class ExecutionServiceTests
 {
-    private Mock<IExecutionAdapter> _executionAdapterMock = new();
-    private Mock<IValidator<ExecutionEntity>> _executionValidatorMock = new();
-    private UnitOfWorkFake _uow = new();
+    private readonly Mock<IValidator<ExecutionEntity>> _executionValidatorMock = new();
+    private readonly UnitOfWorkFake _uow = new();
 
     private ExecutionService _sut = null!;
 
@@ -23,7 +22,6 @@ public class ExecutionServiceTests
     public void Setup()
     {
         _sut = new ExecutionService(
-            _executionAdapterMock.Object,
             _uow,
             _executionValidatorMock.Object);
     }
@@ -33,14 +31,13 @@ public class ExecutionServiceTests
     {
         //Arrange:
         var request = GetCompletionRequest();
-        var executionId = 1;
         var execution = GetExecutionInstance();
         var validationResult = new ValidationResult();
-        _executionAdapterMock.Setup(x => x.GetExecutionById(executionId)).ReturnsAsync(execution);
+        var ct = new CancellationTokenSource().Token;
         _executionValidatorMock.Setup(x => x.ValidateAsync(execution, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
 
         //Act:
-        var result = await _sut.CompleteExecution(execution, request);
+        var result = await _sut.CompleteExecution(execution, request, ct);
 
         //Assert:
         result.IsValid.ShouldBeTrue();
