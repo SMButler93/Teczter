@@ -28,10 +28,7 @@ public class TestController(ITestService _testService) : TeczterControllerBase
     {
         var test = await _testService.GetTestById(id, ct);
 
-        if (test is null)
-        {
-            return NotFound($"Test {id} does not exist");
-        }
+        if (test is null) return NotFound($"Test {id} does not exist");
 
         return Ok(new TestDto(test));
     }
@@ -41,10 +38,7 @@ public class TestController(ITestService _testService) : TeczterControllerBase
     {
         var test = await _testService.GetTestById(id, ct);
 
-        if (test is null)
-        {
-            return NotFound($"Test {id} does not exist");
-        }
+        if (test is null) return NotFound($"Test {id} does not exist");
 
         await _testService.DeleteTest(test, ct);
 
@@ -56,10 +50,7 @@ public class TestController(ITestService _testService) : TeczterControllerBase
     {
         var result = await _testService.CreateNewTest(request, ct);
 
-        if (result.IsValid)
-        {
-            return Ok(new TestDto(result.Value!));
-        }
+        if (result.IsValid) return Ok(new TestDto(result.Value!));
         
         var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
 
@@ -72,17 +63,11 @@ public class TestController(ITestService _testService) : TeczterControllerBase
     {
         var test = await _testService.GetTestById(id, ct);
 
-        if (test is null)
-        {
-            return NotFound($"Test {id} does not exist");
-        }
-
+        if (test is null) return NotFound($"Test {id} does not exist");
+        
         var result = await _testService.UpdateTest(test, request, ct);
 
-        if (result.IsValid)
-        {
-            return Ok(new TestDto(test));
-        }
+        if (result.IsValid) return Ok(new TestDto(test));
         
         var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
 
@@ -95,17 +80,11 @@ public class TestController(ITestService _testService) : TeczterControllerBase
     {
         var test = await _testService.GetTestById(id, ct);
 
-        if (test is null)
-        {
-            return NotFound($"Test {id} does not exist");
-        }
+        if (test is null) return NotFound($"Test {id} does not exist");
 
         var result = await _testService.AddLinkUrl(test, request.Url, ct);
 
-        if (result.IsValid)
-        {
-            return Ok(new TestDto(test));
-        }
+        if (result.IsValid) return Ok(new TestDto(test));
         
         var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
 
@@ -118,17 +97,11 @@ public class TestController(ITestService _testService) : TeczterControllerBase
     {
         var test = await _testService.GetTestById(id, ct);
 
-        if (test is null)
-        {
-            return NotFound($"Test {id} does not exist.");
-        }
+        if (test is null) return NotFound($"Test {id} does not exist.");
 
         var result = await _testService.RemoveLinkUrl(test, request.Url, ct);
 
-        if (result.IsValid)
-        {
-            return Ok(new TestDto(test));
-        }
+        if (result.IsValid) return Ok(new TestDto(test));
         
         var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
 
@@ -140,17 +113,11 @@ public class TestController(ITestService _testService) : TeczterControllerBase
     {
         var test = await _testService.GetTestById(id, ct);
 
-        if (test is null)
-        {
-            return NotFound($"Test {id} does not exist");
-        }
+        if (test is null) return NotFound($"Test {id} does not exist");
 
         var result = await _testService.AddTestStep(test, request, ct);
 
-        if (result.IsValid)
-        {
-            return Ok(new TestDto(test));
-        }
+        if (result.IsValid) return Ok(new TestDto(test));
         
         var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
 
@@ -163,17 +130,11 @@ public class TestController(ITestService _testService) : TeczterControllerBase
     {
         var test = await _testService.GetTestById(testId, ct);
 
-        if (test is null)
-        {
-            return NotFound($"Test {testId} does not exist.");
-        }
+        if (test is null) return NotFound($"Test {testId} does not exist.");
 
         var result = await _testService.RemoveTestStep(test, testStepId, ct);
 
-        if (result.IsValid)
-        {
-            return Ok(new TestDto(test));
-        }
+        if (result.IsValid) return Ok(new TestDto(test));
         
         var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
 
@@ -186,17 +147,11 @@ public class TestController(ITestService _testService) : TeczterControllerBase
     {
         var test = await _testService.GetTestById(testId, ct);
 
-        if (test is null)
-        {
-            return NotFound($"Test {testId} does not exist.");
-        }
+        if (test is null) return NotFound($"Test {testId} does not exist.");
 
         var result = await _testService.UpdateTestStep(test, testStepId, request, ct);
 
-        if (result.IsValid)
-        {
-            return Ok(new TestDto(test));
-        }
+        if (result.IsValid) return Ok(new TestDto(test));
         
         var message = ErrorMessageResponseBuilder.BuildErrorMessage(result.ErrorMessages!);
 

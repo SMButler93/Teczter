@@ -27,11 +27,8 @@ public class ExecutionGroupController(IExecutionGroupService _executionGroupServ
     {
         var executionGroup = await _executionGroupService.GetExecutionGroupById(id, ct);
 
-        if (executionGroup is null)
-        {
-            return NotFound($"Execution group {id} does not exist");
-        }
-
+        if (executionGroup is null) return NotFound($"Execution group {id} does not exist");
+            
         return Ok(new ExecutionGroupDto(executionGroup));
     }
 
@@ -40,17 +37,11 @@ public class ExecutionGroupController(IExecutionGroupService _executionGroupServ
     {
         var executionGroup = await _executionGroupService.GetExecutionGroupById(id, ct);
 
-        if (executionGroup is null)
-        {
-            return NotFound($"Execution group {id} does not exist");
-        }
+        if (executionGroup is null) return NotFound($"Execution group {id} does not exist");
 
         var result = await _executionGroupService.DeleteExecutionGroup(executionGroup, ct);
 
-        if (!result.IsValid)
-        {
-            return BadRequest(result.ErrorMessages);
-        }
+        if (!result.IsValid) return BadRequest(result.ErrorMessages);
 
         return NoContent();
     }
@@ -64,17 +55,11 @@ public class ExecutionGroupController(IExecutionGroupService _executionGroupServ
     {
         var executionGroupToClone = await _executionGroupService.GetExecutionGroupById(id, ct);
 
-        if (executionGroupToClone is null)
-        {
-            return NotFound($"Execution group {id} does not exist");
-        }
+        if (executionGroupToClone is null) return NotFound($"Execution group {id} does not exist");
 
         var result = await _executionGroupService.CloneExecutionGroup(executionGroupToClone, newExecutionGroupName, softwareVersionNumber, ct);
 
-        if (!result.IsValid)
-        {
-            return BadRequest(result.ErrorMessages);
-        }
+        if (!result.IsValid) return BadRequest(result.ErrorMessages);
 
         var dto = new ExecutionGroupDto(result.Value!);
 
@@ -86,10 +71,7 @@ public class ExecutionGroupController(IExecutionGroupService _executionGroupServ
     {
         var result = await _executionGroupService.CreateNewExecutionGroup(request, ct);
 
-        if (!result.IsValid)
-        {
-            return BadRequest(result.ErrorMessages);
-        }
+        if (!result.IsValid) return BadRequest(result.ErrorMessages);
 
         var dto = new ExecutionGroupDto(result.Value!);
 
@@ -101,10 +83,7 @@ public class ExecutionGroupController(IExecutionGroupService _executionGroupServ
     {
         var result = await _executionGroupService.CreateExecution(groupId, request, ct);
 
-        if (!result.IsValid)
-        {
-            return BadRequest(result.ErrorMessages);
-        }
+        if (!result.IsValid) return BadRequest(result.ErrorMessages);
 
         var dto = new ExecutionGroupDto(result.Value!);
 
