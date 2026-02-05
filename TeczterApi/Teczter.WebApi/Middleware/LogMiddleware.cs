@@ -1,10 +1,7 @@
 ﻿namespace Teczter.WebApi.Middleware;
 
-internal class LogMiddleware(RequestDelegate next, ILogger<LogMiddleware> logger)
+internal class LogMiddleware(RequestDelegate _next, ILogger<LogMiddleware> _logger)
 {
-    private readonly RequestDelegate _next = next;
-    private readonly ILogger<LogMiddleware> _logger = logger;
-
     public async Task Invoke(HttpContext context)
     {
         try
@@ -13,14 +10,7 @@ internal class LogMiddleware(RequestDelegate next, ILogger<LogMiddleware> logger
         }
         catch (Exception ex)
         {
-            try
-            {
-                _logger.LogError(ex, $"An unexpected error occurred: {ex.Message}");
-            }
-            catch (Exception logEx)
-            {
-                Console.WriteLine($"ERROR LOGGING FAILED: {logEx.Message}");
-            }
+            _logger.LogError(ex, $"An unexpected error occurred: {ex.Message}");
 
             if (!context.Response.HasStarted)
             {

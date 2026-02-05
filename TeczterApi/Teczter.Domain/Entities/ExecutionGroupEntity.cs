@@ -16,6 +16,7 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
     public DateTime? ClosedDate { get; private set; } = null;
     public bool IsComplete => Executions.All(x => x.ExecutionState != ExecutionStateType.Untested);
     public bool IsClosed => ClosedDate.HasValue;
+    public bool CanModify => !ClosedDate.HasValue && !IsDeleted;
     public List<string> ExecutionGroupNotes { get; set; } = [];
     public int PassedTestPercentage => PassRate();
     public byte[] RowVersion { get; set; } = [];
@@ -24,13 +25,8 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 
     public void AddExecution(ExecutionEntity execution) => Executions.Add(execution);
 
-    public TeczterValidationResult<ExecutionGroupEntity> Delete()
+    public void Delete()
     {
-        if (IsClosed)
-        {
-            return TeczterValidationResult<ExecutionGroupEntity>.Fail("Cannot delete an execution group that has been closed.");
-        }
-
         foreach(var execution in Executions)
         {
             execution.Delete();
@@ -39,22 +35,15 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         IsDeleted = true;
         RevisedOn = DateTime.Now;
         //RevisedBy?
-
-        return TeczterValidationResult<ExecutionGroupEntity>.Succeed(this);
     }
 
-    public TeczterValidationResult<ExecutionEntity> DeleteExecution(ExecutionEntity execution)
+    public void DeleteExecution(ExecutionEntity execution)
     {
-        var result = execution.Delete();
+        execution.Delete();
 
-        if (result.IsValid)
-        {
-            Executions.Remove(execution);
-            RevisedOn = DateTime.Now;
-            //RevisedBy?
-        }
-
-        return result;
+        Executions.Remove(execution); 
+        RevisedOn = DateTime.Now; 
+        //RevisedBy?
     }
 
     public void CloseTestRound() => ClosedDate = DateTime.Now; //RevisedBy?
@@ -76,9 +65,9 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
             //CreatedBy?
         };
 
-        foreach (var execution in this.Executions)
+        foreach (var execution in Executions)
         {
-            executionGroup.AddExecution(execution.CloneExecution());
+            executionGroup.AddExecution(execution.CloneExecution(this));
         }
 
         return executionGroup;
@@ -90,5 +79,5 @@ public class ExecutionGroupEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         var passedTests = Executions.Where(x => x.HasPassed).ToList().Count;
 
         return (100 / numberOfTests) * passedTests;
-    } 
+    }
 }

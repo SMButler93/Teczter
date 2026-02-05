@@ -28,16 +28,15 @@ public class ExecutionGroupEntityTests
     public void DeleteExecutionGroup_WhenDeleted_ShouldDeleteEveryOwnedExecution()
     {
         //Act:
-        var result = _sut.Delete();
+        _sut.Delete();
 
         //Assert:
-        result.IsValid.ShouldBeTrue();
         _sut.IsDeleted.ShouldBeTrue();
         _sut.Executions.ShouldAllBe(x => x.IsDeleted);
     }
 
     [Test]
-    public void RemoveExecution_WhenRemoved_ShouldMarkExecutionAsDeletedAndRemoveFromExecutionCollection()
+    public void RemoveExecution_ShouldMarkExecutionAsDeletedAndRemoveFromExecutionCollection()
     {
         //Arrange:
         var executionToDelete = _sut.Executions.First();
@@ -51,7 +50,7 @@ public class ExecutionGroupEntityTests
     }
 
     [Test]
-    public void AddExecution_WhenAdded_ShouldBePresentInCollectionOfExecutions()
+    public void AddExecution_ShouldBePresentInCollectionOfExecutions()
     {
         //Arrange:
         var newExecution = new ExecutionEntity
@@ -72,10 +71,10 @@ public class ExecutionGroupEntityTests
     }
 
     [Test]
-    public void AddNote_WhenAdded_ShouldBePresentInCollectionOfNotes()
+    public void AddNote_ShouldBePresentInCollectionOfNotes()
     {
         //Arrange
-        var note = "new note";
+        const string note = "new note";
 
         //Act:
         _sut.AddNote(note);

@@ -36,3 +36,36 @@ public record TeczterValidationResult<T>
         };
     }
 }
+
+public record TeczterValidationResult
+{
+    public bool IsValid { get; init; }
+    public string[]? ErrorMessages { get; init; }
+
+    public static TeczterValidationResult Succeed()
+    {
+        return new TeczterValidationResult
+        {
+            IsValid = true,
+            ErrorMessages = []
+        };
+    }
+
+    public static TeczterValidationResult Fail(string[] errorMessages)
+    {
+        return new TeczterValidationResult
+        {
+            IsValid = false,
+            ErrorMessages = errorMessages
+        };
+    }
+
+    public static TeczterValidationResult Fail(string errorMessage)
+    {
+        return new TeczterValidationResult
+        {
+            IsValid = false,
+            ErrorMessages = [errorMessage]
+        };
+    }
+}

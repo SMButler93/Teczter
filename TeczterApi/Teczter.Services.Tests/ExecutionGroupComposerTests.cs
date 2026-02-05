@@ -27,8 +27,8 @@ public class ExecutionGroupComposerTests
         var result = _sut.AddExecution(execution).Build();
 
         //Assert:
-        result.Value.ShouldNotBeNull();
-        result.Value.Executions.Single().ShouldBe(execution);
+        result.Executions.ShouldNotBeEmpty();
+        result.Executions.Single().ShouldBe(execution);
     }
 
     [Test]
@@ -41,8 +41,8 @@ public class ExecutionGroupComposerTests
         var result = _sut.AddExecutions(executions).Build();
 
         //Assert:
-        result.Value.ShouldNotBeNull();
-        result.Value.Executions.ShouldBe(executions);
+        result.Executions.ShouldNotBeEmpty();
+        result.Executions.ShouldBe(executions);
     }
 
     [Test]
@@ -55,8 +55,8 @@ public class ExecutionGroupComposerTests
         var result = _sut.AddExecution(execution).Build();
 
         //Assert:
-        result.Value.ShouldNotBeNull();
-        result.Value.Executions.Single().TestId.ShouldBe(execution.TestId);
+        result.Executions.ShouldNotBeEmpty();
+        result.Executions.Single().TestId.ShouldBe(execution.TestId);
     }
 
     [Test]
@@ -69,10 +69,10 @@ public class ExecutionGroupComposerTests
         var result = _sut.AddExecutions(executions).Build();
 
         //Assert:
-        result.Value.ShouldNotBeNull();
-        result.Value.Executions.Count.ShouldBe(executions.Count);
-        result.Value.Executions.First().TestId.ShouldBe(executions.First().TestId);
-        result.Value.Executions.Last().TestId.ShouldBe(executions.Last().TestId);
+        result.Executions.ShouldNotBeEmpty();
+        result.Executions.Count.ShouldBe(executions.Count);
+        result.Executions.First().TestId.ShouldBe(executions.First().TestId);
+        result.Executions.Last().TestId.ShouldBe(executions.Last().TestId);
     }
 
     [Test]
@@ -82,9 +82,7 @@ public class ExecutionGroupComposerTests
         var result = _sut.SetExecutionGroupNotes(null).Build();
 
         //Assert:
-        result.Value.ShouldNotBeNull();
-        result.Value.ExecutionGroupNotes.ShouldNotBeNull();
-        result.Value.ExecutionGroupNotes.Count.ShouldBe(0);
+        result.ExecutionGroupNotes.ShouldBeEmpty();
     }
 
     [Test]
@@ -97,8 +95,8 @@ public class ExecutionGroupComposerTests
         var result = _sut.SetExecutionGroupNotes(notes).Build();
 
         //Assert:
-        result.Value.ShouldNotBeNull();
-        result.Value.ExecutionGroupNotes.ShouldBe(notes);
+        result.ExecutionGroupNotes.ShouldNotBeEmpty();
+        result.ExecutionGroupNotes.ShouldBe(notes);
     }
 
     [Test]
@@ -111,8 +109,7 @@ public class ExecutionGroupComposerTests
         var result = _sut.SetName(name).Build();
 
         //Assert:
-        result.Value.ShouldNotBeNull();
-        result.Value.ExecutionGroupName.ShouldBe(name);
+        result.ExecutionGroupName.ShouldBe(name);
     }
 
     [Test]
@@ -125,8 +122,7 @@ public class ExecutionGroupComposerTests
         var result = _sut.SetSoftwareVersionNumber(versionNumber).Build();
 
         //Assert:
-        result.Value.ShouldNotBeNull();
-        result.Value.SoftwareVersionNumber.ShouldBe(versionNumber);
+        result.SoftwareVersionNumber.ShouldBe(versionNumber);
     }
 
     private static ExecutionGroupEntity GetBasicSingleExecutionGroupInstance()
@@ -145,7 +141,7 @@ public class ExecutionGroupComposerTests
     {
         List<ExecutionEntity> executions = [];
 
-        for (int i = 0; i < numberOfInstances; i++)
+        for (int i = 1; i <= numberOfInstances; i++)
         {
             var execution = new ExecutionEntity()
             {
@@ -153,7 +149,8 @@ public class ExecutionGroupComposerTests
                 CreatedById =i,
                 RevisedById = i,
                 ExecutionGroupId = i,
-                TestId = i
+                TestId = i,
+                ExecutionGroup = new ExecutionGroupEntity {Id = i}
             };
 
             executions.Add(execution);

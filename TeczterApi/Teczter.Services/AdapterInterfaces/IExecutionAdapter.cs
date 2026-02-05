@@ -4,6 +4,6 @@ namespace Teczter.Services.AdapterInterfaces;
 
 public interface IExecutionAdapter
 {
-    Task<List<ExecutionEntity>> GetExecutionsForTest(int testId);
-    Task<ExecutionEntity?> GetExecutionById(int id);
+    Task<List<ExecutionEntity>> GetExecutionsForTest(int testId, CancellationToken ct);
+    Task<ExecutionEntity?> GetExecutionById(int id, CancellationToken ct);
 }

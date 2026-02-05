@@ -74,10 +74,9 @@ public class TestAdapterTests
         //Arrange:
         var testToAdd = GetSingleBasicTestInstance();
         var initialPersistedTestsCount = await _dbContext.Tests.CountAsync();
-        var ct = new CancellationTokenSource().Token;
 
         //Act:
-        await _sut.AddNewTest(testToAdd, ct);
+        await _sut.AddNewTest(testToAdd, CancellationToken.None);
         await _dbContext.SaveChangesAsync();
         var persistedTestsWithNewEntry = await _dbContext.Tests.ToListAsync();
 
@@ -87,7 +86,7 @@ public class TestAdapterTests
     }
 
     [Test]
-    public async Task GetBasicTestSearchQuery_WhenNoAdditionalFiltersAreApplied_ShouldReturnAllNonDeletedTests()
+    public async Task GetBasicTestSearchResults_WhenNoAdditionalFiltersAreApplied_ShouldReturnUpTo15NonDeletedTests()
     {
         //Arrange:
         var preSeededTests = await _dbContext.Tests.ToListAsync();
@@ -96,12 +95,72 @@ public class TestAdapterTests
         await _dbContext.SaveChangesAsync();
 
         //Act:
-        var query = _sut.GetTestSearchBaseQuery();
-        var results = await query.ToListAsync();
+        var results = await _sut.GetTestSearchResults(1, null, null, CancellationToken.None);
 
         //Assert:
+        results.Count.ShouldBeLessThanOrEqualTo(15);
         results.Count.ShouldBeLessThan(preSeededTests.Count);
         results.ShouldNotContain(x => x.Id == testToMarkAsDeleted.Id);
+    }
+
+    [Test]
+    public async Task GetTestSearchResults_WhenNoFiltersApplied_ShouldReturnUpTo15NonDeletedTests()
+    {
+        //Arrange:
+        var preSeededTests = await _dbContext.Tests
+            .Where(x => !x.IsDeleted)
+            .Take(15)
+            .ToListAsync();
+        
+        var preSeededTestIds = preSeededTests.Select(x => x.Id).OrderBy(x => x).ToList();
+
+        //Act:
+        var results = await _sut.GetTestSearchResults(1, null, null, CancellationToken.None);
+
+        //Assert:
+        var resultsIds = results.Select(x => x.Id).OrderBy(x => x).ToList();
+        resultsIds.ShouldBeEquivalentTo(preSeededTestIds);
+        results.Count.ShouldBeLessThanOrEqualTo(15);
+    }
+
+    [Test]
+    public async Task GetTestSearchResults_WhenFilteredOnTestName_ShouldGetInstancesThatMatch()
+    {
+        //Arrange:
+        var preSeededTests = await _dbContext.Tests.ToListAsync();
+        var expectedTest = preSeededTests.First();
+
+        //Act:
+        var results = await _sut.GetTestSearchResults(1, "One", null, CancellationToken.None);
+
+        //Assert:
+        results.Count.ShouldBe(1);
+        results[0].Id.ShouldBe(expectedTest.Id);
+    }
+
+    [Test]
+    public async Task GetTestSearchResults_WhenFilteredOnOwningDepartment_ShouldGetInstancesThatMatch()
+    {
+        //Arrange:
+        var preSeededTests = await _dbContext.Tests.ToListAsync();
+        var expectedTest = preSeededTests.First(x => x.OwningDepartment == Department.Accounting);
+
+        //Act:
+        var results = await _sut.GetTestSearchResults(1, null, nameof(Department.Accounting), CancellationToken.None);
+
+        //Assert:
+        results.Count.ShouldBe(1);
+        results[0].Id.ShouldBe(expectedTest.Id);
+    }
+
+    [Test]
+    public async Task GetTestSearchResults_WhenFilteredWithNoMatches_ShouldReturnEmptyList()
+    {
+        //Act:
+        var results = await _sut.GetTestSearchResults(1, "ABC", null, CancellationToken.None);
+
+        //Assert:
+        results.ShouldBeEmpty();
     }
 
     private static TestEntity GetSingleBasicTestInstance()

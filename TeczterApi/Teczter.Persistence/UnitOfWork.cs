@@ -2,10 +2,10 @@
 
 namespace Teczter.Persistence;
 
-public class UnitOfWork(TeczterDbContext dbContext) : IUnitOfWork
+public class UnitOfWork(TeczterDbContext _dbContext) : IUnitOfWork
 {
     public async Task SaveChanges(CancellationToken ct)
     {
-        await dbContext.SaveChangesAsync(ct);
+        await _dbContext.SaveChangesAsync(ct);
     }
 }

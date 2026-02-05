@@ -5,9 +5,9 @@ namespace Teczter.Services.RequestDtos.Tests;
 
 public class CreateTestRequestDto
 {
-    public string Title { get; set; } = null!;
-    public string Description { get; set; } = null!;
-    public string OwningDepartment { get; set; } = Department.Unowned.ToString();
-    public List<CreateTestStepRequestDto> TestSteps { get; set; } = [];
-    public List<string> LinkUrls { get; set; } = [];
+    public required string Title { get; init; }
+    public required string Description { get; init;  }
+    public string OwningDepartment { get; init;  } = nameof(Department.Unowned);
+    public List<CreateTestStepRequestDto> TestSteps { get; init; } = [];
+    public List<string> LinkUrls { get; } = [];
 }

@@ -14,5 +14,5 @@ public interface IExecutionGroupComposer
     IExecutionGroupComposer AddExecution(CreateExecutionRequestDto execution);
     IExecutionGroupComposer AddExecutions(IEnumerable<ExecutionEntity> executions);
     IExecutionGroupComposer AddExecution(ExecutionEntity execution);
-    TeczterValidationResult<ExecutionGroupEntity> Build();
+    ExecutionGroupEntity Build();
 }

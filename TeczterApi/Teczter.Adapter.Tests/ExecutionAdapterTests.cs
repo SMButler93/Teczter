@@ -41,7 +41,7 @@ public class ExecutionAdapterTests
         var executionToGet = GetMultipleExecutionInstances().First();
 
         //Act:
-        var result = await _sut.GetExecutionById(executionToGet.Id);
+        var result = await _sut.GetExecutionById(executionToGet.Id,  CancellationToken.None);
 
         //Assert:
         result.ShouldNotBeNull();
@@ -62,7 +62,7 @@ public class ExecutionAdapterTests
         await _dbContext.SaveChangesAsync();
 
         //Act:
-        var result = await _sut.GetExecutionById(executionToGetId);
+        var result = await _sut.GetExecutionById(executionToGetId,  CancellationToken.None);
 
         //Assert:
         result.ShouldBeNull();
@@ -75,7 +75,7 @@ public class ExecutionAdapterTests
         var nonExistentId = GetMultipleExecutionInstances().OrderBy(x => x.Id).Last().Id + 1;
 
         //Act:
-        var result = await _sut.GetExecutionById(nonExistentId);
+        var result = await _sut.GetExecutionById(nonExistentId,  CancellationToken.None);
 
         //Assert:
         result.ShouldBeNull();
@@ -89,7 +89,7 @@ public class ExecutionAdapterTests
         var matchingExecutions = GetMultipleExecutionInstances().Where(x => x.TestId == testId).ToList();
 
         //Act:
-        var result = await _sut.GetExecutionsForTest(testId);
+        var result = await _sut.GetExecutionsForTest(testId,  CancellationToken.None);
 
         //Assert:
         result.Count.ShouldBe(matchingExecutions.Count);
@@ -107,14 +107,17 @@ public class ExecutionAdapterTests
         await _dbContext.SaveChangesAsync();
 
         //Act:
-        var result = await _sut.GetExecutionsForTest(testId);
+        var result = await _sut.GetExecutionsForTest(testId,  CancellationToken.None);
 
         //Assert:
         result.Count.ShouldBe(0);
     }
 
-    private List<ExecutionEntity> GetMultipleExecutionInstances()
+    private static List<ExecutionEntity> GetMultipleExecutionInstances()
     {
+        var test1 = new TestEntity() { Id = 1 };
+        var test2 = new TestEntity() { Id = 2 };
+        
         return
         [
             new ExecutionEntity()
@@ -126,9 +129,11 @@ public class ExecutionAdapterTests
                 TestId = 1,
                 ExecutionGroup = new ExecutionGroupEntity
                 {
+                    Id = 1,
                     ExecutionGroupName = "Group 1",
                     SoftwareVersionNumber = "1.1.1"
-                }
+                },
+                Test = test1
             },
             new ExecutionEntity()
             {
@@ -139,9 +144,11 @@ public class ExecutionAdapterTests
                 TestId = 1,
                 ExecutionGroup = new ExecutionGroupEntity
                 {
+                    Id = 2,
                     ExecutionGroupName = "Group 2",
                     SoftwareVersionNumber = "1.1.2"
-                }
+                },
+                Test = test1
             },
             new ExecutionEntity()
             {
@@ -152,9 +159,11 @@ public class ExecutionAdapterTests
                 TestId = 2,
                 ExecutionGroup = new ExecutionGroupEntity
                 {
+                    Id = 3,
                     ExecutionGroupName = "Group 3",
                     SoftwareVersionNumber = "1.1.3"
-                }
+                },
+                Test = test2
             },
             new ExecutionEntity()
             {
@@ -165,9 +174,11 @@ public class ExecutionAdapterTests
                 TestId = 2,
                 ExecutionGroup = new ExecutionGroupEntity
                 {
+                    Id = 4,
                     ExecutionGroupName = "Group 4",
                     SoftwareVersionNumber = "1.1.4"
-                }
+                },
+                Test = test2
             }
         ];
     }

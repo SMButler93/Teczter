@@ -17,21 +17,11 @@ public class CompleteExecutionRequestValidator : AbstractValidator<CompleteExecu
 
     private bool HasFailedStepWhenFailed(CompleteExecutionRequestDto request)
     {
-        if (!request.HasPassed)
-        {
-            return request.FailedStepId.HasValue;
-        }
-
-        return true;
+        return request.HasPassed || request.FailedStepId.HasValue;
     }
 
     private bool HasFailureReasonWhenFailed(CompleteExecutionRequestDto request)
     {
-        if (!request.HasPassed)
-        {
-            return !string.IsNullOrEmpty(request.FailureReason);
-        }
-
-        return true;
+        return request.HasPassed || !string.IsNullOrEmpty(request.FailureReason);
     }
 }

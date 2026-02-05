@@ -3,7 +3,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Teczter.Domain.Entities.interfaces;
 
 namespace Teczter.Infrastructure.Cache;
-public class TeczterCache<T>(IDistributedCache cache) : ITeczterCache<T> where T : class, IHasIntId
+public class TeczterCache<T>(IDistributedCache _cache) : ITeczterCache<T> where T : class, IHasIntId
 {
     public string KeyPrefix => $"{typeof(T).Name}:";
 
@@ -12,7 +12,7 @@ public class TeczterCache<T>(IDistributedCache cache) : ITeczterCache<T> where T
     public async Task<T?> GetCachedResult(int objectId, CancellationToken ct)
     {
         var key = KeyPrefix + objectId;
-        var json = await cache.GetStringAsync(key, ct);
+        var json = await _cache.GetStringAsync(key, ct);
 
         return json is null ? null : JsonSerializer.Deserialize<T>(json);
     }
@@ -20,7 +20,7 @@ public class TeczterCache<T>(IDistributedCache cache) : ITeczterCache<T> where T
     public async Task RemoveCache(int objectId, CancellationToken ct)
     {
         var key = KeyPrefix + objectId;
-        await cache.RemoveAsync(key, ct);
+        await _cache.RemoveAsync(key, ct);
     }
 
     public async Task SetCache(T obj, CancellationToken ct)
@@ -28,6 +28,6 @@ public class TeczterCache<T>(IDistributedCache cache) : ITeczterCache<T> where T
         var objectId = obj.Id;
         var key = KeyPrefix + objectId;
         var json = JsonSerializer.Serialize(obj);
-        await cache.SetStringAsync(key, json, Options, ct);
+        await _cache.SetStringAsync(key, json, Options, ct);
     }
 }
