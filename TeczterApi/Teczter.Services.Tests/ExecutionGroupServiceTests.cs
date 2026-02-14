@@ -4,7 +4,6 @@ using Moq;
 using NUnit.Framework;
 using Shouldly;
 using Teczter.Domain.Entities;
-using Teczter.Infrastructure.Cache;
 using Teczter.Services.AdapterInterfaces;
 using Teczter.Services.ServiceInterfaces;
 
@@ -16,7 +15,6 @@ public class ExecutionGroupServiceTests
     private readonly Mock<IExecutionGroupAdapter> _executionGroupAdapterMock = new();
     private readonly Mock<IExecutionGroupComposer> _executionGroupComposerMock = new();
     private readonly Mock<IValidator<ExecutionGroupEntity>> _executionGroupValidatorMock = new();
-    private readonly Mock<ITeczterCache<ExecutionGroupEntity>> _cacheMock = new();
     private readonly UnitOfWorkFake _uow = new();
 
     private ExecutionGroupService _sut = null!;
@@ -28,7 +26,6 @@ public class ExecutionGroupServiceTests
             _executionGroupAdapterMock.Object,
             _executionGroupComposerMock.Object,
             _executionGroupValidatorMock.Object,
-            _cacheMock.Object,
             _uow);
     }
 

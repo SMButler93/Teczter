@@ -5,7 +5,6 @@ using NUnit.Framework;
 using Shouldly;
 using Teczter.Domain.Entities;
 using Teczter.Domain.Enums;
-using Teczter.Infrastructure.Cache;
 using Teczter.Services.AdapterInterfaces;
 using Teczter.Services.RequestDtos.TestSteps;
 using Teczter.Services.ServiceInterfaces;
@@ -20,7 +19,6 @@ public class TestServiceTests
     private readonly Mock<ITestComposer> _testComposerMock = new();
     private readonly UnitOfWorkFake _uow = new();
     private readonly Mock<IValidator<TestEntity>> _testValidatorMock = new();
-    private readonly Mock<ITeczterCache<TestEntity>> _cache = new();
 
     private TestService _sut = null!;
 
@@ -32,8 +30,7 @@ public class TestServiceTests
             _executionAdapterMock.Object,
             _testComposerMock.Object,
             _uow,
-            _testValidatorMock.Object,
-            _cache.Object);
+            _testValidatorMock.Object);
     }
 
     [Test]

@@ -7,7 +7,7 @@ namespace Teczter.Adapters;
 
 public class TestAdapter(TeczterDbContext _dbContext) : ITestAdapter
 {
-    private const int TestsPerPage = 15;
+    private static readonly int TestsPerPage = 15;
     
     public async Task AddNewTest(TestEntity test, CancellationToken ct)
     {

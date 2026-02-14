@@ -2,30 +2,16 @@
 
 namespace Teczter.WebApi.ResponseDtos;
 
-public class TestStepDto
+public class TestStepDto(TestStepEntity entity)
 {
-    public int Id { get; private set; }
-    public bool IsDeleted { get; set; }
-    public string CreatedOn { get; }
-    public int CreatedById { get; }
-    public string RevisedOn { get; set; }
-    public int RevisedById { get; set; }
-    public int TestId { get; set; }
-    public int StepPlacement { get; set; }
-    public string Instructions { get; set; } = null!;
-    public List<string> LinkUrls { get; set; } = [];
-
-    public TestStepDto(TestStepEntity testStep)
-    {
-        Id = testStep.Id;
-        IsDeleted = testStep.IsDeleted;
-        CreatedOn = testStep.CreatedOn.ToString();
-        CreatedById = testStep.CreatedById;
-        RevisedOn = testStep.RevisedOn.ToString();
-        RevisedById = testStep.RevisedById;
-        TestId = testStep.Id;
-        StepPlacement = testStep.StepPlacement;
-        Instructions = testStep.Instructions;
-        LinkUrls = testStep.Urls;
-    }
+    public int Id { get; private set; } = entity.Id;
+    public bool IsDeleted { get; set; } = entity.IsDeleted;
+    public DateTime CreatedOn { get; } = entity.CreatedOn;
+    public int CreatedById { get; } = entity.CreatedById;
+    public DateTime RevisedOn { get; set; } = entity.RevisedOn;
+    public int RevisedById { get; set; } = entity.RevisedById;
+    public int TestId { get; set; } = entity.Id;
+    public int StepPlacement { get; set; } = entity.StepPlacement;
+    public string Instructions { get; set; } = entity.Instructions;
+    public List<string> LinkUrls { get; set; } = entity.Urls;
 }

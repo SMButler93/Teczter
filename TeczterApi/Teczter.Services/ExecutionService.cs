@@ -23,13 +23,24 @@ public class ExecutionService(
     {
         var execution = await _executionAdapter.GetExecutionById(id, ct);
 
-        if (execution is null) return TeczterValidationResult<ExecutionEntity>.Fail($"No active execution found with ID {id}.");
+        if (execution is null)
+        {
+            return TeczterValidationResult<ExecutionEntity>.Fail($"No active execution found with ID {id}.");
+        }
         
-        if (!execution.ExecutionGroup.CanModify) return TeczterValidationResult<ExecutionEntity>.Fail("Cannot modify an execution " +
-            "that belongs to a closed or deleted execution group.");
- 
-        if (request.HasPassed) execution.Pass(default);
-        else execution.Fail(default, (int)request.FailedStepId!, request.FailureReason!);
+        if (!execution.ExecutionGroup.CanModify)
+        {
+            return TeczterValidationResult<ExecutionEntity>.Fail("Cannot modify an execution that belongs to a closed or deleted execution group.");
+        }
+
+        if (request.HasPassed)
+        {
+            execution.Pass(default);
+        }
+        else
+        {
+            execution.Fail(default, (int)request.FailedStepId!, request.FailureReason!);
+        }
 
         var result = await ValidateExecutionState(execution, ct);
 
@@ -42,10 +53,15 @@ public class ExecutionService(
     {
         var execution = await _executionAdapter.GetExecutionById(id, ct);
 
-        if (execution is null) return TeczterValidationResult<ExecutionEntity>.Fail($"No active execution found with ID {id}");
+        if (execution is null)
+        {
+            return TeczterValidationResult<ExecutionEntity>.Fail($"No active execution found with ID {id}");
+        }
         
-        if (!execution.ExecutionGroup.CanModify) return TeczterValidationResult<ExecutionEntity>.Fail("Cannot modify an execution " +
-            "that belongs to a closed or deleted execution group.");
+        if (!execution.ExecutionGroup.CanModify)
+        {
+            return TeczterValidationResult<ExecutionEntity>.Fail("Cannot modify an execution that belongs to a closed or deleted execution group.");
+        }
         
         execution.Delete();
         
@@ -55,7 +71,7 @@ public class ExecutionService(
         return result;
     }
 
-    public async Task<TeczterValidationResult<ExecutionEntity>> ValidateExecutionState(ExecutionEntity execution, CancellationToken ct)
+    private async Task<TeczterValidationResult<ExecutionEntity>> ValidateExecutionState(ExecutionEntity execution, CancellationToken ct)
     {
         var result = await _validator.ValidateAsync(execution, ct);
 

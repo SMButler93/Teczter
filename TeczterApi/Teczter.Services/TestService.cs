@@ -2,7 +2,6 @@
 using Teczter.Domain;
 using Teczter.Domain.Entities;
 using Teczter.Domain.Enums;
-using Teczter.Infrastructure.Cache;
 using Teczter.Persistence;
 using Teczter.Services.AdapterInterfaces;
 using Teczter.Services.RequestDtos.Tests;
@@ -15,8 +14,7 @@ public class TestService(ITestAdapter _testAdapter,
         IExecutionAdapter _executionAdapter,
         ITestComposer _composer,
         IUnitOfWork _uow,
-        IValidator<TestEntity> _testValidator,
-        ITeczterCache<TestEntity> _cache) : ITestService
+        IValidator<TestEntity> _testValidator) : ITestService
 {
     public async Task<TeczterValidationResult<TestEntity>> AddLinkUrl(TestEntity test, string url, CancellationToken ct)
     {
@@ -26,10 +24,7 @@ public class TestService(ITestAdapter _testAdapter,
         
         var result = await ValidateTestState(test, ct);
 
-        if (result.IsValid)
-        {
-            await Task.WhenAll(_uow.SaveChanges(ct), _cache.RemoveCache(test.Id, ct));
-        }
+        if (result.IsValid) await _uow.SaveChanges(ct);
         
         return result;
     }
@@ -42,10 +37,7 @@ public class TestService(ITestAdapter _testAdapter,
         
         var result = await ValidateTestState(test, ct);
 
-        if (result.IsValid)
-        {
-            await Task.WhenAll(_uow.SaveChanges(ct), _cache.RemoveCache(test.Id, ct));
-        }
+        if (result.IsValid) await _uow.SaveChanges(ct);
         
         return result;
     }
@@ -63,10 +55,7 @@ public class TestService(ITestAdapter _testAdapter,
         
         var result = await ValidateTestState(test, ct);
 
-        if (result.IsValid)
-        {
-            await Task.WhenAll(_uow.SaveChanges(ct), _cache.RemoveCache(test.Id, ct));
-        }
+        if (result.IsValid) await _uow.SaveChanges(ct);
         
         return result;
     }
@@ -83,19 +72,12 @@ public class TestService(ITestAdapter _testAdapter,
             execution.Delete();
         }
 
-        await Task.WhenAll(_uow.SaveChanges(ct), _cache.RemoveCache(test.Id, ct));
+        await _uow.SaveChanges(ct);
     }
 
     public async Task<TestEntity?> GetTestById(int id, CancellationToken ct)
     {
-        var test = await _cache.GetCachedResult(id, ct) ?? await _testAdapter.GetTestById(id, ct);
-
-        if (test is not null)
-        {
-            await _cache.SetCache(test, ct);
-        }
-
-        return test;
+        return await _testAdapter.GetTestById(id, ct);
     }
 
     public async Task<List<TestEntity>> GetTestSearchResults(int pageNumber, string? testTitle, string? owningDepartment, CancellationToken ct)
@@ -108,11 +90,7 @@ public class TestService(ITestAdapter _testAdapter,
         test.RemoveLinkUrl(url);
         
         var result = await ValidateTestState(test, ct);
-
-        if (result.IsValid)
-        {
-            await Task.WhenAll(_uow.SaveChanges(ct), _cache.RemoveCache(test.Id, ct));
-        }
+        await _uow.SaveChanges(ct);
         
         return result;
     }
@@ -122,11 +100,7 @@ public class TestService(ITestAdapter _testAdapter,
         test.RemoveTestStep(testStepId);
         
         var result = await ValidateTestState(test, ct);
-
-        if (result.IsValid)
-        {
-            await Task.WhenAll(_uow.SaveChanges(ct), _cache.RemoveCache(test.Id, ct));
-        }
+        await _uow.SaveChanges(ct);
         
         return result;
     }
@@ -140,11 +114,7 @@ public class TestService(ITestAdapter _testAdapter,
             .Build();
         
         var result = await ValidateTestState(test, ct);
-
-        if (result.IsValid)
-        {
-            await Task.WhenAll(_uow.SaveChanges(ct), _cache.RemoveCache(test.Id, ct));
-        }
+        await _uow.SaveChanges(ct);
         
         return result;
     }
@@ -158,16 +128,12 @@ public class TestService(ITestAdapter _testAdapter,
         test.SetCorrectStepPlacementValuesOnUpdate();
 
         var result = await ValidateTestState(test, ct);
-
-        if (result.IsValid)
-        {
-            await Task.WhenAll(_uow.SaveChanges(ct), _cache.RemoveCache(test.Id, ct));
-        }
+        await _uow.SaveChanges(ct);
         
         return result;
     }
 
-    public async Task<TeczterValidationResult<TestEntity>> ValidateTestState(TestEntity test, CancellationToken ct)
+    private async Task<TeczterValidationResult<TestEntity>> ValidateTestState(TestEntity test, CancellationToken ct)
     {
         var result = await _testValidator.ValidateAsync(test, ct);
 

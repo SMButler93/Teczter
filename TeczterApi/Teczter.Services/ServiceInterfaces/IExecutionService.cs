@@ -9,5 +9,4 @@ public interface IExecutionService
     Task<ExecutionEntity?> GetExecutionById(int executionId, CancellationToken ct);
     Task<TeczterValidationResult<ExecutionEntity>> CompleteExecution(int id, CompleteExecutionRequestDto request, CancellationToken ct);
     Task<TeczterValidationResult<ExecutionEntity>> DeleteExecution(int id, CancellationToken ct);
-    Task<TeczterValidationResult<ExecutionEntity>> ValidateExecutionState(ExecutionEntity execution, CancellationToken ct);
 }

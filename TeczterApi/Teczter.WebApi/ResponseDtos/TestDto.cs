@@ -2,33 +2,17 @@
 
 namespace Teczter.WebApi.ResponseDtos;
 
-public class TestDto
+public class TestDto(TestEntity entity)
 {
-    public int Id { get; private set; }
-    public bool IsDeleted { get; set; }
-    public string CreatedOn { get; }
-    public int CreatedById { get; }
-    public string RevisedOn { get; set; }
-    public int RevisedById { get; set; }
-    public string Title { get; set; } = null!;
-    public string Description { get; set; } = null!;
-    public List<string> LinkUrls { get; set; } = [];
-    public string Department { get; set; } = null!;
-
-    public List<TestStepDto> TestSteps { get; set; } = [];
-
-    public TestDto(TestEntity test)
-    {
-        Id = test.Id;
-        IsDeleted = test.IsDeleted;
-        CreatedOn = test.CreatedOn.ToString();
-        CreatedById = test.CreatedById;
-        RevisedOn = test.RevisedOn.ToString();
-        RevisedById = test.RevisedById;
-        Title = test.Title;
-        Description = test.Description;
-        LinkUrls = [.. test.Urls];
-        Department = test.OwningDepartment.ToString();
-        TestSteps = test.TestSteps.Select(x => new TestStepDto(x)).ToList();
-    }
+    public int Id { get; private set; } = entity.Id;
+    public bool IsDeleted { get; set; } = entity.IsDeleted;
+    public DateTime CreatedOn { get; } = entity.CreatedOn;
+    public int CreatedById { get; } = entity.CreatedById;
+    public DateTime RevisedOn { get; set; }  = entity.RevisedOn;
+    public int RevisedById { get; set; }  = entity.RevisedById;
+    public string Title { get; set; } = entity.Title;
+    public string Description { get; set; }  = entity.Description;
+    public List<string> LinkUrls { get; set; } = [.. entity.Urls];
+    public string Department { get; set; } = entity.OwningDepartment.ToString();
+    public List<TestStepDto> TestSteps { get; set; } = entity.TestSteps.Select(x => new TestStepDto(x)).ToList();
 }

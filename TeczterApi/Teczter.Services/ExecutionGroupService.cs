@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using Teczter.Domain;
 using Teczter.Domain.Entities;
-using Teczter.Infrastructure.Cache;
 using Teczter.Persistence;
 using Teczter.Services.AdapterInterfaces;
 using Teczter.Services.RequestDtos.ExecutionGroups;
@@ -14,7 +13,6 @@ public class ExecutionGroupService(
         IExecutionGroupAdapter _executionGroupAdapter,
         IExecutionGroupComposer _composer,
         IValidator<ExecutionGroupEntity> _validator,
-        ITeczterCache<ExecutionGroupEntity> _cache,
         IUnitOfWork _uow) : IExecutionGroupService
 {
     public async Task<TeczterValidationResult<ExecutionGroupEntity>> CloneExecutionGroup(
@@ -80,8 +78,9 @@ public class ExecutionGroupService(
         {
             return TeczterValidationResult.Fail("Cannot delete an execution from an execution group that is closed.");
         }
+        
         executionGroup.Delete();
-        await Task.WhenAll(_uow.SaveChanges(ct), _cache.RemoveCache(executionGroup.Id, ct));
+        await _uow.SaveChanges(ct);
 
         return TeczterValidationResult.Succeed();
     }
@@ -96,7 +95,7 @@ public class ExecutionGroupService(
         return await _executionGroupAdapter.GetExecutionGroupSearchResults(pageNumber, executionGroupName, versionNumber, ct);
     }
     
-    public async Task<TeczterValidationResult<ExecutionGroupEntity>> ValidateExecutionGroup(ExecutionGroupEntity executionGroup, CancellationToken ct)
+    private async Task<TeczterValidationResult<ExecutionGroupEntity>> ValidateExecutionGroup(ExecutionGroupEntity executionGroup, CancellationToken ct)
     {
         var result = await _validator.ValidateAsync(executionGroup, ct);
 

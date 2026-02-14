@@ -52,11 +52,6 @@ builder.Services.AddIdentityCore<TeczterUser>(opt =>
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = builder.Configuration.GetConnectionString("Redis");
-});
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -14,5 +14,4 @@ public interface IExecutionGroupService
     Task<TeczterValidationResult<ExecutionGroupEntity>> CloneExecutionGroup(ExecutionGroupEntity executionGroupToClone, string newExecutionGroupName, string? softwareVersionNumber, CancellationToken ct);
     Task<TeczterValidationResult<ExecutionGroupEntity>> CreateExecution(int groupId, CreateExecutionRequestDto request, CancellationToken ct);
     Task<TeczterValidationResult<ExecutionGroupEntity>> CreateNewExecutionGroup(CreateExecutionGroupRequestDto request, CancellationToken ct);
-    Task<TeczterValidationResult<ExecutionGroupEntity>> ValidateExecutionGroup(ExecutionGroupEntity executionGroup, CancellationToken ct);
 }
