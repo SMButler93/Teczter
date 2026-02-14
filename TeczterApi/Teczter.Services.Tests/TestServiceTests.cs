@@ -94,7 +94,7 @@ public class TestServiceTests
     }
 
     [Test]
-    public async Task RemoveTestStep_WhenTheTestStepDoesNotExist_ShouldNOtFailOrThrow()
+    public async Task RemoveTestStep_WhenTheTestStepDoesNotExist_ShouldNotFailOrThrow()
     {
         //Arrange:
         var test = GetBasicTestInstance();
@@ -131,6 +131,8 @@ public class TestServiceTests
         result.Value.ShouldNotBeNull();
         stepToUpdate.StepPlacement.ShouldBe(4);
         test.TestSteps.Count.ShouldBe(4);
+        test.TestSteps.Select(x => x.StepPlacement).Distinct().Count().ShouldBe(test.TestSteps.Count);
+        test.TestSteps.All(x => Enumerable.Range(1, 4).Contains(x.StepPlacement)).ShouldBeTrue();
     }
 
     private static TestEntity GetBasicTestInstance()

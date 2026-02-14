@@ -12,7 +12,7 @@ public class ExecutionController(IExecutionService _executionService) : TeczterC
     {
         var execution = await _executionService.GetExecutionById(id, ct);
 
-        if (execution is null) return BadRequest($"Execution {id} does not exist.");
+        if (execution is null) return NotFound($"Execution {id} does not exist.");
         
         return Ok(new ExecutionDto(execution));
     }
@@ -20,7 +20,11 @@ public class ExecutionController(IExecutionService _executionService) : TeczterC
     [HttpPatch("{id:int}")]
     public async Task<ActionResult<ExecutionDto>> CompleteExecution(int id, [FromBody] CompleteExecutionRequestDto request, CancellationToken ct)
     {
-        var result = await _executionService.CompleteExecution(id, request, ct);
+        var execution = await _executionService.GetExecutionById(id, ct);
+        
+        if (execution is null) return NotFound($"Execution {id} does not exist.");
+        
+        var result = await _executionService.CompleteExecution(execution, request, ct);
 
         if (!result.IsValid) return BadRequest(result.ErrorMessages);
             
@@ -30,7 +34,11 @@ public class ExecutionController(IExecutionService _executionService) : TeczterC
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<ExecutionGroupDto>> DeleteExecution(int id, CancellationToken ct)
     {
-        var result = await _executionService.DeleteExecution(id, ct);
+        var execution = await _executionService.GetExecutionById(id, ct);
+        
+        if (execution is null) return NotFound($"Execution {id} does not exist.");
+        
+        var result = await _executionService.DeleteExecution(execution, ct);
 
         if (!result.IsValid) return BadRequest(result.ErrorMessages);
             

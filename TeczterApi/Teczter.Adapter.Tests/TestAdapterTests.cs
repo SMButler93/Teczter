@@ -71,7 +71,7 @@ public class TestAdapterTests
     [Test]
     public async Task CreateNewTest_WhenAdded_ShouldAppearInDatabase()
     {
-        //Arrange:
+        //Arrange:††
         var testToAdd = GetSingleBasicTestInstance();
         var initialPersistedTestsCount = await _dbContext.Tests.CountAsync();
 

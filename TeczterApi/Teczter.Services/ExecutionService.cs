@@ -19,15 +19,8 @@ public class ExecutionService(
         return await _executionAdapter.GetExecutionById(executionId, ct);
     }
     
-    public async Task<TeczterValidationResult<ExecutionEntity>> CompleteExecution(int id, CompleteExecutionRequestDto request, CancellationToken ct)
+    public async Task<TeczterValidationResult<ExecutionEntity>> CompleteExecution(ExecutionEntity execution, CompleteExecutionRequestDto request, CancellationToken ct)
     {
-        var execution = await _executionAdapter.GetExecutionById(id, ct);
-
-        if (execution is null)
-        {
-            return TeczterValidationResult<ExecutionEntity>.Fail($"No active execution found with ID {id}.");
-        }
-        
         if (!execution.ExecutionGroup.CanModify)
         {
             return TeczterValidationResult<ExecutionEntity>.Fail("Cannot modify an execution that belongs to a closed or deleted execution group.");
@@ -49,15 +42,8 @@ public class ExecutionService(
         return result;
     }
 
-    public async Task<TeczterValidationResult<ExecutionEntity>> DeleteExecution(int id, CancellationToken ct)
+    public async Task<TeczterValidationResult<ExecutionEntity>> DeleteExecution(ExecutionEntity execution, CancellationToken ct)
     {
-        var execution = await _executionAdapter.GetExecutionById(id, ct);
-
-        if (execution is null)
-        {
-            return TeczterValidationResult<ExecutionEntity>.Fail($"No active execution found with ID {id}");
-        }
-        
         if (!execution.ExecutionGroup.CanModify)
         {
             return TeczterValidationResult<ExecutionEntity>.Fail("Cannot modify an execution that belongs to a closed or deleted execution group.");

@@ -17,9 +17,7 @@ public class ExecutionGroupController(IExecutionGroupService _executionGroupServ
     {
         var executionGroups = await _executionGroupService.GetExecutionGroupSearchResults(pageNumber, executionGroupName, releaseVersion, ct);
 
-        var executionGroupDtos = executionGroups.Select(x => new ExecutionGroupDto(x)).ToList();
-
-        return Ok(executionGroupDtos);
+        return Ok(executionGroups.Select(x => new ExecutionGroupDto(x)).ToList());
     }
 
     [HttpGet("{id:int}")]

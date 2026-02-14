@@ -18,7 +18,7 @@ internal class LogMiddleware(RequestDelegate _next, ILogger<LogMiddleware> _logg
                 context.Response.ContentType = "application/json";
                 await context.Response.WriteAsJsonAsync(new
                 {
-                    Error = ex.Message
+                    Error = "An unexpected error occurred"
                 });
             }
         }

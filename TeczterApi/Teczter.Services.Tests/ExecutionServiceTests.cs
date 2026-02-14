@@ -40,7 +40,7 @@ public class ExecutionServiceTests
         _executionAdapterMock.Setup(x => x.GetExecutionById(execution.Id,  It.IsAny<CancellationToken>())).ReturnsAsync(execution);
 
         //Act:
-        var result = await _sut.CompleteExecution(execution.Id, request, ct);
+        var result = await _sut.CompleteExecution(execution, request, ct);
 
         //Assert:
         result.IsValid.ShouldBeTrue();
