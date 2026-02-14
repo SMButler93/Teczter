@@ -1,5 +1,4 @@
-﻿using Teczter.Domain;
-using Teczter.Domain.Entities;
+﻿using Teczter.Domain.Entities;
 using Teczter.Services.RequestDtos.TestSteps;
 using Teczter.Services.ServiceInterfaces;
 
@@ -8,16 +7,10 @@ namespace Teczter.Services.ComposersAndBuilders;
 public class TestComposer() : ITestComposer
 {
     private TestEntity _test = new();
-    private List<string> Errors = [];
 
     public ITestComposer AddLinkUrl(string linkUrl)
     {
-        var result = _test.AddLinkUrl(linkUrl);
-
-        if (!result.IsValid)
-        {
-            Errors.AddRange(result.ErrorMessages!);
-        }
+        _test.AddLinkUrl(linkUrl);
 
         return this;
     }
@@ -66,11 +59,6 @@ public class TestComposer() : ITestComposer
     {
         _test.Description = description ?? _test.Description;
 
-        if (_test.Description is null)
-        {
-            Errors.Add("A test must have a description.");
-        }
-
         return this;
     }
 
@@ -81,12 +69,7 @@ public class TestComposer() : ITestComposer
             return this;
         }
 
-        var result = _test.SetOwningDepartment(department);
-
-        if (!result.IsValid)
-        {
-            Errors.AddRange(result.ErrorMessages!);
-        }
+        _test.SetOwningDepartment(department);
 
         return this;
     }
@@ -94,11 +77,6 @@ public class TestComposer() : ITestComposer
     public ITestComposer SetTitle(string? title)
     {
         _test.Title = title ?? _test.Title;
-
-        if (string.IsNullOrWhiteSpace(_test.Title))
-        {
-            Errors.Add("A test must have a title.");
-        }
 
         return this;
     }
@@ -111,26 +89,16 @@ public class TestComposer() : ITestComposer
         return this;
     }
 
-    public TeczterValidationResult<TestEntity> Build()
+    public TestEntity Build()
     {
-        if (Errors.Any())
-        {
-            return TeczterValidationResult<TestEntity>.Fail(Errors.ToArray());
-        }
-
-        return TeczterValidationResult<TestEntity>.Succeed(_test);
+        return _test;
     }
 
     public ITestComposer AddLinkUrls(IEnumerable<string> links)
     {
         foreach (var link in links)
         {
-            var result = _test.AddLinkUrl(link);
-
-            if (!result.IsValid)
-            {
-                Errors.AddRange(result.ErrorMessages!);
-            }
+            _test.AddLinkUrl(link);
         }
 
         return this;

@@ -5,21 +5,20 @@ using Teczter.Services.AdapterInterfaces;
 
 namespace Teczter.Adapters;
 
-public class ExecutionAdapter(TeczterDbContext dbContext) : IExecutionAdapter
+public class ExecutionAdapter(TeczterDbContext _dbContext) : IExecutionAdapter
 {
-    private readonly TeczterDbContext _dbContext = dbContext;
-
-    public async Task<ExecutionEntity?> GetExecutionById(int id)
+    public async Task<ExecutionEntity?> GetExecutionById(int id, CancellationToken ct)
     {
         return await _dbContext.Executions
-            .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+            .Include(x => x.ExecutionGroup)
+            .Include(x => x.Test)
+            .SingleOrDefaultAsync(x => x.Id == id && !x.IsDeleted, ct);
     }
 
-    public async Task<List<ExecutionEntity>> GetExecutionsForTest(int testId)
+    public async Task<List<ExecutionEntity>> GetExecutionsForTest(int testId,  CancellationToken ct)
     {
         return await _dbContext.Executions
             .Where(x => x.TestId == testId && !x.IsDeleted)
-            .ToListAsync();
+            .ToListAsync(ct);
     }
 }

@@ -3,27 +3,27 @@ using Teczter.Domain.Enums;
 
 namespace Teczter.Domain.Entities;
 
+// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 {
-    public int Id { get; set; }
+    public int Id { get; init; }
     public DateTime CreatedOn { get; private set; } = DateTime.Now;
-    public int CreatedById { get; set; }
+    public int CreatedById { get; init; }
     public DateTime RevisedOn { get; set; } = DateTime.Now;
     public int RevisedById { get; set; }
     public bool IsDeleted { get; set; }
     public int ExecutionGroupId { get; init; }
-    public Guid? AssignedUserId { get; set; }
-    public int TestId { get; set; }
+    public Guid? AssignedUserId { get; init; }
+    public int TestId { get; init; }
     public bool HasPassed => ExecutionState == ExecutionStateType.Pass;
     public int? FailedStepId { get; private set; }
     public string? FailureReason { get; private set; }
     public int? TestedById { get; private set; }
-    public List<string> Notes { get; private set; } = [];
+    public List<string> Notes { get; private init; } = [];
     public ExecutionStateType ExecutionState { get; set; } = ExecutionStateType.Untested;
-    public virtual ExecutionGroupEntity ExecutionGroup { get; set; } = null!;
+    public virtual required  ExecutionGroupEntity ExecutionGroup { get; init; }
     public virtual TestEntity Test { get; set; } = null!;
     public virtual TestStepEntity? FailedStep { get; set; }
-    public virtual UserEntity? AssignedUser { get; set; }
     public byte[] RowVersion { get; set; } = [];
 
     public void Pass(int userId)
@@ -62,21 +62,18 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         //RevisedBy?
     }
 
-    public TeczterValidationResult<ExecutionEntity> Delete()
+    public void Delete()
     {
-        if (ExecutionGroup.IsClosed)
-        {
-            TeczterValidationResult<ExecutionEntity>.Fail("Cannot delete an execution that is part of a completed execution group.");
-        }
-
+        var revisedOn = DateTime.Now;
+        
         IsDeleted = true;
-        RevisedOn = DateTime.Now;
+        RevisedOn = revisedOn; 
         //RevisedBy?
-
-        return TeczterValidationResult<ExecutionEntity>.Succeed(this);
+        ExecutionGroup.RevisedOn = revisedOn;
+        //ExecutionGroupRevisedBy?
     }
 
-    public ExecutionEntity CloneExecution()
+    public ExecutionEntity CloneExecution(ExecutionGroupEntity executionGroup)
     {
         return new ExecutionEntity
         {
@@ -84,7 +81,8 @@ public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
             Test = this.Test,
             AssignedUserId = this.AssignedUserId,
             Notes = this.Notes,
-            ExecutionState = ExecutionStateType.Untested
+            ExecutionState = ExecutionStateType.Untested,
+            ExecutionGroup =  executionGroup
             //CreatedBy?
         };
     }

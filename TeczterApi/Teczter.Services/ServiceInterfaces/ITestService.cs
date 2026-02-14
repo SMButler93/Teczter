@@ -17,5 +17,4 @@ public interface ITestService
     Task<TeczterValidationResult<TestEntity>> AddTestStep(TestEntity test, CreateTestStepRequestDto testStep, CancellationToken ct);
     Task<TeczterValidationResult<TestEntity>> RemoveTestStep(TestEntity test, int testStepId, CancellationToken ct);
     Task<TeczterValidationResult<TestEntity>> UpdateTestStep(TestEntity test, int testStepId, UpdateTestStepRequestDto request, CancellationToken ct);
-    Task<TeczterValidationResult<TestEntity>> ValidateTestState(TestEntity test, CancellationToken ct);
 }

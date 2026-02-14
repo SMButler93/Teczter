@@ -1,5 +1,4 @@
-﻿using Teczter.Domain;
-using Teczter.Domain.Entities;
+﻿using Teczter.Domain.Entities;
 using Teczter.Services.RequestDtos.Executions;
 using Teczter.Services.ServiceInterfaces;
 
@@ -8,7 +7,6 @@ namespace Teczter.Services.ComposersAndBuilders;
 public class ExecutionGroupComposer : IExecutionGroupComposer
 {
     private ExecutionGroupEntity _executionGroup = new();
-    private List<string> Errors = [];
 
     public IExecutionGroupComposer AddExecution(CreateExecutionRequestDto execution)
     {
@@ -17,7 +15,8 @@ public class ExecutionGroupComposer : IExecutionGroupComposer
             {
                 ExecutionGroupId = _executionGroup.Id,
                 TestId = execution.TestId,
-                AssignedUserId = execution.AssignedUserId
+                AssignedUserId = execution.AssignedUserId,
+                ExecutionGroup = _executionGroup
             });
 
         return this;
@@ -49,14 +48,9 @@ public class ExecutionGroupComposer : IExecutionGroupComposer
         return this;
     }
 
-    public TeczterValidationResult<ExecutionGroupEntity> Build()
+    public ExecutionGroupEntity Build()
     {
-        if (Errors.Any())
-        {
-            return TeczterValidationResult<ExecutionGroupEntity>.Fail(Errors.ToArray());
-        }
-
-        return TeczterValidationResult<ExecutionGroupEntity>.Succeed(_executionGroup);
+        return _executionGroup;
     }
 
     public IExecutionGroupComposer SetExecutionGroupNotes(List<string>? notes)

@@ -71,77 +71,29 @@ public class TestEntityTests
     }
 
     [Test]
-    public void AddLinkUrl_WhenInvalid_ShouldFail()
+    public void AddLinkUrl_ShouldExistOnTestInstance()
     {
         //Arrange:
-        var invalidUrl = "Invalid";
-
+        const string validUrl = "www.validUrl.com";
         //Act:
-        var result = _sut.AddLinkUrl(invalidUrl);
+        _sut.AddLinkUrl(validUrl);
 
         //Assert:
-        result.IsValid.ShouldBeFalse();
-        result.Value.ShouldBeNull();
-        result.ErrorMessages.ShouldNotBeEmpty();
-    }
-
-    [Test]
-    public void AddLinkUrl_WhenValid_ShouldPass()
-    {
-        //Arrange:
-        var validUrl = "www.validUrl.com";
-
-        //Act:
-        var result = _sut.AddLinkUrl(validUrl);
-
-        //Assert:
-        result.IsValid.ShouldBeTrue();
-        result.ErrorMessages.ShouldBeEmpty();
-    }
-
-    [Test]
-    public void AddLinkUrl_WhenAlreadyExists_ShouldFail()
-    {
-        //Arrange:
-        var urlToAdd = "www.newUrl.com";
-        _sut.AddLinkUrl(urlToAdd);
-
-        //Act:
-        var result = _sut.AddLinkUrl(urlToAdd);
-
-        //Assert:
-        result.IsValid.ShouldBeFalse();
-        result.ErrorMessages.ShouldNotBeEmpty();
+        _sut.Urls.ShouldContain(validUrl);
     }
 
     [Test]
     public void RemoveLinkUrl_WhenExists_ShouldRemove()
     {
         //Arrange:
-        var newUrl = "www.validUrl.com";
+        const string newUrl = "www.validUrl.com";
         _sut.AddLinkUrl(newUrl);
 
         //Act:
-        var result = _sut.RemoveLinkUrl(newUrl);
+        _sut.RemoveLinkUrl(newUrl);
 
         //Assert:
-        result.IsValid.ShouldBeTrue();
-        result.ErrorMessages.ShouldBeEmpty();
         _sut.Urls.ShouldNotContain(newUrl);
-    }
-
-    [Test]
-    public void RemoveLinkUrl_WhenDoesNotExist_ShouldFail()
-    {
-        //Arrange:
-        var nonExistentUrl = "www.SomeUrl.com";
-
-        //Act:
-        var result = _sut.RemoveLinkUrl(nonExistentUrl);
-
-        //Assert:
-        result.IsValid.ShouldBeFalse();
-        result.ErrorMessages.ShouldNotBeEmpty();
     }
 
     [Test]

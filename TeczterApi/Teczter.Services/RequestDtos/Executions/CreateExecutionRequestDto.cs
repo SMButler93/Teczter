@@ -2,6 +2,6 @@
 
 public class CreateExecutionRequestDto
 {
-    public int TestId { get; set; }
-    public Guid? AssignedUserId { get; set; }
+    public int TestId { get; init; }
+    public Guid? AssignedUserId { get; init; }
 }

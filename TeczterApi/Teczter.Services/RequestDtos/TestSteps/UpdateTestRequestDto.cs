@@ -2,7 +2,7 @@
 
 public class UpdateTestRequestDto
 {
-    public string Title { get; set; } = null!;
-    public string Description { get; set; } = null!;
-    public string OwningDepartment { get; set; } = null!;
+    public required string Title { get; set; }
+    public required string Description { get; set; }
+    public required string OwningDepartment { get; set; }
 }

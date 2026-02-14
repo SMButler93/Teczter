@@ -58,7 +58,7 @@ public class TestStepEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
         Instructions = instructions  ?? Instructions;
         Urls.AddRange(urls);
         RevisedOn = DateTime.Now;
-        //RevisedBy? 
+        //RevisedBy?
     }
 
     private static bool IsValidUrl(string url)

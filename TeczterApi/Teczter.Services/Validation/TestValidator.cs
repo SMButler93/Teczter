@@ -1,32 +1,24 @@
 ﻿using FluentValidation;
 using Teczter.Domain.Entities;
 using Teczter.Services.Validation.ValidationRules;
-using Teczter.Services.ValidationRepositoryInterfaces;
 
 namespace Teczter.Services.Validation;
 
 public class TestValidator : AbstractValidator<TestEntity>
 {
-    private readonly ITestValidationRepository _testValidationRepository;
-    private readonly IValidator<TestStepEntity> _testStepValidator;
-
-    public TestValidator(
-        ITestValidationRepository testValidationRepository,
-        IValidator<TestStepEntity> testStepValidator)
+    public TestValidator(IValidator<TestStepEntity> _testStepValidator)
     {
-        _testValidationRepository = testValidationRepository;
-        _testStepValidator = testStepValidator;
-
         RuleFor(x => x.Title)
-            .NotEmpty().WithMessage("A test must have a title.")
-            .MustAsync((title, _) => TestValidationRules.BeUniqueTitle(title, _testValidationRepository))
-            .WithMessage("A test must have a unique title.");
+            .NotEmpty().WithMessage("A test must have a title.");
 
         RuleFor(x => x.Description)
             .NotEmpty().WithMessage("A test must have a description");
 
         RuleFor(x => x.OwningDepartment)
             .NotEmpty().WithMessage("A test must have an owning department.");
+        
+        RuleFor(x => x.Urls)
+            .Must(TestValidationRules.HaveValidUrls).WithMessage("Invalid urls. Please ensure all urls are valid.");
 
         RuleFor(x => x.CreatedOn)
             .Must(y => y > DateTime.MinValue).WithMessage("Invalid Date. please provide a valid date.")

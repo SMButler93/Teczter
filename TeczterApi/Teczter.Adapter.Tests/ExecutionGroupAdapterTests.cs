@@ -71,22 +71,11 @@ public class ExecutionGroupAdapterTests
     }
 
     [Test]
-    public void GetBasicExecutionGroupSearchQuery_WhenCalled_ShouldReturnQueryable()
-    {
-        //Arrange & Act:
-        var result = _sut.GetBasicExecutionGroupSearchQuery();
-
-        //Assert:
-        result.ShouldBeAssignableTo<IQueryable<ExecutionGroupEntity>>();
-    }
-
-    [Test]
-    public async Task GetBasicExecutionGroupSearchQuery_WhenExecuted_ShouldReturnAllNonDeletedExecutionGroups()
+    public async Task GetExecutionGroupSearchResults_WhenExecuted_ShouldReturnAllNonDeletedExecutionGroups()
     {
         //Arrange & Act:
         var expectedGroups = GetMultipleExecutionGroupInstances();
-        var query = _sut.GetBasicExecutionGroupSearchQuery();
-        var result = await query.ToListAsync();
+        var result = await _sut.GetExecutionGroupSearchResults(1, null, null, CancellationToken.None);
 
         //Assert:
         result.Count.ShouldBe(expectedGroups.Count);
@@ -97,7 +86,6 @@ public class ExecutionGroupAdapterTests
     public async Task CreateNewExecutionGroup_WhenExecuted_ShouldAddNewInstanceToDatabase()
     {
         //Arrange:
-        var ct = new CancellationTokenSource().Token;
         var executionGroup = new ExecutionGroupEntity()
         {
             Id = 5,
@@ -109,7 +97,7 @@ public class ExecutionGroupAdapterTests
 
         //Act:
         var initialPersistedExecutionGroupsCount = await _dbContext.ExecutionGroups.CountAsync();
-        await _sut.AddNewExecutionGroup(executionGroup, ct);
+        await _sut.AddNewExecutionGroup(executionGroup, CancellationToken.None);
         await _dbContext.SaveChangesAsync();
         var persistedExecutionGroups = await _dbContext.ExecutionGroups.ToListAsync();
         var newlyPersistedExecutionGroup = await _dbContext.ExecutionGroups.SingleAsync(x => x.Id == executionGroup.Id);

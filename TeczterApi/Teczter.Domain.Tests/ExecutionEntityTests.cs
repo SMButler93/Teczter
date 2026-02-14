@@ -19,7 +19,7 @@ public class ExecutionEntityTests
             RevisedById = 1,
             IsDeleted = false,
             TestId = 999,
-            ExecutionGroup = new()
+            ExecutionGroup = new ExecutionGroupEntity {Id = 1}
         };
     }
 
@@ -91,10 +91,11 @@ public class ExecutionEntityTests
     }
 
     [Test]
-    public void CloneExecution_WhenCloned_ShouldHaveSameValuesExecptForAuditableValues()
+    public void CloneExecution_WhenCloned_ShouldHaveSameValuesExceptForAuditableValuesAndExecutionGroup()
     {
         //Arrange & Act:
-        var clonedExecution = _sut.CloneExecution();
+        var newExecutionGroup = new ExecutionGroupEntity {Id = 1};
+        var clonedExecution = _sut.CloneExecution(newExecutionGroup);
 
         //Assert:
         clonedExecution.TestId.ShouldBe(_sut.TestId);
@@ -104,5 +105,6 @@ public class ExecutionEntityTests
         clonedExecution.ExecutionState.ShouldBe(ExecutionStateType.Untested);
         clonedExecution.CreatedOn.ShouldNotBe(_sut.CreatedOn);
         clonedExecution.RevisedOn.ShouldNotBe(_sut.RevisedOn);
+        clonedExecution.ExecutionGroup.ShouldBe(newExecutionGroup);
     }
 }

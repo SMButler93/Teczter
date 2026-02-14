@@ -1,12 +1,10 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-using MockQueryable;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
 using Teczter.Domain.Entities;
 using Teczter.Domain.Enums;
-using Teczter.Infrastructure.Cache;
 using Teczter.Services.AdapterInterfaces;
 using Teczter.Services.RequestDtos.TestSteps;
 using Teczter.Services.ServiceInterfaces;
@@ -21,7 +19,6 @@ public class TestServiceTests
     private readonly Mock<ITestComposer> _testComposerMock = new();
     private readonly UnitOfWorkFake _uow = new();
     private readonly Mock<IValidator<TestEntity>> _testValidatorMock = new();
-    private readonly Mock<ITeczterCache<TestEntity>> _cache = new();
 
     private TestService _sut = null!;
 
@@ -33,74 +30,7 @@ public class TestServiceTests
             _executionAdapterMock.Object,
             _testComposerMock.Object,
             _uow,
-            _testValidatorMock.Object,
-            _cache.Object);
-    }
-
-    [Test]
-    public async Task GetTestSearchResults_WhenNoFiltersApplied_ShouldGetAllInstances()
-    {
-        //Arrange:
-        var tests = GetMultipleBasicTestInstances().OrderBy(x => x.Title);
-        var queryable = tests.AsQueryable();
-        var ct = new CancellationTokenSource().Token;
-        _testAdapterMock.Setup(x => x.GetTestSearchBaseQuery()).Returns(queryable.BuildMock());
-
-        //Act:
-        var results = await _sut.GetTestSearchResults(1, null, null, ct);
-
-        //Assert:
-        results.ShouldBe(tests);
-    }
-
-    [Test]
-    public async Task GetTestSearchResults_WhenFilteredOnTestName_ShouldGetInstancesThatMatch()
-    {
-        //Arrange:
-        var tests = GetMultipleBasicTestInstances();
-        var queryable = tests.AsQueryable();
-        var ct = new CancellationTokenSource().Token;
-        _testAdapterMock.Setup(x => x.GetTestSearchBaseQuery()).Returns(queryable.BuildMock());
-
-        //Act:
-        var results = await _sut.GetTestSearchResults(1, "One", null, ct);
-
-        //Assert:
-        results.Count.ShouldBe(1);
-        results[0].ShouldBe(tests[0]);
-    }
-
-    [Test]
-    public async Task GetTestSearchResults_WhenFilteredOnOwningDepartment_ShouldGetInstancesThatMatch()
-    {
-        //Arrange:
-        var tests = GetMultipleBasicTestInstances();
-        var queryable = tests.AsQueryable();
-        var ct = new CancellationTokenSource().Token;
-        _testAdapterMock.Setup(x => x.GetTestSearchBaseQuery()).Returns(queryable.BuildMock());
-
-        //Act:
-        var results = await _sut.GetTestSearchResults(1, null, nameof(Department.Accounting), ct);
-
-        //Assert:
-        results.Count.ShouldBe(1);
-        results[0].ShouldBe(tests[0]);
-    }
-
-    [Test]
-    public async Task GetTestSearchResults_WhenFilteredWithNoMatches_ShouldReturnEmptyList()
-    {
-        //Arrange:
-        var tests = GetMultipleBasicTestInstances();
-        var queryable = tests.AsQueryable();
-        var ct = new CancellationTokenSource().Token;
-        _testAdapterMock.Setup(x => x.GetTestSearchBaseQuery()).Returns(queryable.BuildMock());
-
-        //Act:
-        var results = await _sut.GetTestSearchResults(1, "ABC", null, ct);
-
-        //Assert:
-        results.ShouldBeEmpty();
+            _testValidatorMock.Object);
     }
 
     [Test]
@@ -123,20 +53,24 @@ public class TestServiceTests
     }
 
     [Test]
-    public async Task RemoveLinkUrl_WhenLinkUrlDoesNotExist_ShouldFail()
+    public async Task RemoveLinkUrl_WhenLinkUrlDoesNotExist_ShouldNotAlterCollection()
     {
         //Arrange:
         var test = GetBasicTestInstance();
-        const string url = "www.url.com";
-        var ct = new CancellationTokenSource().Token;
+        test.AddLinkUrl("www.url.com");
+        const string urlToRemove = "www.url2.com";
+        List<string> currentUrls = [.. test.Urls];
+
+        var validationResult = new ValidationResult();
+
+        _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(validationResult);
 
         //Act:
-        var result = await _sut.RemoveLinkUrl(test, url, ct);
+        await _sut.RemoveLinkUrl(test, urlToRemove, CancellationToken.None);
 
         //Assert:
-        result.IsValid.ShouldBeFalse();
-        result.Value.ShouldBeNull();
-        result.ErrorMessages.ShouldNotBeEmpty();
+        test.Urls.Count.ShouldBe(currentUrls.Count);
     }
 
     [Test]
@@ -160,20 +94,23 @@ public class TestServiceTests
     }
 
     [Test]
-    public async Task RemoveTestStep_WhenTheTestStepDoesNotExist_ShouldFail()
+    public async Task RemoveTestStep_WhenTheTestStepDoesNotExist_ShouldNotFailOrThrow()
     {
         //Arrange:
         var test = GetBasicTestInstance();
         const int stepToRemoveId = 5;
-        var ct = new CancellationTokenSource().Token;
+        var validationResult = new ValidationResult();
+        
+        _testValidatorMock.Setup(x => x.ValidateAsync(test, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(validationResult);
 
         //Act:
-        var result = await _sut.RemoveTestStep(test, stepToRemoveId, ct);
+        var result = await _sut.RemoveTestStep(test, stepToRemoveId, CancellationToken.None);
 
         //Assert:
-        result.IsValid.ShouldBeFalse();
-        result.Value.ShouldBeNull();
-        result.ErrorMessages.ShouldNotBeEmpty();
+        test.TestSteps.SingleOrDefault(x => x.Id == stepToRemoveId).ShouldBeNull();
+        result.Value.ShouldNotBeNull();
+        result.ErrorMessages.ShouldBeEmpty();
     }
 
     [Test]
@@ -194,6 +131,8 @@ public class TestServiceTests
         result.Value.ShouldNotBeNull();
         stepToUpdate.StepPlacement.ShouldBe(4);
         test.TestSteps.Count.ShouldBe(4);
+        test.TestSteps.Select(x => x.StepPlacement).Distinct().Count().ShouldBe(test.TestSteps.Count);
+        test.TestSteps.All(x => Enumerable.Range(1, 4).Contains(x.StepPlacement)).ShouldBeTrue();
     }
 
     private static TestEntity GetBasicTestInstance()

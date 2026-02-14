@@ -29,28 +29,23 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
         RevisedOn = DateTime.Now;
     }
 
-    public TeczterValidationResult<TestEntity> RemoveTestStep(int testStepId)
+    public void RemoveTestStep(int testStepId)
     {
         var testStep = TestSteps.SingleOrDefault(x => x.Id == testStepId && !x.IsDeleted);
 
-        if (testStep is null)
-        {
-            return TeczterValidationResult<TestEntity>.Fail("Cannot remove a test step that does not exist, has already been deleted, or does not belong to this test.");
-        }
-
+        if (testStep is null) return;
+        
         testStep.Delete();
         TestSteps.Remove(testStep);
         SetCorrectStepPlacementValuesOnUpdate();
         RevisedOn = DateTime.Now;
-
-        return TeczterValidationResult<TestEntity>.Succeed(this);
     }
 
     public void SetCorrectStepPlacementValuesOnUpdate()
     {
         OrderTestSteps();
 
-        for (int i = 0; i < TestSteps.Count; i++)
+        for (var i = 0; i < TestSteps.Count; i++)
         {
             TestSteps[i].StepPlacement = i + 1;
         }
@@ -73,35 +68,18 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
             .ToList();
     }
 
-    public TeczterValidationResult<TestEntity> AddLinkUrl(string url)
+    public void AddLinkUrl(string url)
     {
-        if (!IsValidUrl(url))
-        {
-            return TeczterValidationResult<TestEntity>.Fail($"{url} is an invalid URL.");
-        }
-
-        if (Urls.Contains(url, StringComparer.OrdinalIgnoreCase))
-        {
-            return TeczterValidationResult<TestEntity>.Fail($"{url} already exists as a link for this test.");
-        }
-
         Urls.Add(url);
         RevisedOn = DateTime.Now;
-
-        return TeczterValidationResult<TestEntity>.Succeed(this);
     }
 
-    public TeczterValidationResult<TestEntity> RemoveLinkUrl(string url)
+    public void RemoveLinkUrl(string url)
     {
-        if (!Urls.Contains(url, StringComparer.OrdinalIgnoreCase))
-        {
-            return TeczterValidationResult<TestEntity>.Fail($"{url} does not belong to this test");
-        }
+        if (!Urls.Contains(url, StringComparer.OrdinalIgnoreCase)) return;
 
         Urls.Remove(url);
         RevisedOn = DateTime.Now;
-
-        return TeczterValidationResult<TestEntity>.Succeed(this);
     }
 
     public void Delete()
@@ -115,26 +93,8 @@ public class TestEntity : IAuditableEntity, ISoftDeleteable, IHasIntId
         RevisedOn = DateTime.Now;
     }
 
-    public TeczterValidationResult<TestEntity> SetOwningDepartment(string department)
+    public void SetOwningDepartment(string department)
     {
-        var isValidDepartment = Enum.TryParse<Department>(department, true, out var validDepartment);
-
-        if (!isValidDepartment)
-        {
-            return TeczterValidationResult<TestEntity>.Fail($"{department} is an invalid department.");
-        }
-
-        OwningDepartment = validDepartment;
-
-        return TeczterValidationResult<TestEntity>.Succeed(this);
-    }
-
-    private static bool IsValidUrl(string url)
-    {
-        var pattern = @"^(https?:\/\/www\.|www\.)[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.(com|co\.uk|org)$";
-
-        var regex = new Regex(pattern);
-
-        return regex.IsMatch(url);
+        OwningDepartment = Enum.Parse<Department>(department);
     }
 }

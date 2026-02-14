@@ -13,8 +13,8 @@ public interface ITestComposer
     ITestComposer AddSteps(IEnumerable<CreateTestStepRequestDto> steps);
     ITestComposer AddStep(CreateTestStepRequestDto step);
     ITestComposer AddSteps(IEnumerable<TestStepEntity> steps);
-    ITestComposer AddStep(TestStepEntity setp);
+    ITestComposer AddStep(TestStepEntity step);
     ITestComposer AddLinkUrls(IEnumerable<string> links);
     ITestComposer AddLinkUrl(string linkUrl);
-    TeczterValidationResult<TestEntity> Build();
+    TestEntity Build();
 }
