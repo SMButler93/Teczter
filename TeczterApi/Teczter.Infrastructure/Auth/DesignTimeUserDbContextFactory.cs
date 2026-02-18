@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace Teczter.Infrastructure.Auth;
 
-public class DesignTimeUserDbContextFactory: IDesignTimeDbContextFactory<UserDbContext>
+public class DesignTimeUserDbContextFactory : IDesignTimeDbContextFactory<UserDbContext>
 {
     public UserDbContext CreateDbContext(string[] args)
     {

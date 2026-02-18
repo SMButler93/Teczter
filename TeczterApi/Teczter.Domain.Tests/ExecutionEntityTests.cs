@@ -19,7 +19,8 @@ public class ExecutionEntityTests
             RevisedById = 1,
             IsDeleted = false,
             TestId = 999,
-            ExecutionGroup = new ExecutionGroupEntity {Id = 1}
+            ExecutionGroup = new ExecutionGroupEntity {Id = 1},
+            Test = new TestEntity {Id = 1}
         };
     }
 
