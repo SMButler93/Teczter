@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Options;
 
 namespace Teczter.Infrastructure.Auth;
 
-public class DesignTimeUserDbContextFactory: IDesignTimeDbContextFactory<UserDbContext>
+public class DesignTimeUserDbContextFactory() : IDesignTimeDbContextFactory<UserDbContext>
 {
     public UserDbContext CreateDbContext(string[] args)
     {

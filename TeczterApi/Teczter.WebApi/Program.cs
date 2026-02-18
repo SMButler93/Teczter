@@ -1,16 +1,18 @@
 using FluentValidation;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Teczter.Adapters.DependencyInjection;
-using Teczter.Infrastructure.Auth;
 using Teczter.Services.DependencyInjection;
 using Teczter.WebApi.Configurations;
+using Teczter.WebApi.DemoModeConfigAndSetup;
 using Teczter.WebApi.Middleware;
 using Teczter.WebApi.Registrations;
 using Teczter.WebApi.RequestValidations.ValidationAttributes;
+using Teczter.WebApi.Setup;
+using Teczter.WebApi.Setup.Registrations;
 
 var builder = WebApplication.CreateBuilder(args);
+var isDemoMode = builder.Configuration.GetValue<bool>("demo");
 
 builder.Host.UseSerilog((context, services, config) =>
 {
@@ -23,7 +25,9 @@ builder.Services.AddControllers(opt =>
 {
     opt.Filters.Add<RequestValidationFilter>();
 });
+
 builder.Services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -35,19 +39,9 @@ builder.Services.AddOptions<CorsOptions>()
     .Bind(builder.Configuration.GetSection("CorsOptions"))
     .Validate(x => x.AllowedOrigins.Length > 0);
 
-builder.Services.AddDbContexts(builder.Configuration, builder.Environment.IsDevelopment());
+builder.Services.AddDbContexts(builder.Configuration, builder.Environment);
 
-builder.Services.AddIdentityCore<TeczterUser>(opt =>
-    {
-        opt.Password.RequireDigit = true;
-        opt.Password.RequireLowercase = true;
-        opt.Password.RequireNonAlphanumeric = true;
-        opt.Password.RequireUppercase = true;
-        opt.Password.RequiredLength = 8;
-    })
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<UserDbContext>()
-    .AddDefaultTokenProviders();
+builder.Services.AddTeczterIdentity();
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
@@ -78,5 +72,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+if (isDemoMode)
+{
+    await app.SetupDemoMode();
+} else
+{
+    await app.ApplyMigrations();
+}
 
 app.Run();

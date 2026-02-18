@@ -16,5 +16,7 @@ public class TeczterDbContext(DbContextOptions<TeczterDbContext> options) : DbCo
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        
+        modelBuilder.HasDefaultSchema("Teczter");
     }
 }

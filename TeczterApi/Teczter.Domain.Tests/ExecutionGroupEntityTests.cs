@@ -59,7 +59,8 @@ public class ExecutionGroupEntityTests
             RevisedById = 1,
             IsDeleted = false,
             TestId = 999,
-            ExecutionGroup = new()
+            ExecutionGroup = new ExecutionGroupEntity(),
+            Test = new TestEntity()
         };
 
         //Act:
@@ -127,7 +128,8 @@ public class ExecutionGroupEntityTests
                 RevisedById = 1,
                 IsDeleted = false,
                 TestId = i,
-                ExecutionGroup = new()
+                ExecutionGroup = new ExecutionGroupEntity(),
+                Test = new TestEntity()
             };
 
             executions.Add(execution);

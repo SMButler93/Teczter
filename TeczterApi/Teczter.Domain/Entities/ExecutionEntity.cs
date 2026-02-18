@@ -3,7 +3,6 @@ using Teczter.Domain.Enums;
 
 namespace Teczter.Domain.Entities;
 
-// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class ExecutionEntity : IAuditableEntity, IHasIntId, ISoftDeleteable
 {
     public int Id { get; init; }

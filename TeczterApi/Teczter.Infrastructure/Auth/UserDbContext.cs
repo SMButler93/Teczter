@@ -3,7 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Teczter.Infrastructure.Auth;
 
-public class UserDbContext(DbContextOptions<UserDbContext> options): IdentityDbContext<TeczterUser>(options)
+public sealed class UserDbContext(DbContextOptions<UserDbContext> options): IdentityDbContext<TeczterUser>(options)
 {
-    
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        builder.HasDefaultSchema("Auth");
+    }
 }

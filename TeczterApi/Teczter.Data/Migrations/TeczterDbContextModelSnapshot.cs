@@ -18,7 +18,8 @@ namespace Teczter.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.6")
+                .HasDefaultSchema("Teczter")
+                .HasAnnotation("ProductVersion", "10.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -79,15 +80,13 @@ namespace Teczter.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssignedUserId");
-
                     b.HasIndex("ExecutionGroupId");
 
                     b.HasIndex("FailedStepId");
 
                     b.HasIndex("TestId");
 
-                    b.ToTable("Executions");
+                    b.ToTable("Executions", "Teczter");
                 });
 
             modelBuilder.Entity("Teczter.Domain.Entities.ExecutionGroupEntity", b =>
@@ -135,7 +134,7 @@ namespace Teczter.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ExecutionGroups");
+                    b.ToTable("ExecutionGroups", "Teczter");
                 });
 
             modelBuilder.Entity("Teczter.Domain.Entities.TestEntity", b =>
@@ -185,7 +184,7 @@ namespace Teczter.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tests");
+                    b.ToTable("Tests", "Teczter");
                 });
 
             modelBuilder.Entity("Teczter.Domain.Entities.TestStepEntity", b =>
@@ -235,54 +234,11 @@ namespace Teczter.Data.Migrations
 
                     b.HasIndex("TestId");
 
-                    b.ToTable("TestSteps");
-                });
-
-            modelBuilder.Entity("Teczter.Domain.Entities.UserEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("AccessLevel")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Department")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("bytea");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
+                    b.ToTable("TestSteps", "Teczter");
                 });
 
             modelBuilder.Entity("Teczter.Domain.Entities.ExecutionEntity", b =>
                 {
-                    b.HasOne("Teczter.Domain.Entities.UserEntity", "AssignedUser")
-                        .WithMany("AssignedExcutions")
-                        .HasForeignKey("AssignedUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("Teczter.Domain.Entities.ExecutionGroupEntity", "ExecutionGroup")
                         .WithMany("Executions")
                         .HasForeignKey("ExecutionGroupId")
@@ -298,8 +254,6 @@ namespace Teczter.Data.Migrations
                         .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("AssignedUser");
 
                     b.Navigation("ExecutionGroup");
 
@@ -325,11 +279,6 @@ namespace Teczter.Data.Migrations
             modelBuilder.Entity("Teczter.Domain.Entities.TestEntity", b =>
                 {
                     b.Navigation("TestSteps");
-                });
-
-            modelBuilder.Entity("Teczter.Domain.Entities.UserEntity", b =>
-                {
-                    b.Navigation("AssignedExcutions");
                 });
 #pragma warning restore 612, 618
         }

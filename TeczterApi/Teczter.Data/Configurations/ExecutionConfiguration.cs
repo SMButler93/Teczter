@@ -10,5 +10,12 @@ internal class ExecutionConfiguration : IEntityTypeConfiguration<ExecutionEntity
     {
         builder.Property(x => x.RowVersion)
             .IsRowVersion();
+
+        builder.HasOne(x => x.Test)
+            .WithMany();
+
+        builder.HasOne(x => x.ExecutionGroup)
+            .WithMany(x => x.Executions)
+            .HasForeignKey(x => x.ExecutionGroupId);
     }
 }
