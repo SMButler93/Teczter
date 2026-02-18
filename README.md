@@ -4,7 +4,7 @@
 
 ---
 
-## 📖 Overview
+## Overview
 
 Below are the core concepts of the system:
 
@@ -45,40 +45,39 @@ Users can be assigned executions to complete. User roles determine access rights
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
-- **Backend**: [.NET 9](https://dotnet.microsoft.com/)
-- **Frontend**: [Angular](https://angular.io/)
-- **UI Library**: [PrimeNG](https://www.primefaces.org/primeng/)
+- **Backend**: [.NET 10](https://dotnet.microsoft.com/)
+- **Frontend**: `Yet to be decided.`
 
-### 📦 Libraries & Tools
+### Libraries & Tools
 
+- `Entity Framework Core`
+- `Identity`
 - `FluentValidation`
 - `Moq`
 - `NUnit`
 - `Serilog`
 - `Shouldly`
 
-### 📄 Database
+### Database
 
-- Managed via **SSDT** (SQL Server Data Tools)
-- Originally developed using **EF Core Code-First**, but migrated in **May 2025**
-- ORM: **Entity Framework Core**
+- [PostgreSql](https://www.postgresql.org/)
+- Currently developed and managed via **EF Migrations**
 
 ---
 
-## 🚧 Planned Work
+## Planned Work
 
 This project is actively being developed. Upcoming tasks include:
 
-- Implement authentication and authorization
-- Build an MVP user interface
-- Add email notifications
-- Introduce domain events and CQRS where appropriate
+- Finish authorisation and authentication using Identity and JWT.
+- Build an MVP user interface.
+- Add notifications.
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
-Teczter is a personal project, but contributions or feedback are welcome. If you're interested in helping out, feel free to raise an issue or submit a pull request!
+Teczter is a personal portfolio project, but I welcome collaboration. If you wish to contribute (especially to the frontend) please reach out!
 
